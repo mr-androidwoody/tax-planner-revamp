@@ -135,27 +135,43 @@
 
   // ─────────────────────────────────────────────
   // SHEET 2 — Parameters
-  // Layout: col A = label, col B = value, col C = notes
-  // Section header rows have no mapping — skipped automatically
+  // Supports two formats:
+  //   New: col A = label, col B = value, col C = notes
+  //   Old: col A = label, col B = key, col C = value
+  // Auto-detected by checking if col B header says "Key"
   // Labels mapped to element IDs via PARAM_MAP
   // ─────────────────────────────────────────────
   function parseParams(wb) {
     const sheet = wb.Sheets['Parameters'];
     if (!sheet) throw new Error('No "Parameters" sheet found.');
 
-    const rows = XLSX.utils.sheet_to_json(sheet, {
+    const allRows = XLSX.utils.sheet_to_json(sheet, {
       header: 1,
       defval: '',
-      range:  2,
+      range:  1, // start at row 2 (0-indexed: row index 1) to catch header
     });
 
+    // Detect format: if row 0 col B contains "Key", it's the old format
+    const headerRow = allRows[0] || [];
+    const isOldFormat = String(headerRow[1] || '').toLowerCase().includes('key');
+
+    const dataRows = allRows.slice(1); // skip the header row we just read
+
     const params = {};
-    rows.forEach((row) => {
-      const label = String(row[0] || '').trim();
-      if (!label) return;
-      const elementId = PARAM_MAP[label];
-      if (!elementId) return; // section header or unrecognised — skip
-      params[elementId] = row[1]; // value is col B
+    dataRows.forEach((row) => {
+      if (isOldFormat) {
+        // Old format: A=label, B=key(elementId), C=value
+        const key = String(row[1] || '').trim();
+        if (!key) return;
+        params[key] = row[2];
+      } else {
+        // New format: A=label, B=value
+        const label = String(row[0] || '').trim();
+        if (!label) return;
+        const elementId = PARAM_MAP[label];
+        if (!elementId) return;
+        params[elementId] = row[1];
+      }
     });
 
     return params;
@@ -180,7 +196,7 @@
         errors.push(`Accounts row ${r} (${a.name}): Allocation totals ${allocTotal.toFixed(1)}%, must be 100%`);
     });
 
-    const requiredIds = REQUIRED_LABELS.map(l => PARAM_MAP[l]);
+    const requiredIds = ['woodyDOB', 'heidiDOB', 'startYear', 'endYear', 'spending'];
     requiredIds.forEach(id => {
       if (params[id] === undefined || params[id] === '')
         errors.push(`Parameters: Missing required field "${id}"`);
