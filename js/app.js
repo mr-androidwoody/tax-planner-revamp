@@ -34,6 +34,39 @@
   }
 
   // ─────────────────────────────
+  // SAVE FEEDBACK TOAST
+  // ─────────────────────────────
+  function showToast(msg, isError) {
+    let toast = safeEl('rup-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'rup-toast';
+      Object.assign(toast.style, {
+        position: 'fixed',
+        bottom: '24px',
+        right: '24px',
+        padding: '10px 18px',
+        borderRadius: '6px',
+        fontFamily: 'sans-serif',
+        fontSize: '14px',
+        color: '#fff',
+        zIndex: 9999,
+        opacity: 0,
+        transition: 'opacity 0.2s ease',
+        pointerEvents: 'none',
+      });
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = msg;
+    toast.style.background = isError ? '#c0392b' : '#27ae60';
+    toast.style.opacity = 1;
+
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => { toast.style.opacity = 0; }, 2500);
+  }
+
+  // ─────────────────────────────
   // DOM → STATE
   // ─────────────────────────────
   function syncAccountsFromDOM() {
@@ -157,21 +190,56 @@
   function saveSetup() {
     syncAccountsFromDOM();
     const data = readSetupInputs();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    console.log('Saved:', data);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      console.log('Saved:', data);
+      showToast('Setup saved ✓');
+    } catch (err) {
+      console.error(err);
+      showToast('Save failed – see console', true);
+    }
   }
 
   function loadSetup() {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return alert('No saved setup found.');
+    if (!raw) return showToast('No saved setup found.', true);
 
     try {
       const data = JSON.parse(raw);
       applySetupInputs(data);
+      showToast('Setup loaded ✓');
     } catch (err) {
       console.error(err);
-      alert('Load failed – see console');
+      showToast('Load failed – see console', true);
     }
+  }
+
+  // ─────────────────────────────
+  // ACCOUNTS
+  // ─────────────────────────────
+  function addAccount() {
+    const acc = {
+      id: state.nextId++,
+      name: '',
+      wrapper: 'GIA',
+      owner: 'p1',
+      value: 0,
+      alloc: { equities: 100, bonds: 0, cashlike: 0, cash: 0 },
+      rate: null,
+      monthlyDraw: null,
+    };
+    state.portfolioAccounts.push(acc);
+    R.renderAccountRow(acc);
+    R.updateRowBadge(acc);
+    R.applyWrapperFieldState(acc);
+    refreshSetupSummary();
+  }
+
+  function removeAccount(el) {
+    const row = el.closest('tr');
+    if (row) row.remove();
+    syncAccountsFromDOM();
+    refreshSetupSummary();
   }
 
   // ─────────────────────────────
@@ -191,8 +259,8 @@
 
     const action = el.dataset.action;
 
-    if (action === 'add-account') return;
-    if (action === 'remove-account') return;
+    if (action === 'add-account') return addAccount();
+    if (action === 'remove-account') return removeAccount(el);
 
     if (action === 'save-setup') return saveSetup();
     if (action === 'load-setup') return loadSetup();
