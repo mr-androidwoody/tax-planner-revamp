@@ -53,17 +53,18 @@
     const woodyOrder = getOrder('woody', 4);
     const heidiOrder = getOrder('heidi', 4);
 
-    // p1name used to match interest account ownership
-    const p1name = document.getElementById('sp-p1name')?.value?.trim() || 'Woody';
+    // p1name/p2name used for depletion keys and interest account ownership
+    const p1name = document.getElementById('sp-p1name')?.value?.trim() || 'Person 1';
+    const p2name = document.getElementById('sp-p2name')?.value?.trim() || 'Person 2';
 
     let woodyGIACost = woodyBal.GIA;
     let heidiGIACost = heidiBal.GIA;
 
     const startBal = {
-      'Woody Cash': woodyBal.Cash, 'Woody GIA': woodyBal.GIA,
-      'Woody SIPP': woodyBal.SIPP, 'Woody ISA': woodyBal.ISA,
-      'Heidi Cash': heidiBal.Cash, 'Heidi GIA': heidiBal.GIA,
-      'Heidi SIPP': heidiBal.SIPP, 'Heidi ISA': heidiBal.ISA,
+      [`${p1name} Cash`]: woodyBal.Cash, [`${p1name} GIA`]: woodyBal.GIA,
+      [`${p1name} SIPP`]: woodyBal.SIPP, [`${p1name} ISA`]: woodyBal.ISA,
+      [`${p2name} Cash`]: heidiBal.Cash, [`${p2name} GIA`]: heidiBal.GIA,
+      [`${p2name} SIPP`]: heidiBal.SIPP, [`${p2name} ISA`]: heidiBal.ISA,
     };
     intAccts.forEach(a => { startBal[a.name + ' (' + a.owner + ')'] = a.balance || a.value || 0; });
 
@@ -213,14 +214,14 @@
 
       // Depletion tracking
       const checkMap = {
-        'Woody Cash': woodyBal.Cash, 'Woody GIA': woodyBal.GIA,
-        'Woody SIPP': woodyBal.SIPP, 'Woody ISA': woodyBal.ISA,
-        'Heidi Cash': heidiBal.Cash, 'Heidi GIA': heidiBal.GIA,
-        'Heidi SIPP': heidiBal.SIPP, 'Heidi ISA': heidiBal.ISA,
+        [`${p1name} Cash`]: woodyBal.Cash, [`${p1name} GIA`]: woodyBal.GIA,
+        [`${p1name} SIPP`]: woodyBal.SIPP, [`${p1name} ISA`]: woodyBal.ISA,
+        [`${p2name} Cash`]: heidiBal.Cash, [`${p2name} GIA`]: heidiBal.GIA,
+        [`${p2name} SIPP`]: heidiBal.SIPP, [`${p2name} ISA`]: heidiBal.ISA,
       };
       Object.entries(checkMap).forEach(([key, bal]) => {
         if (!depletions[key] && (startBal[key] || 0) > 0 && bal <= 0)
-          depletions[key] = { year, age: year - (key.startsWith('Woody') ? woodyDOB : heidiDOB) };
+          depletions[key] = { year, age: year - (key.startsWith(p1name) ? woodyDOB : heidiDOB) };
       });
 
       const intBalWoody = intAccts.filter(a => a.owner === p1name).reduce((s, a) => s + (a.balance || 0), 0);
