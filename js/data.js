@@ -1,5 +1,9 @@
 (function () {
   const PRELOAD = {
+    p1name: 'Woody',
+    p2name: 'Heidi',
+    p1age: 58,
+    p2age: 59,
     woodyDOB: 1968,
     heidiDOB: 1967,
     startYear: 2026,

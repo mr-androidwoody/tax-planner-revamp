@@ -151,6 +151,12 @@
   // PRELOAD
   // ─────────────────────────────
   function preloadSetup() {
+    // Names and ages
+    if (safeEl('sp-p1name')) safeEl('sp-p1name').value = D.PRELOAD.p1name || '';
+    if (safeEl('sp-p2name')) safeEl('sp-p2name').value = D.PRELOAD.p2name || '';
+    if (safeEl('sp-p1age'))  safeEl('sp-p1age').value  = D.PRELOAD.p1age  || '';
+    if (safeEl('sp-p2age'))  safeEl('sp-p2age').value  = D.PRELOAD.p2age  || '';
+
     state.portfolioAccounts = [];
     state.nextId = 1;
     const tbody = safeEl('acct-tbody');
@@ -250,8 +256,8 @@
   function continueToMain() {
     syncAccountsFromDOM();
     const data   = readSetupInputs();
-    const p1name = data.people.p1.name || 'Woody';
-    const p2name = data.people.p2.name || 'Heidi';
+    const p1name = data.people.p1.name || 'Person 1';
+    const p2name = data.people.p2.name || 'Person 2';
 
     const sumBy = (owner, wrapper) =>
       state.portfolioAccounts
