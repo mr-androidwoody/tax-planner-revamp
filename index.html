@@ -173,8 +173,8 @@
         <div class="section-title" style="cursor:default">People</div>
         <div class="section-body">
           <div class="two-col">
-            <div class="field"><label>Woody – birth year</label><input type="number" id="woodyDOB" placeholder="e.g. 1968"></div>
-            <div class="field"><label>Heidi – birth year</label><input type="number" id="heidiDOB" placeholder="e.g. 1967"></div>
+            <div class="field"><label data-p1="– birth year">Woody – birth year</label><input type="number" id="woodyDOB" placeholder="e.g. 1968"></div>
+            <div class="field"><label data-p2="– birth year">Heidi – birth year</label><input type="number" id="heidiDOB" placeholder="e.g. 1967"></div>
           </div>
           <div class="two-col">
             <div class="field"><label>Projection start year</label><input type="number" id="startYear" placeholder="e.g. 2026"></div>
@@ -194,7 +194,7 @@
         <div class="section-title" data-action="toggle-section">Spending step-down at 75<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="field">
-            <label>Reduce spending from Woody's age 75 by</label>
+            <label data-p1-stepdown>Reduce spending from Woody's age 75 by</label>
             <select id="stepDownPct">
               <option value="0">No step-down</option>
               <option value="5">5%</option>
@@ -204,12 +204,12 @@
               <option value="25">25%</option>
             </select>
           </div>
-          <div class="hint">Reduces the gross spending target from the year Woody turns 75.</div>
+          <div class="hint" data-p1-stepdown-hint>Reduces the gross spending target from the year Woody turns 75.</div>
         </div>
       </div>
 
       <div class="section" data-collapsible>
-        <div class="section-title" data-action="toggle-section">Heidi salary (employment income)<span class="section-chevron">▸</span></div>
+        <div class="section-title" data-action="toggle-section"><span data-p2="salary (employment income)">Heidi salary (employment income)</span><span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
             <div class="field"><label>Gross annual (£)</label><input type="text" id="heidiSalary" class="currency-input" placeholder="e.g. 15,000"></div>
@@ -222,12 +222,12 @@
       <div class="section" data-collapsible>
         <div class="section-title" data-action="toggle-section">State pension<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
-          <div class="subsection">Woody</div>
+          <div class="subsection" data-p1>Woody</div>
           <div class="two-col">
             <div class="field"><label>Start age</label><input type="number" id="woodySPAge" placeholder="e.g. 67"></div>
             <div class="field"><label>Annual amount (£)</label><input type="text" id="woodySP" class="currency-input" placeholder="e.g. 12,000"></div>
           </div>
-          <div class="subsection">Heidi</div>
+          <div class="subsection" data-p2>Heidi</div>
           <div class="two-col">
             <div class="field"><label>Start age</label><input type="number" id="heidiSPAge" placeholder="e.g. 67"></div>
             <div class="field"><label>Annual amount (£)</label><input type="text" id="heidiSP" class="currency-input" placeholder="e.g. 12,547"></div>
@@ -239,8 +239,8 @@
         <div class="section-title" data-action="toggle-section">Cash holdings<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label>Woody cash (£)</label><input type="text" id="woodyCash" class="currency-input" placeholder="e.g. 96,264"></div>
-            <div class="field"><label>Heidi cash (£)</label><input type="text" id="heidiCash" class="currency-input" placeholder="e.g. 100"></div>
+            <div class="field"><label data-p1="cash (£)">Woody cash (£)</label><input type="text" id="woodyCash" class="currency-input" placeholder="e.g. 96,264"></div>
+            <div class="field"><label data-p2="cash (£)">Heidi cash (£)</label><input type="text" id="heidiCash" class="currency-input" placeholder="e.g. 100"></div>
           </div>
           <div class="hint">Cash earns no return and is not inflation-uprated.</div>
         </div>
@@ -258,8 +258,8 @@
         <div class="section-title" data-action="toggle-section">Pension (SIPP) balances<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label>Woody (£)</label><input type="text" id="woodySIPP" class="currency-input" placeholder="e.g. 450,000"></div>
-            <div class="field"><label>Heidi (£)</label><input type="text" id="heidiSIPP" class="currency-input" placeholder="e.g. 200,000"></div>
+            <div class="field"><label data-p1="(£)">Woody (£)</label><input type="text" id="woodySIPP" class="currency-input" placeholder="e.g. 450,000"></div>
+            <div class="field"><label data-p2="(£)">Heidi (£)</label><input type="text" id="heidiSIPP" class="currency-input" placeholder="e.g. 200,000"></div>
           </div>
         </div>
       </div>
@@ -268,8 +268,8 @@
         <div class="section-title" data-action="toggle-section">ISA balances<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label>Woody (£)</label><input type="text" id="woodyISA" class="currency-input" placeholder="e.g. 250,000"></div>
-            <div class="field"><label>Heidi (£)</label><input type="text" id="heidiISA" class="currency-input" placeholder="e.g. 150,000"></div>
+            <div class="field"><label data-p1="(£)">Woody (£)</label><input type="text" id="woodyISA" class="currency-input" placeholder="e.g. 250,000"></div>
+            <div class="field"><label data-p2="(£)">Heidi (£)</label><input type="text" id="heidiISA" class="currency-input" placeholder="e.g. 150,000"></div>
           </div>
         </div>
       </div>
@@ -278,8 +278,8 @@
         <div class="section-title" data-action="toggle-section">GIA balances (equity growth)<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label>Woody (£)</label><input type="text" id="woodyGIA" class="currency-input" placeholder="e.g. 154,000"></div>
-            <div class="field"><label>Heidi (£)</label><input type="text" id="heidiGIA" class="currency-input" placeholder="e.g. 5,000"></div>
+            <div class="field"><label data-p1="(£)">Woody (£)</label><input type="text" id="woodyGIA" class="currency-input" placeholder="e.g. 154,000"></div>
+            <div class="field"><label data-p2="(£)">Heidi (£)</label><input type="text" id="heidiGIA" class="currency-input" placeholder="e.g. 5,000"></div>
           </div>
         </div>
       </div>
@@ -287,14 +287,14 @@
       <div class="section" data-collapsible>
         <div class="section-title" data-action="toggle-section">Withdrawal order (1st → last)<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
-          <div class="subsection">Woody</div>
+          <div class="subsection" data-p1>Woody</div>
           <div class="order-row">
             <select id="woodyOrder1"><option value="GIA">GIA</option><option value="SIPP">SIPP</option><option value="ISA">ISA</option><option value="Cash">Cash</option></select>
             <select id="woodyOrder2"><option value="SIPP">SIPP</option><option value="GIA">GIA</option><option value="ISA">ISA</option><option value="Cash">Cash</option></select>
             <select id="woodyOrder3"><option value="ISA">ISA</option><option value="GIA">GIA</option><option value="SIPP">SIPP</option><option value="Cash">Cash</option></select>
             <select id="woodyOrder4"><option value="Cash">Cash</option><option value="GIA">GIA</option><option value="SIPP">SIPP</option><option value="ISA">ISA</option></select>
           </div>
-          <div class="subsection" style="margin-top:0.5rem">Heidi</div>
+          <div class="subsection" data-p2 style="margin-top:0.5rem">Heidi</div>
           <div class="order-row">
             <select id="heidiOrder1"><option value="GIA">GIA</option><option value="SIPP">SIPP</option><option value="ISA">ISA</option><option value="Cash">Cash</option></select>
             <select id="heidiOrder2"><option value="SIPP">SIPP</option><option value="GIA">GIA</option><option value="ISA">ISA</option><option value="Cash">Cash</option></select>
@@ -341,9 +341,9 @@
             <label for="bniEnabled" style="font-size:12px;color:#333;margin:0;cursor:pointer;font-weight:500">Enable bed-and-ISA strategy</label>
           </div>
           <div id="bni-fields" style="display:none">
-            <div class="subsection">Woody</div>
+            <div class="subsection" data-p1>Woody</div>
             <div class="field"><label>GIA → ISA (£/yr)</label><input type="text" id="bniWoodyGIA" class="currency-input" placeholder="e.g. 20,000"></div>
-            <div class="subsection" style="margin-top:0.25rem">Heidi</div>
+            <div class="subsection" data-p2 style="margin-top:0.25rem">Heidi</div>
             <div class="field"><label>GIA → ISA (£/yr)</label><input type="text" id="bniHeidiGIA" class="currency-input" placeholder="e.g. 5,000"></div>
             <div class="hint" style="margin-top:6px">Each transfer capped at source balance and £20k ISA allowance per person per year.</div>
           </div>
@@ -363,8 +363,8 @@
         <span class="controls-label">Person</span>
         <div class="toggle-group" style="margin-top:4px">
           <button class="active" data-action="view-both">Both</button>
-          <button data-action="view-woody">Woody</button>
-          <button data-action="view-heidi">Heidi</button>
+          <button data-action="view-woody" data-p1-btn>Woody</button>
+          <button data-action="view-heidi" data-p2-btn>Heidi</button>
         </div>
       </div>
       <div>
