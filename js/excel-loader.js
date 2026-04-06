@@ -89,6 +89,7 @@
     document.dispatchEvent(new CustomEvent('excel-loaded', {
       detail: { accounts, params }
     }));
+    console.log('[ExcelLoader] params dispatched:', JSON.stringify(params, null, 2));
   }
 
   // ─────────────────────────────────────────────
@@ -154,6 +155,7 @@
     // Detect format: if row 0 col B contains "Key", it's the old format
     const headerRow = allRows[0] || [];
     const isOldFormat = String(headerRow[1] || '').toLowerCase().includes('key');
+    console.log('[ExcelLoader] format detected:', isOldFormat ? 'OLD (3-col)' : 'NEW (2-col)', '| header row:', headerRow.slice(0,3));
 
     const dataRows = allRows.slice(1); // skip the header row we just read
 
