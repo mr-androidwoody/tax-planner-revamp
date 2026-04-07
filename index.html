@@ -256,29 +256,16 @@
 
       <div class="assump-row-top">
 
-      <!-- ── Card 1: People & Projection ── -->
+      <!-- ── Panel: Person 1 ── -->
       <div class="assump-card">
-        <div class="assump-card-title">People &amp; Projection</div>
-        <div class="assump-info-grid">
-          <div class="assump-info-block">
-            <div class="assump-info-label" data-p1>Person 1</div>
-            <div class="assump-info-row"><span class="assump-info-key">Name</span><span class="assump-info-val" id="ai-p1name">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">Birth year</span><span class="assump-info-val" id="ai-p1dob">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">Salary (£/yr)</span><span class="assump-info-val" id="ai-p1salary">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">Salary stops age</span><span class="assump-info-val" id="ai-p1salarystop">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">State pension age</span><span class="assump-info-val" id="ai-p1spage">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">State pension (£/yr)</span><span class="assump-info-val" id="ai-p1sp">–</span></div>
-          </div>
-          <div class="assump-info-block p2-field">
-            <div class="assump-info-label" data-p2>Person 2</div>
-            <div class="assump-info-row"><span class="assump-info-key">Name</span><span class="assump-info-val" id="ai-p2name">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">Birth year</span><span class="assump-info-val" id="ai-p2dob">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">Salary (£/yr)</span><span class="assump-info-val" id="ai-p2salary">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">Salary stops age</span><span class="assump-info-val" id="ai-p2salarystop">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">State pension age</span><span class="assump-info-val" id="ai-p2spage">–</span></div>
-            <div class="assump-info-row"><span class="assump-info-key">State pension (£/yr)</span><span class="assump-info-val" id="ai-p2sp">–</span></div>
-          </div>
-        </div>
+        <div class="assump-card-title">Person 1</div>
+        <div class="assump-info-label" data-p1>Summary</div>
+        <div class="assump-info-row"><span class="assump-info-key">Name</span><span class="assump-info-val" id="ai-p1name">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">Birth year</span><span class="assump-info-val" id="ai-p1dob">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">Salary (£/yr)</span><span class="assump-info-val" id="ai-p1salary">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">Salary stops age</span><span class="assump-info-val" id="ai-p1salarystop">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">State pension age</span><span class="assump-info-val" id="ai-p1spage">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">State pension (£/yr)</span><span class="assump-info-val" id="ai-p1sp">–</span></div>
         <div class="assump-info-row" style="margin-top:0.5rem">
           <span class="assump-info-key">Projection</span>
           <span class="assump-info-val"><span id="ai-startyear">–</span> → <span id="ai-endyear">–</span></span>
@@ -306,32 +293,19 @@
         <input type="hidden" id="p2SP">
       </div>
 
-      <!-- ── Card 2: Spending ── -->
-      <div class="assump-card">
-        <div class="assump-card-title">Spending</div>
-        <div class="field">
-          <label>Annual household spending (£)</label>
-          <input type="text" id="spending" class="currency-input" placeholder="e.g. 45,000">
-        </div>
-        <div class="field" style="margin-top:0.5rem">
-          <label data-p1-stepdown>Reduce spending from Person 1's age 75 by</label>
-          <select id="stepDownPct">
-            <option value="0">No step-down</option>
-            <option value="5">5%</option>
-            <option value="10">10%</option>
-            <option value="15">15%</option>
-            <option value="20">20%</option>
-            <option value="25">25%</option>
-          </select>
-        </div>
-        <div class="hint" data-p1-stepdown-hint>Reduces the gross spending target from the year Person 1 turns 75.</div>
+      <!-- ── Panel: Person 2 ── -->
+      <div class="assump-card p2-field">
+        <div class="assump-card-title">Person 2</div>
+        <div class="assump-info-label" data-p2>Summary</div>
+        <div class="assump-info-row"><span class="assump-info-key">Name</span><span class="assump-info-val" id="ai-p2name">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">Birth year</span><span class="assump-info-val" id="ai-p2dob">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">Salary (£/yr)</span><span class="assump-info-val" id="ai-p2salary">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">Salary stops age</span><span class="assump-info-val" id="ai-p2salarystop">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">State pension age</span><span class="assump-info-val" id="ai-p2spage">–</span></div>
+        <div class="assump-info-row"><span class="assump-info-key">State pension (£/yr)</span><span class="assump-info-val" id="ai-p2sp">–</span></div>
       </div>
 
-      </div><!-- /.assump-row-top -->
-
-      <div class="assump-row-bottom">
-
-      <!-- ── Card 3: Portfolio Balances ── -->
+      <!-- ── Panel: Portfolio Balances ── -->
       <div class="assump-card">
         <div class="assump-card-title">Portfolio Balances</div>
         <div class="assump-info-grid">
@@ -359,9 +333,34 @@
         <div id="int-accts-list" style="margin-top:0.75rem"></div>
       </div>
 
-      <!-- ── Card 4: Growth, Inflation & Tax ── -->
+      <!-- ── Panel: Spending ── -->
       <div class="assump-card">
-        <div class="assump-card-title">Growth, Inflation &amp; Tax</div>
+        <div class="assump-card-title">Spending</div>
+        <div class="field">
+          <label>Annual household spending (£)</label>
+          <input type="text" id="spending" class="currency-input" placeholder="e.g. 45,000">
+        </div>
+        <div class="field" style="margin-top:0.5rem">
+          <label data-p1-stepdown>Reduce spending from Person 1's age 75 by</label>
+          <select id="stepDownPct">
+            <option value="0">No step-down</option>
+            <option value="5">5%</option>
+            <option value="10">10%</option>
+            <option value="15">15%</option>
+            <option value="20">20%</option>
+            <option value="25">25%</option>
+          </select>
+        </div>
+        <div class="hint" data-p1-stepdown-hint>Reduces the gross spending target from the year Person 1 turns 75.</div>
+      </div>
+
+      </div><!-- /.assump-row-top -->
+
+      <div class="assump-row-bottom">
+
+      <!-- ── Panel: Growth & Inflation ── -->
+      <div class="assump-card">
+        <div class="assump-card-title">Growth &amp; Inflation</div>
         <div class="two-col">
           <div class="field"><label>Portfolio growth (%/yr)</label><input type="number" id="growth" step="0.1" placeholder="e.g. 4"></div>
           <div class="field"><label>Inflation (%/yr)</label><input type="number" id="inflation" step="0.1" placeholder="e.g. 2.5"></div>
@@ -385,7 +384,12 @@
           ">Balanced 5%</button>
         </div>
         <div class="hint" style="margin-top:4px">Growth is nominal. Real return ≈ growth − inflation.</div>
-        <div class="field" style="margin-top:0.75rem">
+      </div>
+
+      <!-- ── Panel: Tax ── -->
+      <div class="assump-card">
+        <div class="assump-card-title">Tax</div>
+        <div class="field">
           <label>Tax threshold uprating</label>
           <div style="display:flex;flex-direction:column;gap:5px;margin-top:5px">
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#333;font-weight:400;cursor:pointer">
@@ -405,17 +409,16 @@
         </div>
       </div>
 
-      <!-- ── Card 5: Withdrawal Strategy ── -->
+      <!-- ── Panel: Withdrawal Split Mode ── -->
       <div class="assump-card">
-        <div class="assump-card-title">Withdrawal Strategy</div>
-        <div class="subsection" style="margin-bottom:4px">Withdrawal split mode</div>
+        <div class="assump-card-title">Withdrawal Split Mode</div>
+        <div class="subsection" style="margin-bottom:4px">Split mode</div>
         <label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:0.85rem">
           <input type="radio" name="withdrawalMode" value="50/50"> 50/50 mechanical split (wrapper order only)
         </label>
         <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem">
           <input type="radio" name="withdrawalMode" value="tax-aware" checked> Tax-aware (SIPP fills PA, then proportional by headroom)
         </label>
-
         <div class="subsection" style="margin-top:0.75rem;margin-bottom:4px">Wrapper order (1st → last) — applies after Cash</div>
         <div class="subsection" data-p1 style="margin-bottom:2px">Person 1</div>
         <div class="order-row">
@@ -430,25 +433,26 @@
           <select id="p2Order3"><option value="ISA">ISA</option><option value="GIA">GIA</option><option value="SIPP">SIPP</option></select>
         </div>
         <div class="hint" style="margin-top:6px">Interest-bearing accounts drawn first, then Cash (automatic), then wrapper order above.</div>
+      </div>
 
-        <div style="margin-top:1rem;padding-top:0.75rem;border-top:1px solid #f0f2f5">
-          <div class="subsection" style="margin-bottom:6px">Bed &amp; ISA – annual transfers</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-            <input type="checkbox" id="bniEnabled" style="width:auto;margin:0;cursor:pointer">
-            <label for="bniEnabled" style="font-size:12px;color:#333;margin:0;cursor:pointer;font-weight:500">Enable bed-and-ISA strategy</label>
-          </div>
-          <div class="subsection" data-p1 style="margin-bottom:2px">Person 1</div>
-          <div class="field">
-            <label>GIA → ISA (£/yr)</label>
-            <input type="text" id="bniP1GIA" class="currency-input" placeholder="e.g. 20,000">
-          </div>
-          <div class="subsection p2-field" data-p2 style="margin-top:0.25rem;margin-bottom:2px">Person 2</div>
-          <div class="field p2-field">
-            <label>GIA → ISA (£/yr)</label>
-            <input type="text" id="bniP2GIA" class="currency-input" placeholder="e.g. 5,000">
-          </div>
-          <div class="hint" style="margin-top:6px">Each transfer capped at source balance and £20k ISA allowance per person per year.</div>
+      <!-- ── Panel: Bed & ISA ── -->
+      <div class="assump-card">
+        <div class="assump-card-title">Bed &amp; ISA</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <input type="checkbox" id="bniEnabled" style="width:auto;margin:0;cursor:pointer">
+          <label for="bniEnabled" style="font-size:12px;color:#333;margin:0;cursor:pointer;font-weight:500">Enable bed-and-ISA strategy</label>
         </div>
+        <div class="subsection" data-p1 style="margin-bottom:2px">Person 1</div>
+        <div class="field">
+          <label>GIA → ISA (£/yr)</label>
+          <input type="text" id="bniP1GIA" class="currency-input" placeholder="e.g. 20,000">
+        </div>
+        <div class="subsection p2-field" data-p2 style="margin-top:0.25rem;margin-bottom:2px">Person 2</div>
+        <div class="field p2-field">
+          <label>GIA → ISA (£/yr)</label>
+          <input type="text" id="bniP2GIA" class="currency-input" placeholder="e.g. 5,000">
+        </div>
+        <div class="hint" style="margin-top:6px">Each transfer capped at source balance and £20k ISA allowance per person per year.</div>
       </div>
 
       </div><!-- /.assump-row-bottom -->
