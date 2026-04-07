@@ -92,10 +92,10 @@
 
   function applySetupInputs(data) {
     if (!data) return;
-    if (safeEl('sp-p1name'))    safeEl('sp-p1name').value    = data.people?.p1?.name  || '';
-    if (safeEl('sp-p1dob'))     safeEl('sp-p1dob').value     = data.people?.p1?.dob   || '';
-    if (safeEl('sp-p2name'))    safeEl('sp-p2name').value    = data.people?.p2?.name  || '';
-    if (safeEl('sp-p2dob'))     safeEl('sp-p2dob').value     = data.people?.p2?.dob   || '';
+    if (safeEl('sp-p1name'))    safeEl('sp-p1name').value    = data.people?.p1?.name || '';
+    if (safeEl('sp-p1dob'))     safeEl('sp-p1dob').value     = data.people?.p1?.dob  || '';
+    if (safeEl('sp-p2name'))    safeEl('sp-p2name').value    = data.people?.p2?.name || '';
+    if (safeEl('sp-p2dob'))     safeEl('sp-p2dob').value     = data.people?.p2?.dob  || '';
     if (safeEl('sp-startYear')) safeEl('sp-startYear').value = data.startYear || '';
     if (safeEl('sp-endYear'))   safeEl('sp-endYear').value   = data.endYear   || '';
 
@@ -147,52 +147,6 @@
     } catch (err) {
       console.error(err);
       showToast('Load failed – see console', true);
-    }
-  }
-
-  // ─────────────────────────────
-  // PRELOAD
-  // ─────────────────────────────
-  function preloadSetup() {
-    // Names and ages
-    if (safeEl('sp-p1name')) safeEl('sp-p1name').value = D.PRELOAD.p1name || '';
-    if (safeEl('sp-p2name')) safeEl('sp-p2name').value = D.PRELOAD.p2name || '';
-    if (safeEl('sp-p1age'))  safeEl('sp-p1age').value  = D.PRELOAD.p1age  || '';
-    if (safeEl('sp-p2age'))  safeEl('sp-p2age').value  = D.PRELOAD.p2age  || '';
-
-    state.portfolioAccounts = [];
-    state.nextId = 1;
-    const tbody = safeEl('acct-tbody');
-    if (tbody) tbody.innerHTML = '';
-    const ownerNames = getOwnerNames();
-    D.PRELOAD_ACCOUNTS.forEach(a => {
-      const acc = { id: state.nextId++, ...a, alloc: { ...a.alloc } };
-      state.portfolioAccounts.push(acc);
-      R.renderAccountRow(acc, ownerNames);
-      R.updateRowBadge(acc);
-      R.applyWrapperFieldState(acc);
-    });
-    refreshSetupSummary();
-    showToast('Preloaded ✓');
-  }
-
-  function preloadCalc() {
-    // Ensure name fields are set so getNames() works correctly in calc-render
-    if (safeEl('sp-p1name') && D.PRELOAD.p1name) safeEl('sp-p1name').value = D.PRELOAD.p1name;
-    if (safeEl('sp-p2name') && D.PRELOAD.p2name) safeEl('sp-p2name').value = D.PRELOAD.p2name;
-
-    Object.entries(D.PRELOAD).forEach(([k, val]) => {
-      const el = safeEl(k);
-      if (!el) return;
-      el.value = D.MONEY_FIELDS.has(k) && val !== '' ? formatCurrency(val) : val;
-    });
-    const tm = safeEl('thresholdFrozen');
-    if (tm) tm.checked = true;
-    const bniCb = safeEl('bniEnabled');
-    if (bniCb) {
-      bniCb.checked = true;
-      const f = safeEl('bni-fields');
-      if (f) f.style.display = '';
     }
   }
 
@@ -454,8 +408,6 @@
     if (action === 'save-setup')     return saveSetup();
     if (action === 'load-setup')     return loadSetup();
     if (action === 'load-excel')     return window.RetireExcelLoader.openFilePicker();
-    if (action === 'preload-setup')  return preloadSetup();
-    if (action === 'preload-calc')   return preloadCalc();
     if (action === 'run-projection') return runProjection();
     if (action === 'toggle-section') return toggleSection(el);
     if (action === 'toggle-all')     return toggleAllSections();
