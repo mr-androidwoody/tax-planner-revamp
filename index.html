@@ -233,8 +233,8 @@
         <div class="section-title" style="cursor:default">People</div>
         <div class="section-body">
           <div class="two-col">
-            <div class="field"><label data-p1="– birth year">Woody – birth year</label><input type="number" id="woodyDOB" class="from-setup" readonly></div>
-            <div class="field p2-field"><label data-p2="– birth year">Heidi – birth year</label><input type="number" id="heidiDOB" class="from-setup" readonly></div>
+            <div class="field"><label data-p1="– birth year">Person 1 – birth year</label><input type="number" id="woodyDOB" class="from-setup" readonly></div>
+            <div class="field p2-field"><label data-p2="– birth year">Person 2 – birth year</label><input type="number" id="heidiDOB" class="from-setup" readonly></div>
           </div>
           <div class="two-col">
             <div class="field"><label>Projection start year</label><input type="number" id="startYear" class="from-setup" readonly></div>
@@ -255,7 +255,7 @@
         <div class="section-title" data-action="toggle-section">Spending step-down at 75<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="field">
-            <label data-p1-stepdown>Reduce spending from Woody's age 75 by</label>
+            <label data-p1-stepdown>Reduce spending from Person 1's age 75 by</label>
             <select id="stepDownPct">
               <option value="0">No step-down</option>
               <option value="5">5%</option>
@@ -265,7 +265,7 @@
               <option value="25">25%</option>
             </select>
           </div>
-          <div class="hint" data-p1-stepdown-hint>Reduces the gross spending target from the year Woody turns 75.</div>
+          <div class="hint" data-p1-stepdown-hint>Reduces the gross spending target from the year Person 1 turns 75.</div>
         </div>
       </div>
 
@@ -274,8 +274,8 @@
         <div class="section-title" data-action="toggle-section">Cash holdings<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label data-p1="cash (£)">Woody cash (£)</label><input type="text" id="woodyCash" class="currency-input from-setup" readonly></div>
-            <div class="field p2-field"><label data-p2="cash (£)">Heidi cash (£)</label><input type="text" id="heidiCash" class="currency-input from-setup" readonly></div>
+            <div class="field"><label data-p1="cash (£)">Person 1 cash (£)</label><input type="text" id="woodyCash" class="currency-input from-setup" readonly></div>
+            <div class="field p2-field"><label data-p2="cash (£)">Person 2 cash (£)</label><input type="text" id="heidiCash" class="currency-input from-setup" readonly></div>
           </div>
           <div class="hint">Cash earns no return and is not inflation-uprated.</div>
         </div>
@@ -293,8 +293,8 @@
         <div class="section-title" data-action="toggle-section">Pension (SIPP) balances<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label data-p1="(£)">Woody (£)</label><input type="text" id="woodySIPP" class="currency-input from-setup" readonly></div>
-            <div class="field p2-field"><label data-p2="(£)">Heidi (£)</label><input type="text" id="heidiSIPP" class="currency-input from-setup" readonly></div>
+            <div class="field"><label data-p1="(£)">Person 1 (£)</label><input type="text" id="woodySIPP" class="currency-input from-setup" readonly></div>
+            <div class="field p2-field"><label data-p2="(£)">Person 2 (£)</label><input type="text" id="heidiSIPP" class="currency-input from-setup" readonly></div>
           </div>
         </div>
       </div>
@@ -303,8 +303,8 @@
         <div class="section-title" data-action="toggle-section">ISA balances<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label data-p1="(£)">Woody (£)</label><input type="text" id="woodyISA" class="currency-input from-setup" readonly></div>
-            <div class="field p2-field"><label data-p2="(£)">Heidi (£)</label><input type="text" id="heidiISA" class="currency-input from-setup" readonly></div>
+            <div class="field"><label data-p1="(£)">Person 1 (£)</label><input type="text" id="woodyISA" class="currency-input from-setup" readonly></div>
+            <div class="field p2-field"><label data-p2="(£)">Person 2 (£)</label><input type="text" id="heidiISA" class="currency-input from-setup" readonly></div>
           </div>
         </div>
       </div>
@@ -313,8 +313,8 @@
         <div class="section-title" data-action="toggle-section">GIA balances (equity growth)<span class="section-chevron">▸</span></div>
         <div class="section-body collapsed">
           <div class="two-col">
-            <div class="field"><label data-p1="(£)">Woody (£)</label><input type="text" id="woodyGIA" class="currency-input from-setup" readonly></div>
-            <div class="field p2-field"><label data-p2="(£)">Heidi (£)</label><input type="text" id="heidiGIA" class="currency-input from-setup" readonly></div>
+            <div class="field"><label data-p1="(£)">Person 1 (£)</label><input type="text" id="woodyGIA" class="currency-input from-setup" readonly></div>
+            <div class="field p2-field"><label data-p2="(£)">Person 2 (£)</label><input type="text" id="heidiGIA" class="currency-input from-setup" readonly></div>
           </div>
           <div class="field" style="margin-top:6px">
             <label>Dividend yield on GIA equities (%)</label>
@@ -335,13 +335,13 @@
             <input type="radio" name="withdrawalMode" value="tax-aware" checked> Tax-aware (SIPP fills PA, then proportional by headroom)
           </label>
           <div class="subsection" style="margin-top:0.75rem;margin-bottom:4px">Wrapper order (1st → last) — applies after Cash</div>
-          <div class="subsection" data-p1 style="margin-bottom:2px">Woody</div>
+          <div class="subsection" data-p1 style="margin-bottom:2px">Person 1</div>
           <div class="order-row">
             <select id="woodyOrder1"><option value="GIA">GIA</option><option value="SIPP">SIPP</option><option value="ISA">ISA</option></select>
             <select id="woodyOrder2"><option value="SIPP">SIPP</option><option value="GIA">GIA</option><option value="ISA">ISA</option></select>
             <select id="woodyOrder3"><option value="ISA">ISA</option><option value="GIA">GIA</option><option value="SIPP">SIPP</option></select>
           </div>
-          <div class="subsection p2-field" data-p2 style="margin-top:0.5rem;margin-bottom:2px">Heidi</div>
+          <div class="subsection p2-field" data-p2 style="margin-top:0.5rem;margin-bottom:2px">Person 2</div>
           <div class="order-row p2-field">
             <select id="heidiOrder1"><option value="GIA">GIA</option><option value="SIPP">SIPP</option><option value="ISA">ISA</option></select>
             <select id="heidiOrder2"><option value="SIPP">SIPP</option><option value="GIA">GIA</option><option value="ISA">ISA</option></select>
@@ -406,9 +406,9 @@
             <label for="bniEnabled" style="font-size:12px;color:#333;margin:0;cursor:pointer;font-weight:500">Enable bed-and-ISA strategy</label>
           </div>
           <div id="bni-fields" style="display:none">
-            <div class="subsection" data-p1>Woody</div>
+            <div class="subsection" data-p1>Person 1</div>
             <div class="field"><label>GIA → ISA (£/yr)</label><input type="text" id="bniWoodyGIA" class="currency-input" placeholder="e.g. 20,000"></div>
-            <div class="subsection p2-field" data-p2 style="margin-top:0.25rem">Heidi</div>
+            <div class="subsection p2-field" data-p2 style="margin-top:0.25rem">Person 2</div>
             <div class="field p2-field"><label>GIA → ISA (£/yr)</label><input type="text" id="bniHeidiGIA" class="currency-input" placeholder="e.g. 5,000"></div>
             <div class="hint" style="margin-top:6px">Each transfer capped at source balance and £20k ISA allowance per person per year.</div>
           </div>
@@ -441,8 +441,8 @@
         <span class="controls-label">Person</span>
         <div class="toggle-group" style="margin-top:4px">
           <button class="active" data-action="view-both">Both</button>
-          <button data-action="view-woody" data-p1-btn>Woody</button>
-          <button data-action="view-heidi" data-p2-btn>Heidi</button>
+          <button data-action="view-woody" data-p1-btn>Person 1</button>
+          <button data-action="view-heidi" data-p2-btn>Person 2</button>
         </div>
       </div>
       <div>
