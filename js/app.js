@@ -322,6 +322,25 @@
     }
   }
 
+  function deletePortfolio() {
+    try {
+      state.portfolioAccounts = [];
+      state.nextId = 1;
+
+      const tbody = safeEl('acct-tbody');
+      if (tbody) tbody.innerHTML = '';
+
+      localStorage.removeItem(STORAGE_KEY);
+
+      refreshSetupSummary();
+
+      showToast('Portfolio deleted');
+    } catch (err) {
+      console.error(err);
+      showToast('Delete failed – see console', true);
+    }
+  }    
+
   // ─────────────────────────────
   // ACCOUNTS
   // ─────────────────────────────
