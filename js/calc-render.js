@@ -322,9 +322,26 @@
     const spendingCtx = document.getElementById('spendingChart')?.getContext('2d');
     if (spendingCtx) {
 
-      // Drawdown = everything pulled from invested wrappers (SIPP, ISA, GIA, Cash)
-      // excluding interest account draws (those aren't portfolio drawdown)
+      // Drawdown = everything leaving the portfolio: wrapper draws + interest account draws
       function getDrawdown(r) {
+        if (_viewPerson === 'p1') {
+          return (r.p1Drawn.SIPP || 0) + (r.p1Drawn.ISA || 0)
+               + (r.p1Drawn.GIA  || 0) + (r.p1Drawn.Cash || 0)
+               + (r.p1IntDraw || 0);
+        }
+        if (_viewPerson === 'p2') {
+          return (r.p2Drawn.SIPP || 0) + (r.p2Drawn.ISA || 0)
+               + (r.p2Drawn.GIA  || 0) + (r.p2Drawn.Cash || 0)
+               + (r.p2IntDraw || 0);
+        }
+        return (r.p1Drawn.SIPP || 0) + (r.p1Drawn.ISA || 0)
+             + (r.p1Drawn.GIA  || 0) + (r.p1Drawn.Cash || 0)
+             + (r.p2Drawn.SIPP || 0) + (r.p2Drawn.ISA || 0)
+             + (r.p2Drawn.GIA  || 0) + (r.p2Drawn.Cash || 0)
+             + (r.intDrawTotal || 0);
+      }
+
+      function getWrapperDrawdown(r) {
         if (_viewPerson === 'p1') {
           return (r.p1Drawn.SIPP || 0) + (r.p1Drawn.ISA || 0)
                + (r.p1Drawn.GIA  || 0) + (r.p1Drawn.Cash || 0);
@@ -337,6 +354,12 @@
              + (r.p1Drawn.GIA  || 0) + (r.p1Drawn.Cash || 0)
              + (r.p2Drawn.SIPP || 0) + (r.p2Drawn.ISA || 0)
              + (r.p2Drawn.GIA  || 0) + (r.p2Drawn.Cash || 0);
+      }
+
+      function getIntDraw(r) {
+        if (_viewPerson === 'p1') return (r.p1IntDraw || 0);
+        if (_viewPerson === 'p2') return (r.p2IntDraw || 0);
+        return (r.intDrawTotal || 0);
       }
 
       function getPortfolio(r) {
@@ -413,13 +436,18 @@
               callbacks: {
                 label: ctx => {
                   if (ctx.dataset.label === '4% guideline') return '4% guideline';
-                  const v   = ctx.parsed.y || 0;
-                  const idx = ctx.dataIndex;
-                  const drawdown = getDrawdown(_rows[idx]);
-                  return [
+                  const v        = ctx.parsed.y || 0;
+                  const r        = _rows[ctx.dataIndex];
+                  const total    = getDrawdown(r);
+                  const wrappers = getWrapperDrawdown(r);
+                  const intDraw  = getIntDraw(r);
+                  const lines    = [
                     `Withdrawal rate: ${v.toFixed(2)}%`,
-                    `Drawdown: ${D.formatMoney(drawdown)}`,
+                    `Total drawdown: ${D.formatMoney(total)}`,
                   ];
+                  if (intDraw > 0)  lines.push(`  Interest accts: ${D.formatMoney(intDraw)}`);
+                  if (wrappers > 0) lines.push(`  SIPP/ISA/GIA/Cash: ${D.formatMoney(wrappers)}`);
+                  return lines;
                 },
               },
             },
