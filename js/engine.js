@@ -255,7 +255,7 @@
         p2Drawn.GIA += p2RemDrawn.GIA;
         p2Drawn.ISA += p2RemDrawn.ISA;
 
-        // Fallback: unmet demand goes to the other person
+        // Fallback: unmet demand goes to the other person, including SIPP as last resort
         const p1Unmet = Math.max(
           0,
           remShortfall * p1Weight - p1RemDrawn.GIA - p1RemDrawn.ISA - p1RemDrawn.SIPP
@@ -266,14 +266,18 @@
         );
 
         if (p1Unmet > 0) {
-          const extra = C.withdraw(p2Bal, p2NonSippOrder, p1Unmet);
+          const extra = C.withdraw(p2Bal, p2WrapperOrder, p1Unmet);
           p2Drawn.GIA += extra.GIA;
           p2Drawn.ISA += extra.ISA;
+          p2Drawn.SIPP += extra.SIPP;
+          p2Drawn.sippTaxable += extra.sippTaxable;
         }
         if (p2Unmet > 0) {
-          const extra = C.withdraw(p1Bal, p1NonSippOrder, p2Unmet);
+          const extra = C.withdraw(p1Bal, p1WrapperOrder, p2Unmet);
           p1Drawn.GIA += extra.GIA;
           p1Drawn.ISA += extra.ISA;
+          p1Drawn.SIPP += extra.SIPP;
+          p1Drawn.sippTaxable += extra.sippTaxable;
         }
       }
 
@@ -389,6 +393,9 @@
       const p2NaturalNet = p2NaturalIncome - p2Income.tax - p2NI;
       const householdNaturalNet = p1NaturalNet + p2NaturalNet;
 
+      const p1NetIncome = p1GrossIncome - p1TaxTotal;
+      const p2NetIncome = p2GrossIncome - p2TaxTotal;
+
         rows.push({
         year, p1Age, p2Age,
 
@@ -415,8 +422,14 @@
         householdGrossIncome,
         householdTax,
         householdNetIncome,
+        p1NetIncome,
+        p2NetIncome,
         spendingShortfall,
         spendingSurplus,
+
+        p1NaturalNet,
+        p2NaturalNet,
+        householdNaturalNet,
 
         p1TaxInc: p1NonSavings + p1IntTaxable + p1Divs,
         p2TaxInc: p2NonSavings + p2IntTaxable + p2Divs,
