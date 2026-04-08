@@ -317,6 +317,7 @@ canvas { display: block; width: 100%; height: auto; }
   justify-content: space-between;
   gap: 14px;
   width: 100%;
+  margin-top: 10px;
   padding: 10px 14px;
   background: #fff5f5;
   border: 1px solid #fca5a5;
