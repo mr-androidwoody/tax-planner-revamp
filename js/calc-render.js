@@ -292,6 +292,21 @@
       stack: 'income',
     });
 
+    // Target line — dashed, not stacked; should be flat in Real terms
+    sets.push({
+      label: 'Spending target',
+      data: _rows.map(r => Math.round(adj(r.target || 0, r) / 1000)),
+      type: 'line',
+      stack: undefined,
+      backgroundColor: 'transparent',
+      borderColor: COLOURS.target,
+      borderWidth: 2,
+      borderDash: [6, 3],
+      pointRadius: 0,
+      tension: 0,
+      order: 0,
+    });
+
     const incCtx = document.getElementById('incomeChart')?.getContext('2d');
     if (incCtx) {
       if (_incomeChart) _incomeChart.destroy();
@@ -309,6 +324,7 @@
                   const val = (ctx.parsed.y || 0) * 1000;
                   if (!val) return null;
                   if (ctx.dataset.label === 'Spending shortfall') return `Shortfall: ${D.formatMoney(val)}`;
+                  if (ctx.dataset.label === 'Spending target')    return `Target: ${D.formatMoney(val)}`;
                   return `${ctx.dataset.label}: ${D.formatMoney(val)}`;
                 },
               },
@@ -325,7 +341,9 @@
               max: Math.ceil(
                 Math.max(
                   ..._rows.map(r => Math.round(adj(r.target || 0, r) / 1000)),
-                  ...labels.map((_, i) => sets.reduce((sum, s) => sum + (s.data[i] || 0), 0))
+                  ...labels.map((_, i) => sets
+                    .filter(s => s.stack === 'income')
+                    .reduce((sum, s) => sum + (s.data[i] || 0), 0))
                 ) * 1.1 / 5
               ) * 5,
             
