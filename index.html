@@ -44,12 +44,13 @@
          TAB 1 — SETUP
     ═══════════════════════════════════════════ -->
     <div id="tab-setup" class="tab-panel">
-
+    
+      <!-- Top intro -->
       <div class="setup-intro-row">
         <div class="setup-intro__text">
           <h1>Portfolio setup</h1>
         </div>
-
+    
         <div class="setup-intro-actions">
           <button class="btn btn-secondary" data-action="load-excel" type="button">
             <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M8 9l4-4 4 4"/><path d="M4 15v4h16v-4"/></svg>
@@ -61,20 +62,20 @@
           </button>
         </div>
       </div>
-
-      <!-- Summary panels -->
+    
+      <!-- Main layout -->
       <div class="setup-grid">
-
-        <!-- Person 1 -->
+    
+        <!-- ── Person 1 ── -->
         <div class="setup-panel">
           <div class="setup-panel-title">Person 1</div>
-
+    
           <div class="people-grid">
             <div>
               <label>Name</label>
               <input data-action="setup-summary-input" id="sp-p1name" type="text" placeholder="Person 1"/>
             </div>
-
+    
             <div>
               <label>Birth Year</label>
               <div class="stepper-input">
@@ -83,187 +84,138 @@
                 <button class="stepper-btn" data-step-for="sp-p1dob" data-step-direction="-1" type="button">&#x25BC;</button>
               </div>
             </div>
-
+    
             <div>
               <label>State Pension £</label>
-              <input type="text" id="p1SP" class="currency-input" placeholder="e.g. 12,000"/>
+              <input type="text" id="p1SP" class="currency-input"/>
             </div>
-
+    
             <div>
               <label>State Pension Age</label>
               <div class="stepper-input">
-                <input type="number" id="p1SPAge" placeholder="e.g. 67"/>
+                <input type="number" id="p1SPAge"/>
                 <button class="stepper-btn" data-step-for="p1SPAge" data-step-direction="1" type="button">&#x25B2;</button>
                 <button class="stepper-btn" data-step-for="p1SPAge" data-step-direction="-1" type="button">&#x25BC;</button>
               </div>
             </div>
-
+    
             <div>
               <label>Gross Salary £/yr</label>
-              <input type="text" id="p1Salary" class="currency-input" placeholder="e.g. 0"/>
+              <input type="text" id="p1Salary" class="currency-input"/>
             </div>
-
+    
             <div>
               <label>Salary Stop Age</label>
               <div class="stepper-input">
-                <input type="number" id="p1SalaryStopAge" placeholder="e.g. 60"/>
+                <input type="number" id="p1SalaryStopAge"/>
                 <button class="stepper-btn" data-step-for="p1SalaryStopAge" data-step-direction="1" type="button">&#x25B2;</button>
                 <button class="stepper-btn" data-step-for="p1SalaryStopAge" data-step-direction="-1" type="button">&#x25BC;</button>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Person 2 -->
+    
+        <!-- ── Person 2 ── -->
         <div class="setup-panel">
           <div class="setup-panel-title" style="display:flex;align-items:center;gap:8px">
             <span>Person 2</span>
-            <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:400;color:var(--muted);cursor:pointer;margin-left:auto;text-transform:none;letter-spacing:0">
-              <input type="checkbox" id="p2enabled" data-action="toggle-p2" checked style="width:auto;margin:0;cursor:pointer">
+            <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:400;color:var(--muted);margin-left:auto">
+              <input type="checkbox" id="p2enabled" data-action="toggle-p2" checked>
               Include
             </label>
           </div>
-
+    
           <div class="people-grid" id="p2-setup-fields">
-            <div>
-              <label>Name</label>
-              <input data-action="setup-summary-input" id="sp-p2name" type="text" placeholder="Person 2"/>
-            </div>
-
-            <div>
-              <label>Birth Year</label>
-              <div class="stepper-input">
-                <input data-action="setup-summary-input" id="sp-p2dob" type="number" placeholder="e.g. 1967"/>
-                <button class="stepper-btn" data-step-for="sp-p2dob" data-step-direction="1" type="button">&#x25B2;</button>
-                <button class="stepper-btn" data-step-for="sp-p2dob" data-step-direction="-1" type="button">&#x25BC;</button>
-              </div>
-            </div>
-
-            <div>
-              <label>State Pension £</label>
-              <input type="text" id="p2SP" class="currency-input" placeholder="e.g. 12,547"/>
-            </div>
-
-            <div>
-              <label>State Pension Age</label>
-              <div class="stepper-input">
-                <input type="number" id="p2SPAge" placeholder="e.g. 67"/>
-                <button class="stepper-btn" data-step-for="p2SPAge" data-step-direction="1" type="button">&#x25B2;</button>
-                <button class="stepper-btn" data-step-for="p2SPAge" data-step-direction="-1" type="button">&#x25BC;</button>
-              </div>
-            </div>
-
-            <div>
-              <label>Gross Salary £/yr</label>
-              <input type="text" id="p2Salary" class="currency-input" placeholder="e.g. 0"/>
-            </div>
-
-            <div>
-              <label>Salary Stop Age</label>
-              <div class="stepper-input">
-                <input type="number" id="p2SalaryStopAge" placeholder="e.g. 63"/>
-                <button class="stepper-btn" data-step-for="p2SalaryStopAge" data-step-direction="1" type="button">&#x25B2;</button>
-                <button class="stepper-btn" data-step-for="p2SalaryStopAge" data-step-direction="-1" type="button">&#x25BC;</button>
-              </div>
-            </div>
+            <div><label>Name</label><input id="sp-p2name" type="text"/></div>
+            <div><label>Birth Year</label><input id="sp-p2dob" type="number"/></div>
+            <div><label>State Pension £</label><input id="p2SP" class="currency-input"/></div>
+            <div><label>State Pension Age</label><input id="p2SPAge" type="number"/></div>
+            <div><label>Gross Salary £/yr</label><input id="p2Salary" class="currency-input"/></div>
+            <div><label>Salary Stop Age</label><input id="p2SalaryStopAge" type="number"/></div>
           </div>
         </div>
-
-        <!-- Overall allocation -->
+    
+        <!-- ── Allocation ── -->
         <div class="setup-panel">
           <div class="setup-panel-title">Allocation</div>
-
-          <div id="alloc-summary">
-            <div class="alloc-row">
-              <div class="alloc-head"><span>Equities</span><strong class="alloc-pct">–</strong></div>
-              <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:0%;background:#2563eb"></div></div>
-            </div>
-            <div class="alloc-row">
-              <div class="alloc-head"><span>Bonds</span><strong class="alloc-pct">–</strong></div>
-              <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:0%;background:#10b981"></div></div>
-            </div>
-            <div class="alloc-row">
-              <div class="alloc-head"><span>Cashlike</span><strong class="alloc-pct">–</strong></div>
-              <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:0%;background:#f59e0b"></div></div>
-            </div>
-            <div class="alloc-row">
-              <div class="alloc-head"><span>Cash</span><strong class="alloc-pct">–</strong></div>
-              <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:0%;background:#d7dee9"></div></div>
-            </div>
-
-            <div class="alloc-row" style="margin-top:4px;border:none">
-              <span class="alloc-label">Total allocation</span>
-              <span class="alloc-balanced" id="alloc-total-label">–</span>
-            </div>
-          </div>
+          <div id="alloc-summary"></div>
         </div>
-
-        <!-- Wrapper totals -->
+    
+        <!-- ── Wrappers ── -->
         <div class="setup-panel">
           <div class="setup-panel-title">Wrappers</div>
-
-          <div id="wrapper-summary">
-            <div class="wrapper-row"><span class="wrapper-name">ISA</span><span class="wrapper-val" id="wt-ISA">£0</span></div>
-            <div class="wrapper-row"><span class="wrapper-name">SIPP</span><span class="wrapper-val" id="wt-SIPP">£0</span></div>
-            <div class="wrapper-row"><span class="wrapper-name">GIA</span><span class="wrapper-val" id="wt-GIA">£0</span></div>
-            <div class="wrapper-row"><span class="wrapper-name">Cash</span><span class="wrapper-val" id="wt-Cash">£0</span></div>
-          </div>
-
+          <div id="wrapper-summary"></div>
           <div class="wrapper-total-footer">
-            <span class="meta-label">Total Portfolio Value</span>
-            <div class="meta-value" id="sp-total">£0</div>
+            <span>Total Portfolio Value</span>
+            <div id="sp-total">£0</div>
           </div>
         </div>
-
-      </div>
-
-      <!-- Accounts table -->
-      <div class="accounts-panel">
-        <div class="accounts-toolbar">
-          <div class="accounts-toolbar-top">
-            <h2>Accounts</h2>
-            <p>Add the accounts you hold, their current values, and how they're invested. This forms the foundation of your plan and feeds directly into your assumptions. Once done, continue to refine your 'Assumptions'.</p>
-          </div>
-        
-          <div class="accounts-toolbar-actions">
-            <button class="btn-add" data-action="add-account" type="button">+ Add account</button>
-        
-            <div class="accounts-toolbar-right">
-              <button class="btn btn-success" data-action="save-setup" type="button">
-                <svg viewBox="0 0 24 24"><path d="M5 21h14"/><path d="M7 21V5h8l2 2v14"/><path d="M9 9h6"/><path d="M9 13h6"/></svg>
-                Save portfolio
-              </button>
-              <button class="btn btn-primary" data-action="switch-tab" data-tab="assumptions" type="button">
-                Continue to assumptions &#x2192;
-              </button>
+    
+        <!-- ── Accounts (NOW CORRECTLY INSIDE GRID) ── -->
+        <div class="accounts-panel">
+    
+          <!-- Toolbar -->
+          <div class="accounts-toolbar">
+    
+            <div class="accounts-toolbar-top">
+              <h2>Accounts</h2>
+              <p>
+                Add the accounts you hold, their current values, and how they're invested.
+              </p>
             </div>
+    
+            <div class="accounts-toolbar-actions">
+    
+              <!-- Left -->
+              <button class="btn-add" data-action="add-account">+ Add account</button>
+    
+              <!-- Right -->
+              <div class="accounts-toolbar-right">
+    
+                <button class="btn btn-success" data-action="save-setup">
+                  Save portfolio
+                </button>
+    
+                <button class="btn btn-primary" data-action="switch-tab" data-tab="assumptions">
+                  Continue to assumptions →
+                </button>
+    
+                <button class="btn btn-secondary" data-action="delete-portfolio">
+                  Delete portfolio
+                </button>
+    
+              </div>
+            </div>
+    
           </div>
+    
+          <!-- Table -->
+          <table class="acct-table">
+            <thead>
+              <tr>
+                <th>Account name</th>
+                <th>Wrapper</th>
+                <th>Owner</th>
+                <th class="right">Value (£)</th>
+                <th class="right">Equities %</th>
+                <th class="right">Bonds %</th>
+                <th class="right">Cashlike %</th>
+                <th class="right">Cash %</th>
+                <th class="right">Rate %</th>
+                <th class="right">Mo. draw £</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+    
+            <tbody id="acct-tbody"></tbody>
+          </table>
+    
         </div>
-
-        <table class="acct-table">
-          <thead>
-            <tr>
-              <th class="col-name">Account name</th>
-              <th class="col-wrap">Wrapper</th>
-              <th class="col-owner">Owner</th>
-              <th class="col-value right">Value (£)</th>
-              <th class="col-alloc right">Equities %</th>
-              <th class="col-alloc right">Bonds %</th>
-              <th class="col-alloc right">Cashlike %</th>
-              <th class="col-alloc right">Cash %</th>
-              <th class="col-rate right">Rate %</th>
-              <th class="col-draw right">Mo. draw £</th>
-              <th class="col-total">Total</th>
-              <th class="col-action"></th>
-            </tr>
-          </thead>
-
-          <tbody id="acct-tbody"></tbody>
-        </table>
-      </div>
-
-    </div><!-- /#tab-setup -->
-
+    
+      </div> <!-- /setup-grid -->
+    
+    </div> <!-- /#tab-setup -->
     <!-- ═══════════════════════════════════════════
          TAB 2 — ASSUMPTIONS
     ═══════════════════════════════════════════ -->
