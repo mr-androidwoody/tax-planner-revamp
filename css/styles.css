@@ -503,8 +503,8 @@ input[type="radio"] { accent-color: var(--accent); }
   font-size: 0.76rem;
   font-weight: 800;
   color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: none;
+  letter-spacing: 0;
   margin-bottom: 16px;
 }
 
@@ -700,8 +700,8 @@ input[type="radio"] { accent-color: var(--accent); }
   font-size: 0.7rem;
   font-weight: 800;
   color: #44536b;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: none;
+  letter-spacing: 0;
   padding: 11px 12px;
   background: #f7faff;
   border-bottom: 1px solid var(--border);
