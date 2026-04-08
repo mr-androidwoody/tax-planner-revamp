@@ -51,10 +51,11 @@
 
   // ─────────────────────────────
   // SAVE BUTTON FEEDBACK
-  // Immediately saves, flips button to "Saving…" + green for 800ms,
-  // then resets to original label + original class.
+  // Default state: btn-success (solid green).
+  // Saving state:  btn-saving  (ghost green — white bg, green border, green text).
+  // After 800ms:   resets to btn-success + original label.
   // ─────────────────────────────
-  function triggerSaveFeedback(btn, originalLabel, originalClass, saveFn) {
+  function triggerSaveFeedback(btn, originalLabel, saveFn) {
     try {
       saveFn();
     } catch (err) {
@@ -62,30 +63,35 @@
       showToast('Save failed – see console', true);
       return;
     }
+
+    // Flip to ghost saving state
     btn.textContent = 'Saving…';
-    btn.className = btn.className.replace(/btn-\w+/, '').trim() + ' btn-success';
+    btn.classList.remove('btn-success');
+    btn.classList.add('btn-saving');
     clearTimeout(btn._saveTimer);
+
     btn._saveTimer = window.setTimeout(() => {
       btn.textContent = originalLabel;
-      btn.className = btn.className.replace(/btn-\w+/, '').trim() + ' ' + originalClass;
+      btn.classList.remove('btn-saving');
+      btn.classList.add('btn-success');
     }, 800);
   }
 
   // ─────────────────────────────
   // DELETE CONFIRM HELPERS
-  // First click: hides trigger button, shows inline confirm.
+  // First click: hides trigger button, shows block confirm box.
   // Cancel: restores. Confirm: executes deleteFn then restores.
   // ─────────────────────────────
   function wireDeleteConfirm(triggerId, confirmId, confirmBtnId, cancelBtnId, deleteFn) {
-    const triggerBtn  = safeEl(triggerId);
-    const confirmEl   = safeEl(confirmId);
-    const confirmBtn  = safeEl(confirmBtnId);
-    const cancelBtn   = safeEl(cancelBtnId);
+    const triggerBtn = safeEl(triggerId);
+    const confirmEl  = safeEl(confirmId);
+    const confirmBtn = safeEl(confirmBtnId);
+    const cancelBtn  = safeEl(cancelBtnId);
     if (!triggerBtn || !confirmEl || !confirmBtn || !cancelBtn) return;
 
     function showConfirm() {
       triggerBtn.style.display = 'none';
-      confirmEl.style.display  = 'inline-flex';
+      confirmEl.style.display  = 'flex';
     }
 
     function hideConfirm() {
@@ -308,7 +314,6 @@
 
   // ─────────────────────────────
   // SAVE / LOAD — core data functions
-  // Button feedback is handled separately via triggerSaveFeedback.
   // ─────────────────────────────
   function saveSetupData() {
     syncAccountsFromDOM();
@@ -548,7 +553,6 @@
     setHidden('p1GIA',  p1gia);
     setHidden('p2GIA',  p2gia);
 
-    // Interest accounts list
     const intAccts = state.portfolioAccounts.filter(isYieldAccount);
     const listEl = safeEl('int-accts-list');
     if (listEl) {
@@ -571,7 +575,6 @@
       }
     }
 
-    // Handoff banner
     const total  = state.portfolioAccounts.reduce((s, a) => s + (a.value || 0), 0);
     const nAccts = state.portfolioAccounts.length;
     let banner = safeEl('handoff-banner');
@@ -752,9 +755,6 @@
     if (action === 'load-excel')     return window.RetireExcelLoader.openFilePicker();
     if (action === 'run-projection') return runProjection();
 
-    // save-setup and save-assumptions are handled by direct ID listeners below
-    // to support the Saving… feedback pattern — intentionally not here.
-
     if (action === 'switch-tab') {
       const tab = el.dataset.tab;
       if (state.activeTab === 'setup') syncSetupToAssumptions();
@@ -772,17 +772,12 @@
   });
 
   // ─────────────────────────────
-  // SAVE PORTFOLIO — feedback pattern
+  // SAVE PORTFOLIO — ghost feedback on click
   // ─────────────────────────────
   const savePortfolioBtn = safeEl('savePortfolioBtn');
   if (savePortfolioBtn) {
     savePortfolioBtn.addEventListener('click', () => {
-      triggerSaveFeedback(
-        savePortfolioBtn,
-        'Save portfolio',
-        'btn-success',
-        saveSetupData
-      );
+      triggerSaveFeedback(savePortfolioBtn, 'Save portfolio', saveSetupData);
     });
   }
 
@@ -798,17 +793,12 @@
   );
 
   // ─────────────────────────────
-  // SAVE ASSUMPTIONS — feedback pattern
+  // SAVE ASSUMPTIONS — ghost feedback on click
   // ─────────────────────────────
   const saveAssumptionsBtn = safeEl('saveAssumptionsBtn');
   if (saveAssumptionsBtn) {
     saveAssumptionsBtn.addEventListener('click', () => {
-      triggerSaveFeedback(
-        saveAssumptionsBtn,
-        'Save assumptions',
-        'btn-success',
-        saveAssumptionsData
-      );
+      triggerSaveFeedback(saveAssumptionsBtn, 'Save assumptions', saveAssumptionsData);
     });
   }
 
