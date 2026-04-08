@@ -141,17 +141,36 @@
           <div id="alloc-summary"></div>
         </div>
     
-        <!-- ── Wrappers ── -->
+       <!-- ── Wrappers ── -->
         <div class="setup-panel">
           <div class="setup-panel-title">Wrappers</div>
-          <div id="wrapper-summary"></div>
+        
+          <!-- Wrapper totals (required IDs for renderSetupSummary) -->
+          <div id="wrapper-summary">
+            <div class="wrapper-row">
+              <span class="wrapper-name">ISA</span>
+              <span class="wrapper-val" id="wt-ISA">£0</span>
+            </div>
+            <div class="wrapper-row">
+              <span class="wrapper-name">SIPP</span>
+              <span class="wrapper-val" id="wt-SIPP">£0</span>
+            </div>
+            <div class="wrapper-row">
+              <span class="wrapper-name">GIA</span>
+              <span class="wrapper-val" id="wt-GIA">£0</span>
+            </div>
+            <div class="wrapper-row">
+              <span class="wrapper-name">Cash</span>
+              <span class="wrapper-val" id="wt-Cash">£0</span>
+            </div>
+          </div>
+        
+          <!-- Total -->
           <div class="wrapper-total-footer">
-            <span>Total Portfolio Value</span>
-            <div id="sp-total">£0</div>
+            <span class="meta-label">Total Portfolio Value</span>
+            <div class="meta-value" id="sp-total">£0</div>
           </div>
         </div>
-    
-        <!-- ── Accounts (NOW CORRECTLY INSIDE GRID) ── -->
         <div class="accounts-panel">
     
           <!-- Toolbar -->
