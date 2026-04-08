@@ -143,55 +143,57 @@
     return label.replace(`– ${name}`, '').trim();
   }
 
-  function makeGroup(title, items, personName) {
-    if (!items.length) return null;
-
-    const group = document.createElement('div');
-    group.className = 'legend-group';
-
-    const heading = document.createElement('div');
-    heading.className = 'legend-heading';
-    heading.textContent = title;
-
-    const row = document.createElement('div');
-    row.className = 'split-legend-row';
-
-    items.forEach(({ ds, i }) => {
-      const item = document.createElement('div');
-      item.className = 'split-legend-item';
-      if (!chart.isDatasetVisible(i)) item.classList.add('is-hidden');
-
-      const swatch = document.createElement('span');
-      swatch.className = 'split-legend-swatch';
-      swatch.style.background = ds.backgroundColor;
-
-      const label = document.createElement('span');
-      label.textContent = cleanLabel(ds.label, personName);
-
-      item.appendChild(swatch);
-      item.appendChild(label);
-
-      item.addEventListener('click', () => {
-        chart.setDatasetVisibility(i, !chart.isDatasetVisible(i));
-        chart.update();
-        renderIncomeLegend(chart);
+    function makeGroup(title, items, personName) {
+      if (!items.length) return null;
+    
+      const group = document.createElement('div');
+      group.className = 'legend-group';
+    
+      const heading = document.createElement('div');
+      heading.className = 'legend-heading';
+      heading.textContent = title;
+    
+      const row = document.createElement('div');
+      row.className = 'split-legend-row';
+    
+      // helper to normalise label lengths
+      function shortLabel(label) {
+        return label
+          .replace('State Pension', 'Pension')
+          .replace('Interest draw', 'Interest')
+          .replace('Cash draw', 'Cash')
+          .trim();
+      }
+    
+      items.forEach(({ ds, i }) => {
+        const item = document.createElement('div');
+        item.className = 'split-legend-item';
+        if (!chart.isDatasetVisible(i)) item.classList.add('is-hidden');
+    
+        const swatch = document.createElement('span');
+        swatch.className = 'split-legend-swatch';
+        swatch.style.background = ds.backgroundColor;
+    
+        const label = document.createElement('span');
+        label.textContent = shortLabel(cleanLabel(ds.label, personName));
+    
+        item.appendChild(swatch);
+        item.appendChild(label);
+    
+        item.addEventListener('click', () => {
+          chart.setDatasetVisibility(i, !chart.isDatasetVisible(i));
+          chart.update();
+          renderIncomeLegend(chart);
+        });
+    
+        row.appendChild(item);
       });
-
-      row.appendChild(item);
-    });
-
-    group.appendChild(heading);
-    group.appendChild(row);
-
-    return group;
-  }
-
-  const g1 = makeGroup(p1, p1sets, p1);
-  const g2 = makeGroup(p2, p2sets, p2);
-
-  if (g1) host.appendChild(g1);
-  if (g2) host.appendChild(g2);
-}
+    
+      group.appendChild(heading);
+      group.appendChild(row);
+    
+      return group;
+    }
 
   // ─────────────────────────────────────────────
   // CHARTS
