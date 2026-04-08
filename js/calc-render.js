@@ -267,26 +267,53 @@
     // ─────────────────────────────────────────────
     let sets = [];
 
+    // Helper: attribute incomeTax+NI back to each taxable source proportionally.
+    // ISA, GIA, Cash draws are tax-free at withdrawal — their bars are unchanged.
+    // CGT is left unallocated (small and hard to attribute per-source).
+    function netForP1(r, sourceFn) {
+      const sippTaxable  = r.p1Drawn.sippTaxable  || 0;
+      const intTaxable   = r.p1IntTaxable          || 0;
+      const p1TaxableTotal = (r.p1SP || 0) + (r.p1SalInc || 0) + sippTaxable
+                           + intTaxable + (r.p1Divs || 0);
+      const hints = { sippTaxable, intTaxable };
+      if (p1TaxableTotal === 0) return sourceFn(r, hints).gross;
+      const p1TaxBurden = (r.p1IncomeTax || 0) + (r.p1NI || 0);
+      const { gross, taxableShare } = sourceFn(r, hints);
+      return gross - p1TaxBurden * (taxableShare / p1TaxableTotal);
+    }
+
+    function netForP2(r, sourceFn) {
+      const sippTaxable  = r.p2Drawn.sippTaxable  || 0;
+      const intTaxable   = r.p2IntTaxable          || 0;
+      const p2TaxableTotal = (r.p2SP || 0) + (r.p2SalInc || 0) + sippTaxable
+                           + intTaxable + (r.p2Divs || 0);
+      const hints = { sippTaxable, intTaxable };
+      if (p2TaxableTotal === 0) return sourceFn(r, hints).gross;
+      const p2TaxBurden = (r.p2IncomeTax || 0) + (r.p2NI || 0);
+      const { gross, taxableShare } = sourceFn(r, hints);
+      return gross - p2TaxBurden * (taxableShare / p2TaxableTotal);
+    }
+
     if (_viewPerson === 'both' || _viewPerson === 'p1') {
-      sets.push(ds(`State Pension – ${p1}`, r => r.p1SP, COLOURS.p1SP));
-      sets.push(ds(`Salary – ${p1}`, r => r.p1SalInc || 0, COLOURS.salary));
-      sets.push(ds(`SIPP – ${p1}`, r => r.p1Drawn.SIPP, COLOURS.p1SIPP));
-      sets.push(ds(`ISA – ${p1}`, r => r.p1Drawn.ISA, COLOURS.p1ISA));
-      sets.push(ds(`GIA – ${p1}`, r => r.p1Drawn.GIA, COLOURS.p1GIA));
-      sets.push(ds(`Interest draw – ${p1}`, r => r.p1IntDraw, COLOURS.intDraw));
-      sets.push(ds(`Dividends – ${p1}`, r => r.p1Divs || 0, COLOURS.p1Divs));
-      sets.push(ds(`Cash draw – ${p1}`, r => r.p1Drawn.Cash, COLOURS.p1Cash));
+      sets.push(ds(`State Pension – ${p1}`,   r => netForP1(r, (r, _) => ({ gross: r.p1SP || 0,        taxableShare: r.p1SP || 0 })),        COLOURS.p1SP));
+      sets.push(ds(`Salary – ${p1}`,          r => netForP1(r, (r, _) => ({ gross: r.p1SalInc || 0,    taxableShare: r.p1SalInc || 0 })),    COLOURS.salary));
+      sets.push(ds(`SIPP – ${p1}`,            r => netForP1(r, (r, h) => ({ gross: r.p1Drawn.SIPP,     taxableShare: h.sippTaxable })),       COLOURS.p1SIPP));
+      sets.push(ds(`ISA – ${p1}`,             r => r.p1Drawn.ISA,                                                                             COLOURS.p1ISA));
+      sets.push(ds(`GIA – ${p1}`,             r => r.p1Drawn.GIA,                                                                             COLOURS.p1GIA));
+      sets.push(ds(`Interest draw – ${p1}`,   r => netForP1(r, (r, h) => ({ gross: r.p1IntDraw,        taxableShare: h.intTaxable })),        COLOURS.intDraw));
+      sets.push(ds(`Dividends – ${p1}`,       r => netForP1(r, (r, _) => ({ gross: r.p1Divs || 0,      taxableShare: r.p1Divs || 0 })),      COLOURS.p1Divs));
+      sets.push(ds(`Cash draw – ${p1}`,       r => r.p1Drawn.Cash,                                                                            COLOURS.p1Cash));
     }
 
     if (_viewPerson === 'both' || _viewPerson === 'p2') {
-      sets.push(ds(`State Pension – ${p2}`, r => r.p2SP, COLOURS.p2SP));
-      sets.push(ds(`Salary – ${p2}`, r => r.p2SalInc || 0, COLOURS.salary));
-      sets.push(ds(`SIPP – ${p2}`, r => r.p2Drawn.SIPP, COLOURS.p2SIPP));
-      sets.push(ds(`ISA – ${p2}`, r => r.p2Drawn.ISA, COLOURS.p2ISA));
-      sets.push(ds(`GIA – ${p2}`, r => r.p2Drawn.GIA, COLOURS.p2GIA));
-      sets.push(ds(`Interest draw – ${p2}`, r => r.p2IntDraw, COLOURS.intDraw));
-      sets.push(ds(`Dividends – ${p2}`, r => r.p2Divs || 0, COLOURS.p2Divs));
-      sets.push(ds(`Cash draw – ${p2}`, r => r.p2Drawn.Cash, COLOURS.p1Cash));
+      sets.push(ds(`State Pension – ${p2}`,   r => netForP2(r, (r, _) => ({ gross: r.p2SP || 0,        taxableShare: r.p2SP || 0 })),        COLOURS.p2SP));
+      sets.push(ds(`Salary – ${p2}`,          r => netForP2(r, (r, _) => ({ gross: r.p2SalInc || 0,    taxableShare: r.p2SalInc || 0 })),    COLOURS.salary));
+      sets.push(ds(`SIPP – ${p2}`,            r => netForP2(r, (r, h) => ({ gross: r.p2Drawn.SIPP,     taxableShare: h.sippTaxable })),       COLOURS.p2SIPP));
+      sets.push(ds(`ISA – ${p2}`,             r => r.p2Drawn.ISA,                                                                             COLOURS.p2ISA));
+      sets.push(ds(`GIA – ${p2}`,             r => r.p2Drawn.GIA,                                                                             COLOURS.p2GIA));
+      sets.push(ds(`Interest draw – ${p2}`,   r => netForP2(r, (r, h) => ({ gross: r.p2IntDraw,        taxableShare: h.intTaxable })),        COLOURS.intDraw));
+      sets.push(ds(`Dividends – ${p2}`,       r => netForP2(r, (r, _) => ({ gross: r.p2Divs || 0,      taxableShare: r.p2Divs || 0 })),      COLOURS.p2Divs));
+      sets.push(ds(`Cash draw – ${p2}`,       r => r.p2Drawn.Cash,                                                                            COLOURS.p1Cash));
     }
 
     // Shortfall bar — stacked on top in red, shows unmet portion of spending target
