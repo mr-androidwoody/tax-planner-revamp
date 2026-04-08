@@ -380,7 +380,6 @@
     if (tbody) tbody.innerHTML = '';
     localStorage.removeItem(STORAGE_KEY);
     refreshSetupSummary();
-    showToast('Portfolio deleted');
   }
 
   // ─────────────────────────────
