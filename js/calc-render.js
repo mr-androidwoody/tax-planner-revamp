@@ -143,9 +143,9 @@
     let incomeTargetStr;
     if (stepDownPct > 0) {
       const reduced = spending * (1 - stepDownPct / 100);
-      incomeTargetStr = fmtK(spending) + ' \u2192 ' + fmtK(reduced) + ' at 75';
+      incomeTargetStr = fmtK(spending) + ' reducing to ' + fmtK(reduced) + ' at age 75';
     } else {
-      incomeTargetStr = fmtK(spending) + '/yr';
+      incomeTargetStr = fmtK(spending) + ' per year';
     }
 
     const last = _rows[_rows.length - 1];
