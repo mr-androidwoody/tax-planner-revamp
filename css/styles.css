@@ -99,12 +99,6 @@ canvas { display: block; width: 100%; height: auto; }
   padding-bottom: 10px;
 }
 
-.top-header__tabs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .top-header__actions {
   display: flex;
   align-items: center;
@@ -114,49 +108,69 @@ canvas { display: block; width: 100%; height: auto; }
   white-space: nowrap;
 }
 
+.top-header__tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(255,255,255,0.45);
+  border: 0.5px solid rgba(150,170,210,0.4);
+  border-radius: 999px;
+  padding: 3px;
+}
+
 .tab-btn {
   appearance: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 9px 18px;
-  background: rgba(255,255,255,0.72);
-  color: #1f2a40;
-  border: 1px solid rgba(77,105,153,0.18);
+  padding: 8px 20px;
+  background: transparent;
+  color: #4a5880;
+  border: none;
   border-radius: 999px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.88rem;
+  font-weight: 600;
   white-space: nowrap;
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
-.tab-btn:hover { transform: translateY(-1px); }
+.tab-btn:hover { color: #1f2a40; }
 
 .tab-active {
-  border-color: transparent;
   background: linear-gradient(180deg, #4774ff 0%, #315ce8 100%);
   color: #ffffff;
-  box-shadow: 0 8px 20px rgba(49,92,232,0.25);
+  box-shadow: 0 4px 12px rgba(49,92,232,0.25);
 }
 
-.tab-sep {
-  position: relative;
-  width: 14px;
-  height: 14px;
-  flex: 0 0 14px;
+.tab-active:hover { color: #ffffff; }
+
+.btn-run {
+  appearance: none;
+  border: none;
+  background: linear-gradient(180deg, #4774ff 0%, #315ce8 100%);
+  border-radius: 12px;
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(49,92,232,0.28);
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.tab-sep::before {
-  content: "";
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 7px solid rgba(77,105,153,0.38);
-  transform: translate(-35%, -50%);
+.btn-run:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(49,92,232,0.35); }
+
+.btn-run--hidden {
+  display: none;
+}
+
+.btn-run--disabled {
+  background: rgba(255,255,255,0.35);
+  color: rgba(74,88,128,0.4);
+  box-shadow: none;
+  border: 0.5px solid rgba(150,170,210,0.35);
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* ========================================
