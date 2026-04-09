@@ -681,9 +681,18 @@ input[type="radio"] { accent-color: var(--accent); }
 .wrapper-val { color: var(--text); font-weight: 700; }
 
 /* Total allocation row — same pill, bold label + inline green value */
-.alloc-total-row { margin-top: 8px; }
-.alloc-total-row .alloc-total-label { font-weight: 700; color: var(--text); }
-.alloc-balanced { font-size: 0.82rem; font-weight: 700; color: #0c8a5c; }
+.alloc-total-row {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+.alloc-total-row .alloc-total-label { font-weight: 700; color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.alloc-balanced { font-size: 0.82rem; font-weight: 800; color: #0c8a5c; }
 
 /* Wrapper total footer — label left, value right */
 .wrapper-total-footer {
