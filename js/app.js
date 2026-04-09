@@ -199,7 +199,25 @@
   }
 
   function readAssumptionsInputs() {
-    return readSetupInputs().assumptions;
+    return {
+      spending:          safeValue('spending'),
+      stepDownPct:       safeValue('stepDownPct'),
+      growth:            safeValue('growth'),
+      inflation:         safeValue('inflation'),
+      thresholdMode:     document.querySelector('input[name="thresholdMode"]:checked')?.value || 'frozen',
+      thresholdFromYear: safeValue('thresholdFromYearVal'),
+      withdrawalMode:    document.querySelector('input[name="withdrawalMode"]:checked')?.value || 'tax-aware',
+      p1Order1:          safeValue('p1Order1'),
+      p1Order2:          safeValue('p1Order2'),
+      p1Order3:          safeValue('p1Order3'),
+      p2Order1:          safeValue('p2Order1'),
+      p2Order2:          safeValue('p2Order2'),
+      p2Order3:          safeValue('p2Order3'),
+      bniEnabled:        safeEl('bniEnabled')?.checked || false,
+      bniP1GIA:          safeValue('bniP1GIA'),
+      bniP2GIA:          safeValue('bniP2GIA'),
+      dividendYield:     safeValue('dividendYield'),
+    };
   }
 
   function applySetupInputs(data) {
@@ -275,6 +293,9 @@
         if (el) { el.disabled = !a.bniEnabled; el.style.opacity = a.bniEnabled ? '' : '0.45'; }
       });
     }
+
+    updateSidebarNames();
+    applyP2State();
   }
 
   // ─────────────────────────────
@@ -296,6 +317,7 @@
   }
 
   function saveAssumptionsData() {
+    syncSetupToAssumptions();
     localStorage.setItem(ASSUMPTIONS_KEY, JSON.stringify(readAssumptionsInputs()));
   }
 
