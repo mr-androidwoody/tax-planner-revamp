@@ -140,17 +140,15 @@
     const spending    = D.parseCurrency(document.getElementById('spending')?.value || '0');
     const stepDownPct = parseFloat(document.getElementById('stepDownPct')?.value) || 0;
     const fmtK = n => '£' + Math.round(n).toLocaleString('en-GB');
-    const last = _rows[_rows.length - 1];
     let incomeTargetStr;
-    if (!_useReal) {
-      const nominalFinal = last.target || 0;
-      incomeTargetStr = fmtK(spending) + ' growing to ' + fmtK(nominalFinal) + ' by ' + last.year;
-    } else if (stepDownPct > 0) {
+    if (stepDownPct > 0) {
       const reduced = spending * (1 - stepDownPct / 100);
       incomeTargetStr = fmtK(spending) + ' reducing to ' + fmtK(reduced) + ' at age 75';
     } else {
       incomeTargetStr = fmtK(spending) + ' per year';
     }
+
+    const last = _rows[_rows.length - 1];
     const mTax    = document.getElementById('m-tax');
     const mRate   = document.getElementById('m-rate');
     const mTarget = document.getElementById('m-income-target');
@@ -159,6 +157,10 @@
     if (mRate)   mRate.textContent   = (avgRate * 100).toFixed(1) + '%';
     if (mTarget) mTarget.textContent = incomeTargetStr;
     if (mPort)   mPort.textContent   = fmt(adj(last.totalPortfolio, last));
+    const mIncomeLabel = document.getElementById('m-income-label');
+    if (mIncomeLabel) {
+      mIncomeLabel.childNodes[0].textContent = _useReal ? 'Real income target' : 'Nominal income target';
+    }
   }
 
   // ─────────────────────────────────────────────
