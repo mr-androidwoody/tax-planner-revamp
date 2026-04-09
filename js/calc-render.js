@@ -419,27 +419,7 @@
     host.appendChild(header);
 
     chart.data.datasets.forEach((ds, i) => {
-      if (ds.type === 'line') {
-        // Render line datasets as a special legend item with a line swatch
-        const item = document.createElement('div');
-        item.className = 'sidebar-legend__item sidebar-legend__item--fixed';
-
-        const swatch = document.createElement('span');
-        swatch.className = 'sidebar-legend__swatch';
-        swatch.style.background = 'none';
-        swatch.style.borderTop = `2px solid ${ds.borderColor}`;
-        swatch.style.height = '0';
-        swatch.style.alignSelf = 'center';
-
-        const label = document.createElement('span');
-        label.textContent = ds.label;
-        label.style.flex = '1';
-
-        item.appendChild(swatch);
-        item.appendChild(label);
-        host.appendChild(item);
-        return;
-      }
+      if (ds.type === 'line') return;
 
       const fixed = ds._fixed === true;
       const item = document.createElement('div');
@@ -465,17 +445,7 @@
 
       if (!fixed) {
         item.addEventListener('click', () => {
-          const nowVisible = !chart.isDatasetVisible(i);
-          chart.setDatasetVisibility(i, nowVisible);
-
-          // If this is Net income, sync the rate line visibility (inverse)
-          if (ds.label === 'Net income') {
-            const rateIdx = chart.data.datasets.findIndex(d => d.label === 'Effective tax rate');
-            if (rateIdx >= 0) {
-              chart.data.datasets[rateIdx].hidden = nowVisible;
-            }
-          }
-
+          chart.setDatasetVisibility(i, !chart.isDatasetVisible(i));
           chart.update('none');
           renderGrossNetLegend(chart);
         });
@@ -486,6 +456,146 @@
 
 
   }
+
+  // ─────────────────────────────────────────────
+  // TAX LEGEND
+  // ─────────────────────────────────────────────
+  function renderTaxLegend(chart) {
+    const host = document.getElementById('taxLegend');
+    if (!host) return;
+    host.innerHTML = '';
+
+    const intro = document.createElement('p');
+    intro.className = 'chart-intro';
+    intro.textContent = 'Shows total income tax and CGT paid each year, with the effective rate as a percentage of gross income on the right axis.';
+    host.appendChild(intro);
+
+    // Tax paid — bar item
+    const barItem = document.createElement('div');
+    barItem.className = 'sidebar-legend__item sidebar-legend__item--tax';
+    barItem.style.cursor = 'default';
+
+    const barSwatch = document.createElement('span');
+    barSwatch.className = 'sidebar-legend__swatch';
+    barSwatch.style.background = '#C55A11';
+
+    const barLabel = document.createElement('span');
+    barLabel.textContent = 'Tax paid';
+    barLabel.style.flex = '1';
+
+    const barValue = document.createElement('span');
+    barValue.className = 'sidebar-legend__value';
+    const totalTax = _rows.reduce((s, r) => {
+      const t = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT
+              : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT
+              : r.p1IncomeTax + r.p1CGT + r.p2IncomeTax + r.p2CGT;
+      return s + adj(t, r);
+    }, 0);
+    barValue.textContent = fmt(totalTax);
+
+    barItem.appendChild(barSwatch);
+    barItem.appendChild(barLabel);
+    barItem.appendChild(barValue);
+    host.appendChild(barItem);
+
+    // Effective tax rate — line item
+    const lineItem = document.createElement('div');
+    lineItem.className = 'sidebar-legend__item';
+    lineItem.style.cursor = 'default';
+
+    const lineSwatch = document.createElement('span');
+    lineSwatch.className = 'sidebar-legend__swatch';
+    lineSwatch.style.background = 'none';
+    lineSwatch.style.borderTop = '2px solid #7F6000';
+    lineSwatch.style.height = '0';
+    lineSwatch.style.alignSelf = 'center';
+
+    const lineLabel = document.createElement('span');
+    lineLabel.textContent = 'Effective tax rate';
+    lineLabel.style.flex = '1';
+
+    const lineNote = document.createElement('span');
+    lineNote.className = 'sidebar-legend__fixed-note';
+    lineNote.textContent = 'right axis';
+
+    lineItem.appendChild(lineSwatch);
+    lineItem.appendChild(lineLabel);
+    lineItem.appendChild(lineNote);
+    host.appendChild(lineItem);
+  }
+
+  // ─────────────────────────────────────────────
+  // WEALTH LEGEND
+  // ─────────────────────────────────────────────
+  function buildWealthTooltip(label) {
+    if (label.includes('SIPP')) return 'Pension fund balance — tax-free growth inside the wrapper. Withdrawals are subject to income tax (75% taxable, 25% tax-free). Subject to IHT on death before age 75 in some cases.';
+    if (label.includes('ISA'))  return 'ISA balance — completely tax-free growth, income, and withdrawals. No CGT, income tax, or dividend tax on any gains.';
+    if (label.includes('GIA'))  return 'General Investment Account — subject to CGT on gains above the annual exemption (£3,000) and dividend tax above the allowance (£500). Growth is otherwise unrestricted.';
+    if (label.includes('Interest')) return 'Interest-bearing accounts (e.g. money market funds) — interest taxed as savings income, within the Starting Rate for Savings (£5,000) and Personal Savings Allowance (£1,000) where available.';
+    if (label.includes('Cash')) return 'Liquid cash reserves — interest taxed as savings income within standard allowances. Used to bridge spending before investment wrappers are drawn.';
+    return null;
+  }
+
+  function renderWealthLegend(chart) {
+    const host = document.getElementById('wealthLegend');
+    if (!host) return;
+    host.innerHTML = '';
+    host.classList.add('sidebar-legend--scrollable');
+
+    const intro = document.createElement('p');
+    intro.className = 'chart-intro';
+    intro.textContent = 'Shows portfolio balance by wrapper at end of each year. Click any legend item to show or hide it in the chart.';
+    host.appendChild(intro);
+
+    const header = document.createElement('div');
+    header.className = 'sidebar-legend__header';
+    header.innerHTML = '<span>Wrapper</span><span>Now</span>';
+    host.appendChild(header);
+
+    chart.data.datasets.forEach((ds, i) => {
+      const item = document.createElement('div');
+      item.className = 'sidebar-legend__item';
+      if (!chart.isDatasetVisible(i)) item.classList.add('is-hidden');
+
+      const swatch = document.createElement('span');
+      swatch.className = 'sidebar-legend__swatch';
+      swatch.style.background = ds.backgroundColor;
+
+      const label = document.createElement('span');
+      label.textContent = ds.label;
+      label.style.flex = '1';
+
+      // Current (first year) balance as the "now" value
+      const nowVal = ds.data[0] || 0;
+      const value = document.createElement('span');
+      value.className = 'sidebar-legend__value';
+      value.textContent = nowVal > 0 ? fmt(nowVal) : '—';
+
+      item.appendChild(swatch);
+      item.appendChild(label);
+
+      const tipText = buildWealthTooltip(ds.label);
+      if (tipText) {
+        const info = document.createElement('span');
+        info.className = 'sidebar-legend__info';
+        info.textContent = 'ⓘ';
+        info.addEventListener('mouseenter', e => { e.stopPropagation(); showTooltip(info, tipText); });
+        info.addEventListener('mouseleave', hideTooltip);
+        item.appendChild(info);
+      }
+
+      item.appendChild(value);
+
+      item.addEventListener('click', () => {
+        chart.setDatasetVisibility(i, !chart.isDatasetVisible(i));
+        chart.update('none');
+        renderWealthLegend(chart);
+      });
+
+      host.appendChild(item);
+    });
+  }
+
     function renderCharts() {
     if (!_rows.length) return;
     const labels = _rows.map(r => r.year);
@@ -697,20 +807,6 @@
         _fixed: true,
       });
 
-      grossNetSets.push({
-        type: 'line',
-        label: 'Effective tax rate',
-        data: rateData,
-        borderColor: '#991B1B',
-        backgroundColor: '#991B1B',
-        borderWidth: 2,
-        pointRadius: 2,
-        tension: 0.2,
-        yAxisID: 'y1',
-        order: 0,
-        hidden: true,
-      });
-
       if (_spendingChart) _spendingChart.destroy();
       _spendingChart = new Chart(spendingCtx, {
         type: 'bar',
@@ -723,7 +819,6 @@
             tooltip: {
               callbacks: {
                 label: ctx => {
-                  if (ctx.dataset.yAxisID === 'y1') return `${ctx.dataset.label}: ${ctx.parsed.y}%`;
                   const val = (ctx.parsed.y || 0) * 1000;
                   if (!val) return null;
                   if (ctx.dataset.label === 'Spending target') return `Target: ${D.formatMoney(val)}`;
@@ -747,18 +842,6 @@
               ticks: {
                 font: { size: 11 },
                 callback: v => v + 'k',
-              },
-            },
-            y1: {
-              position: 'right',
-              grid: { drawOnChartArea: false },
-              title: {
-                display: true,
-                text: 'Rate %',
-                font: { size: 11 },
-              },
-              ticks: {
-                callback: v => v + '%',
               },
             },
           },
@@ -806,7 +889,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: true },
+            legend: { display: false },
             tooltip: {
               callbacks: {
                 label: ctx => {
@@ -847,6 +930,7 @@
           },
         },
       });
+      renderTaxLegend(_taxChart);
     }
 
     // ─────────────────────────────────────────────
@@ -932,7 +1016,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: true },
+            legend: { display: false },
             tooltip: {
               callbacks: {
                 label: ctx => `${ctx.dataset.label}: ${D.formatMoney(ctx.parsed.y || 0)}`,
@@ -959,6 +1043,7 @@
           },
         },
       });
+      renderWealthLegend(_wealthChart);
     }
   }
 
