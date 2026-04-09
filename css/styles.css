@@ -1132,6 +1132,11 @@ input[type="radio"] { accent-color: var(--accent); }
   min-width: 80px;
 }
 
+/* Bed & ISA fields need more room for formatted currency */
+.bni-field .assump-inline-field__input {
+  width: 50%;
+}
+
 .assump-inline-field__input .stepper-input,
 .assump-inline-field__input .currency-stepper {
   width: 100%;
