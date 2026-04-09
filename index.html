@@ -537,13 +537,13 @@
               <p class="assump-section__label"><span class="assump-tooltip-anchor">Growth presets<span class="assump-tooltip">Sets the nominal portfolio growth rate. Real return equals growth minus inflation.</span></span></p>
               <div class="assump-radio-group">
                 <label class="assump-radio-label">
-                  <input type="radio" name="growthPreset" value="3" onchange="document.getElementById('growth').value='3'"> Conservative – 3% <span class="assump-inline-field__hint" style="margin-left:4px">(~0.5% real)</span>
+                  <input type="radio" name="growthPreset" value="3" onchange="document.getElementById('growth').value='3'"> <strong>Conservative</strong> <span class="assump-inline-field__hint">3%, ~0.5% real return</span>
                 </label>
                 <label class="assump-radio-label">
-                  <input type="radio" name="growthPreset" value="4" onchange="document.getElementById('growth').value='4'"> Moderate – 4% <span class="assump-inline-field__hint" style="margin-left:4px">(~1.5% real)</span>
+                  <input type="radio" name="growthPreset" value="4" onchange="document.getElementById('growth').value='4'"> <strong>Moderate</strong> <span class="assump-inline-field__hint">4%, ~1.5% real return</span>
                 </label>
                 <label class="assump-radio-label">
-                  <input type="radio" name="growthPreset" value="5" onchange="document.getElementById('growth').value='5'"> Optimistic – 5% <span class="assump-inline-field__hint" style="margin-left:4px">(~2.5% real)</span>
+                  <input type="radio" name="growthPreset" value="5" onchange="document.getElementById('growth').value='5'"> <strong>Optimistic</strong> <span class="assump-inline-field__hint">5%, ~2.5% real return</span>
                 </label>
               </div>
             </div>
@@ -558,15 +558,15 @@
               <p class="assump-section__label">Tax threshold uprating</p>
               <div class="assump-radio-group">
                 <label class="assump-radio-label">
-                  <input type="radio" name="thresholdMode" id="thresholdFrozen" value="frozen" checked> Frozen (fiscal drag applies)
+                  <input type="radio" name="thresholdMode" id="thresholdFrozen" value="frozen" checked> <strong>Frozen</strong> <span class="assump-inline-field__hint">fiscal drag applies</span>
                 </label>
                 <label class="assump-radio-label">
-                  <input type="radio" name="thresholdMode" id="thresholdFromYear" value="fromYear"> Uprated from year
+                  <input type="radio" name="thresholdMode" id="thresholdFromYear" value="fromYear"> <strong>Uprated from year</strong>
                   <input type="number" id="thresholdFromYearVal" value="2028" min="2026" max="2060"
                     onfocus="document.getElementById('thresholdFromYear').checked=true">
                 </label>
                 <label class="assump-radio-label">
-                  <input type="radio" name="thresholdMode" id="thresholdAlways" value="always"> Always uprated with inflation
+                  <input type="radio" name="thresholdMode" id="thresholdAlways" value="always"> <strong>Always uprated</strong> <span class="assump-inline-field__hint">with inflation</span>
                 </label>
               </div>
               <div class="hint" style="margin-top:6px">Uprating applies to PA, basic-rate limit, higher-rate threshold, and CGT exempt amount.</div>
@@ -597,10 +597,10 @@
               <p class="assump-section__label">Split mode</p>
               <div class="assump-radio-group">
                 <label class="assump-radio-label">
-                  <input type="radio" name="withdrawalMode" value="50/50"> 50/50 split – each wrapper drawn in order, no tax optimisation
+                  <input type="radio" name="withdrawalMode" value="50/50"> <strong>50/50 split</strong> <span class="assump-inline-field__hint">each wrapper drawn in order, no tax optimisation</span>
                 </label>
                 <label class="assump-radio-label">
-                  <input type="radio" name="withdrawalMode" value="tax-aware" checked> Tax-aware – SIPP used to fill personal allowance first, then drawn proportionally
+                  <input type="radio" name="withdrawalMode" value="tax-aware" checked> <strong>Tax-aware</strong> <span class="assump-inline-field__hint">SIPP fills personal allowance first, then drawn proportionally</span>
                 </label>
               </div>
             </div>
