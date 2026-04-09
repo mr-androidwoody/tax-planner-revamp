@@ -1236,28 +1236,51 @@ input[type="radio"] { accent-color: var(--accent); }
   margin: 10px 0 14px;
 }
 
-/* Person / Real/Nominal toggle groups in sidebar */
-.chart-sidebar .toggle-group {
+/* Two-column Person / Chart mode control row */
+.sidebar-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.sidebar-controls__col {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-controls__col .chart-sidebar__label {
+  margin: 0;
+}
+
+/* Pill-style toggle buttons in sidebar */
+.sidebar-toggle {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 
-.chart-sidebar .toggle-group button {
-  padding: 4px 10px;
-  font-size: 0.78rem;
+.sidebar-toggle button {
+  width: 100%;
+  padding: 7px 6px;
+  font-size: 0.76rem;
   font-weight: 600;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--panel-solid);
+  border-radius: 7px;
+  border: none;
+  background: var(--border);
   color: var(--muted);
   cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.chart-sidebar .toggle-group button.is-active {
-  background: var(--accent);
-  color: #fff;
-  border-color: transparent;
+.sidebar-toggle button.is-active {
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.13);
 }
 
 /* ─────────────────────────────
