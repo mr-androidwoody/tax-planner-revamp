@@ -4,7 +4,7 @@
    ======================================== */
 
 :root {
-  --bg: #d7deea;
+  --bg: #d8e2f0;
   --bg-page: #eef2f8;
   --shell: rgba(255,255,255,0.56);
   --shell-border: rgba(212,220,232,0.98);
@@ -1127,7 +1127,7 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .metrics-band {
-  background: #384d6e;
+  background: #1e2d45;
   border-radius: 16px;
   padding: 10px;
   margin-bottom: 16px;
@@ -1141,7 +1141,7 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .metric {
   padding: 16px 18px;
-  background: #45546e;
+  background: #2d3f5e;
   border: none;
   border-radius: 10px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
