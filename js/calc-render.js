@@ -467,13 +467,25 @@
 
     const intro = document.createElement('p');
     intro.className = 'chart-intro';
-    intro.textContent = 'Shows total income tax and CGT paid each year, with the effective rate as a percentage of gross income on the right axis.';
+    intro.textContent = 'Shows total income tax and CGT paid each year, with the effective rate as a percentage of gross income on the right axis. Click either item to show or hide it.';
     host.appendChild(intro);
 
+    function toggleDataset(idx) {
+      const visible = chart.isDatasetVisible(idx);
+      chart.setDatasetVisibility(idx, !visible);
+      const axisKey = idx === 0 ? 'y' : 'y1';
+      if (chart.options.scales[axisKey]) {
+        chart.options.scales[axisKey].display = !visible;
+      }
+      chart.update();
+      renderTaxLegend(chart);
+    }
+
     // Tax paid — bar item
+    const barVisible = chart.isDatasetVisible(0);
     const barItem = document.createElement('div');
-    barItem.className = 'sidebar-legend__item sidebar-legend__item--tax';
-    barItem.style.cursor = 'default';
+    barItem.className = 'sidebar-legend__item' + (barVisible ? '' : ' is-hidden');
+    barItem.style.cursor = 'pointer';
 
     const barSwatch = document.createElement('span');
     barSwatch.className = 'sidebar-legend__swatch';
@@ -496,12 +508,14 @@
     barItem.appendChild(barSwatch);
     barItem.appendChild(barLabel);
     barItem.appendChild(barValue);
+    barItem.addEventListener('click', () => toggleDataset(0));
     host.appendChild(barItem);
 
     // Effective tax rate — line item
+    const lineVisible = chart.isDatasetVisible(1);
     const lineItem = document.createElement('div');
-    lineItem.className = 'sidebar-legend__item';
-    lineItem.style.cursor = 'default';
+    lineItem.className = 'sidebar-legend__item' + (lineVisible ? '' : ' is-hidden');
+    lineItem.style.cursor = 'pointer';
 
     const lineSwatch = document.createElement('span');
     lineSwatch.className = 'sidebar-legend__swatch';
@@ -514,13 +528,26 @@
     lineLabel.textContent = 'Effective tax rate';
     lineLabel.style.flex = '1';
 
-    const lineNote = document.createElement('span');
-    lineNote.className = 'sidebar-legend__fixed-note';
-    lineNote.textContent = 'right axis';
+    const avgRate = _rows.length
+      ? (_rows.reduce((s, r) => {
+          const tax = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT
+                    : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT
+                    : r.p1IncomeTax + r.p1CGT + r.p2IncomeTax + r.p2CGT;
+          const gross = _viewPerson === 'p1' ? (r.p1GrossIncome || 0)
+                      : _viewPerson === 'p2' ? (r.p2GrossIncome || 0)
+                      : (r.householdGrossIncome || 0);
+          return s + (gross > 0 ? tax / gross : 0);
+        }, 0) / _rows.length * 100).toFixed(1)
+      : '0.0';
+
+    const lineValue = document.createElement('span');
+    lineValue.className = 'sidebar-legend__value';
+    lineValue.textContent = avgRate + '% avg';
 
     lineItem.appendChild(lineSwatch);
     lineItem.appendChild(lineLabel);
-    lineItem.appendChild(lineNote);
+    lineItem.appendChild(lineValue);
+    lineItem.addEventListener('click', () => toggleDataset(1));
     host.appendChild(lineItem);
   }
 
