@@ -86,10 +86,17 @@
       const effCGTExempt  = effThresholds.cgtExempt;
 
       // FIX 2: GIA dividends — opening balance × yield, treated as cashflow (not reinvested)
-      const p1GIAOpen = p1Bal.GIA || 0;
-      const p2GIAOpen = p2Bal.GIA || 0;
-      const p1Divs    = p1GIAOpen * dividendYield;
-      const p2Divs    = p2GIAOpen * dividendYield;
+      const p1GIAOpen  = p1Bal.GIA || 0;
+      const p2GIAOpen  = p2Bal.GIA || 0;
+      const p1Divs     = p1GIAOpen * dividendYield;
+      const p2Divs     = p2GIAOpen * dividendYield;
+      // Cap dividend display to the portion that actually counts toward spending
+      const preDivGap  = Math.max(0, target - (p1SP + p2SP + p1SalInc + p2SalInc));
+      const totalDivs  = p1Divs + p2Divs;
+      const divsUsed   = Math.min(totalDivs, preDivGap);
+      const divRatio   = totalDivs > 0 ? divsUsed / totalDivs : 0;
+      const p1DivsUsed = p1Divs * divRatio;
+      const p2DivsUsed = p2Divs * divRatio;
 
       // FIX 1: annual CGT gain accumulators — reset each year, exemption applied once at year-end
       let p1AnnualGains = 0;
@@ -440,6 +447,7 @@
         intDrawTotal, p1IntDraw, p2IntDraw,
         p1IntTaxable, p2IntTaxable,
         p1Divs, p2Divs,
+        p1DivsUsed, p2DivsUsed,
         p1Drawn, p2Drawn,
 
         p1IncomeTax: p1Income.tax,

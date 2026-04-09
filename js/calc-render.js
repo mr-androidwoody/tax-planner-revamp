@@ -493,10 +493,10 @@
     _engineShortfall = _rows.map(r => {
       const p1Gross = (r.p1SP || 0) + (r.p1SalInc || 0) + (r.p1Drawn.SIPP || 0) +
                       (r.p1Drawn.ISA || 0) + (r.p1Drawn.GIA || 0) +
-                      (r.p1IntDraw || 0) + (r.p1Divs || 0) + (r.p1Drawn.Cash || 0);
+                      (r.p1IntDraw || 0) + (r.p1DivsUsed || 0) + (r.p1Drawn.Cash || 0);
       const p2Gross = (r.p2SP || 0) + (r.p2SalInc || 0) + (r.p2Drawn.SIPP || 0) +
                       (r.p2Drawn.ISA || 0) + (r.p2Drawn.GIA || 0) +
-                      (r.p2IntDraw || 0) + (r.p2Divs || 0) + (r.p2Drawn.Cash || 0);
+                      (r.p2IntDraw || 0) + (r.p2DivsUsed || 0) + (r.p2Drawn.Cash || 0);
       const visibleGross = _viewPerson === 'p1' ? p1Gross
                          : _viewPerson === 'p2' ? p2Gross
                          : p1Gross + p2Gross;
@@ -507,7 +507,7 @@
     sets.push(ds('Salary',        r => r.p1SalInc     || 0, r => r.p2SalInc     || 0, COLOURS.salary));
     sets.push(ds('Cash',          r => r.p1Drawn.Cash || 0, r => r.p2Drawn.Cash || 0, COLOURS.p1Cash));
     sets.push(ds('Interest',      r => r.p1IntDraw    || 0, r => r.p2IntDraw    || 0, COLOURS.intDraw));
-    sets.push(ds('Dividends',     r => r.p1Divs       || 0, r => r.p2Divs       || 0, COLOURS.p1Divs));
+    sets.push(ds('Dividends',     r => r.p1DivsUsed  || 0, r => r.p2DivsUsed  || 0, COLOURS.p1Divs));
     sets.push(ds('GIA',           r => r.p1Drawn.GIA  || 0, r => r.p2Drawn.GIA  || 0, COLOURS.p1GIA));
     sets.push(ds('ISA',           r => r.p1Drawn.ISA  || 0, r => r.p2Drawn.ISA  || 0, COLOURS.p1ISA));
     sets.push(ds('SIPP / WP',     r => r.p1Drawn.SIPP || 0, r => r.p2Drawn.SIPP || 0, COLOURS.p1SIPP));
