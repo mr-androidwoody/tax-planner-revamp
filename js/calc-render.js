@@ -131,9 +131,9 @@
       const tax = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT + r.p1NI
                 : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT + r.p2NI
                 : r.p1IncomeTax + r.p1CGT + r.p1NI + r.p2IncomeTax + r.p2CGT + r.p2NI;
-      const p1Gross = r.p1SP + (r.p1SalInc || 0) + r.p1Drawn.SIPP + r.p1Drawn.ISA + r.p1Drawn.GIA + r.p1IntDraw + r.p1Drawn.Cash;
-      const p2Gross = r.p2SP + r.p2SalInc + r.p2Drawn.SIPP + r.p2Drawn.ISA + r.p2Drawn.GIA + r.p2IntDraw + r.p2Drawn.Cash;
-      const gross = _viewPerson === 'p1' ? p1Gross : _viewPerson === 'p2' ? p2Gross : p1Gross + p2Gross;
+      const gross = _viewPerson === 'p1' ? (r.p1GrossIncome || 0)
+                : _viewPerson === 'p2' ? (r.p2GrossIncome || 0)
+                : (r.householdGrossIncome || 0);
       return s + (gross > 0 ? tax / gross : 0);
     }, 0) / _rows.length;
 
@@ -499,9 +499,9 @@
     const barValue = document.createElement('span');
     barValue.className = 'sidebar-legend__value';
     const totalTax = _rows.reduce((s, r) => {
-      const t = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT
-              : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT
-              : r.p1IncomeTax + r.p1CGT + r.p2IncomeTax + r.p2CGT;
+      const t = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT + r.p1NI
+              : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT + r.p2NI
+              : r.p1IncomeTax + r.p1CGT + r.p1NI + r.p2IncomeTax + r.p2CGT + r.p2NI;
       return s + adj(t, r);
     }, 0);
     barValue.textContent = fmt(totalTax);
@@ -531,9 +531,9 @@
 
     const avgRate = _rows.length
       ? (_rows.reduce((s, r) => {
-          const tax = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT
-                    : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT
-                    : r.p1IncomeTax + r.p1CGT + r.p2IncomeTax + r.p2CGT;
+          const tax = _viewPerson === 'p1' ? r.p1IncomeTax + r.p1CGT + r.p1NI
+                    : _viewPerson === 'p2' ? r.p2IncomeTax + r.p2CGT + r.p2NI
+                    : r.p1IncomeTax + r.p1CGT + r.p1NI + r.p2IncomeTax + r.p2CGT + r.p2NI;
           const gross = _viewPerson === 'p1' ? (r.p1GrossIncome || 0)
                       : _viewPerson === 'p2' ? (r.p2GrossIncome || 0)
                       : (r.householdGrossIncome || 0);
