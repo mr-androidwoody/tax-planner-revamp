@@ -958,7 +958,7 @@
           stack: 'wealth',
         },
         {
-          label: `${p1} SIPP`,
+          label: `${p1} SIPP / WP`,
           data: _rows.map(r => Math.round(adj(r.snap.p1SIPP || 0, r))),
           backgroundColor: '#ED7D31',
           stack: 'wealth',
@@ -988,7 +988,7 @@
           stack: 'wealth',
         },
         {
-          label: `${p2} SIPP`,
+          label: `${p2} SIPP / WP`,
           data: _rows.map(r => Math.round(adj(r.snap.p2SIPP || 0, r))),
           backgroundColor: '#FFC000',
           stack: 'wealth',
