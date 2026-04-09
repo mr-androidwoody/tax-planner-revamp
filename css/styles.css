@@ -539,7 +539,7 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .setup-intro__text h1 {
-  margin: 0 0 4px;
+  margin: 0 0 10px;
   font-size: 1.15rem;
   font-weight: 800;
   color: var(--text);
@@ -548,8 +548,8 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .setup-intro__text p {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.82rem;
+  color: #56657d;
+  font-size: 0.85rem;
   line-height: 1.42;
 }
 
@@ -575,8 +575,11 @@ input[type="radio"] { accent-color: var(--accent); }
   min-height: 280px;
 }
 
-/* Panel title — aligned to assump-section__label */
 .setup-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -590,19 +593,19 @@ input[type="radio"] { accent-color: var(--accent); }
 .people-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 12px;
+  gap: 14px 12px;
 }
 
 .people-grid > div {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
 }
 
 .people-grid > div.full { grid-column: 1 / -1; }
 
-/* Field labels aligned to assump pattern */
+/* Field labels — assump pattern */
 .people-grid label,
 .range-field label,
 .field label {
@@ -613,7 +616,7 @@ input[type="radio"] { accent-color: var(--accent); }
   color: var(--muted);
 }
 
-/* Shared pill row — used by both Allocation and Wrappers panels */
+/* Shared pill row — Allocation and Wrappers panels */
 .wrapper-row {
   display: flex;
   justify-content: space-between;
@@ -631,21 +634,10 @@ input[type="radio"] { accent-color: var(--accent); }
 .wrapper-row:last-child { margin-bottom: 0; }
 .wrapper-val { color: var(--text); font-weight: 700; }
 
-/* Total allocation row — same pill, bold label, green value inline */
-.alloc-total-row {
-  margin-top: 8px;
-}
-
-.alloc-total-row .alloc-total-label {
-  font-weight: 700;
-  color: var(--text);
-}
-
-.alloc-balanced {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #0c8a5c;
-}
+/* Total allocation row — same pill, bold label + inline green value */
+.alloc-total-row { margin-top: 8px; }
+.alloc-total-row .alloc-total-label { font-weight: 700; color: var(--text); }
+.alloc-balanced { font-size: 0.82rem; font-weight: 700; color: #0c8a5c; }
 
 /* Wrapper total footer — label left, value right */
 .wrapper-total-footer {
