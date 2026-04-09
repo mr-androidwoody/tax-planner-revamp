@@ -1269,7 +1269,7 @@ input[type="radio"] { accent-color: var(--accent); }
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: #e2e7f0;
+  background: var(--panel-soft);
   border-radius: 10px;
   padding: 2px;
   flex: 1;
