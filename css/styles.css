@@ -1224,15 +1224,11 @@ input[type="radio"] { accent-color: var(--accent); }
 .chart-panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-  border: 1px solid var(--border);
-  border-radius: 0 var(--radius-xs) var(--radius-xs) var(--radius-xs);
-  background: var(--panel-solid);
-  overflow: hidden;
+  gap: 0;
 }
 
 .chart-sidebar {
   background: var(--panel-solid);
-  border-right: 1px solid var(--border);
   padding: 16px 14px;
   display: flex;
   flex-direction: column;
@@ -1496,9 +1492,13 @@ input[type="radio"] { accent-color: var(--accent); }
    ───────────────────────────── */
 
 .chart-canvas-area {
-  padding: 18px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  background: var(--panel-solid);
+  border: 1px solid var(--shell-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 .chart-canvas-area h2 {
@@ -1519,8 +1519,7 @@ input[type="radio"] { accent-color: var(--accent); }
     grid-template-columns: 1fr;
   }
   .chart-sidebar {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
   }
   .chart-sidebar .toggle-group {
     flex-direction: row;
