@@ -30,24 +30,18 @@
       if (el) el.textContent = D.formatMoney(summary.wrapperTotals[w] || 0);
     });
 
-    const rows = document.querySelectorAll('#alloc-summary .alloc-row');
-    const classes = ['equities', 'bonds', 'cashlike', 'cash'];
-    const colors = ['#4472C4', '#70AD47', '#FFC000', '#B0B0B0'];
-
-    classes.forEach((cls, i) => {
-      const weighted = summary.overallAllocation[cls] || 0;
-      const row = rows[i];
-      if (!row) return;
-
-      row.querySelector('.alloc-pct').textContent = weighted.toFixed(1) + '%';
-      row.querySelector('.alloc-bar').style.width = weighted.toFixed(1) + '%';
-      row.querySelector('.alloc-bar').style.background = colors[i];
+    const idMap = { equities: 'alloc-eq-pct', bonds: 'alloc-bd-pct', cashlike: 'alloc-cl-pct', cash: 'alloc-c-pct' };
+    Object.entries(idMap).forEach(([cls, id]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = (summary.overallAllocation[cls] || 0).toFixed(1) + '%';
     });
 
     const lbl = document.getElementById('alloc-total-label');
-    const pct = Math.round(summary.overallPct);
-    lbl.textContent = pct === 100 ? '100.0% Balanced' : summary.overallPct.toFixed(1) + '%';
-    lbl.style.color = pct === 100 ? '#16a34a' : '#a16207';
+    if (lbl) {
+      const pct = Math.round(summary.overallPct);
+      lbl.textContent = pct === 100 ? '100.0% Balanced' : summary.overallPct.toFixed(1) + '%';
+      lbl.style.color = pct === 100 ? '#16a34a' : '#a16207';
+    }
   }
 
   function updateInterestAccountsBanner(interestAccounts, ownerNames) {
