@@ -435,14 +435,8 @@
         label.textContent = ds.label;
         label.style.flex = '1';
 
-        const note = document.createElement('span');
-        note.className = 'sidebar-legend__fixed-note';
-        note.textContent = 'right axis';
-        note.style.marginLeft = 'auto';
-
         item.appendChild(swatch);
         item.appendChild(label);
-        item.appendChild(note);
         host.appendChild(item);
         return;
       }
@@ -471,8 +465,18 @@
 
       if (!fixed) {
         item.addEventListener('click', () => {
-          chart.setDatasetVisibility(i, !chart.isDatasetVisible(i));
-          chart.update();
+          const nowVisible = !chart.isDatasetVisible(i);
+          chart.setDatasetVisibility(i, nowVisible);
+
+          // If this is Net income, sync the rate line visibility (inverse)
+          if (ds.label === 'Net income') {
+            const rateIdx = chart.data.datasets.findIndex(d => d.label === 'Effective tax rate');
+            if (rateIdx >= 0) {
+              chart.data.datasets[rateIdx].hidden = nowVisible;
+            }
+          }
+
+          chart.update('none');
           renderGrossNetLegend(chart);
         });
       }
@@ -704,6 +708,7 @@
         tension: 0.2,
         yAxisID: 'y1',
         order: 0,
+        hidden: true,
       });
 
       if (_spendingChart) _spendingChart.destroy();
