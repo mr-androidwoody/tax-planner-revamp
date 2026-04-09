@@ -1186,6 +1186,7 @@ input[type="radio"] { accent-color: var(--accent); }
   color: var(--accent);
   font-weight: 700;
   border-top: 3px solid var(--accent);
+  border-bottom: 1px solid var(--panel-solid);
   margin-bottom: -4px;
   padding-bottom: 12px;
 }
@@ -1208,13 +1209,13 @@ input[type="radio"] { accent-color: var(--accent); }
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xs);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) var(--radius-xs);
   background: var(--panel-solid);
   overflow: hidden;
 }
 
 .chart-sidebar {
-  background: var(--panel-soft);
+  background: var(--panel-solid);
   border-right: 1px solid var(--border);
   padding: 16px 14px;
   display: flex;
@@ -1312,6 +1313,10 @@ input[type="radio"] { accent-color: var(--accent); }
   display: flex;
   flex-direction: column;
   gap: 0;
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
 }
 
 .sidebar-legend__header {
