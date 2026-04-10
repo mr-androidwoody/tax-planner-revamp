@@ -259,64 +259,44 @@
     refreshSetupSummary();
   }
 
-    function applyAssumptionsInputs(a) {
-      if (!a) return;
-    
-      const sv = (id, val) => {
-        const el = safeEl(id);
-        if (!el) return;
-    
-        if (el.classList.contains('currency-input')) {
-          if (val === '' || val === null || val === undefined || val === 0) {
-            el.value = '';
-          } else {
-            el.value = D.formatCurrency(val);
-          }
-          return;
-        }
-    
-        if (val != null) {
-          el.value = val;
-        }
-      };
-    
-      sv('spending',             a.spending);
-      sv('stepDownPct',          a.stepDownPct);
-      sv('growth',               a.growth);
-      sv('inflation',            a.inflation);
-      sv('thresholdFromYearVal', a.thresholdFromYear);
-      sv('dividendYield',        a.dividendYield);
-      sv('bniP1GIA',             a.bniP1GIA);
-      sv('bniP2GIA',             a.bniP2GIA);
-    
-      if (a.thresholdMode) {
-        const r = document.querySelector(`input[name="thresholdMode"][value="${a.thresholdMode}"]`);
-        if (r) r.checked = true;
-      }
-    
-      if (a.withdrawalMode) {
-        const r = document.querySelector(`input[name="withdrawalMode"][value="${a.withdrawalMode}"]`);
-        if (r) r.checked = true;
-      }
-    
-      ['p1Order1','p1Order2','p1Order3','p2Order1','p2Order2','p2Order3']
-        .forEach(id => sv(id, a[id]));
-    
-      const bni = safeEl('bniEnabled');
-      if (bni) {
-        bni.checked = !!a.bniEnabled;
-        ['bniP1GIA','bniP2GIA'].forEach(id => {
-          const el = safeEl(id);
-          if (el) {
-            el.disabled = !a.bniEnabled;
-            el.style.opacity = a.bniEnabled ? '' : '0.45';
-          }
-        });
-      }
-    
-      updateSidebarNames();
-      applyP2State();
+  function applyAssumptionsInputs(a) {
+    if (!a) return;
+
+    const sv = (id, val) => { const el = safeEl(id); if (el && val != null) el.value = val; };
+
+    sv('spending',             a.spending);
+    sv('stepDownPct',          a.stepDownPct);
+    sv('growth',               a.growth);
+    sv('inflation',            a.inflation);
+    sv('thresholdFromYearVal', a.thresholdFromYear);
+    sv('dividendYield',        a.dividendYield);
+    sv('bniP1GIA',             a.bniP1GIA);
+    sv('bniP2GIA',             a.bniP2GIA);
+
+    if (a.thresholdMode) {
+      const r = document.querySelector(`input[name="thresholdMode"][value="${a.thresholdMode}"]`);
+      if (r) r.checked = true;
     }
+    if (a.withdrawalMode) {
+      const r = document.querySelector(`input[name="withdrawalMode"][value="${a.withdrawalMode}"]`);
+      if (r) r.checked = true;
+    }
+
+    ['p1Order1','p1Order2','p1Order3','p2Order1','p2Order2','p2Order3']
+      .forEach(id => sv(id, a[id]));
+
+    const bni = safeEl('bniEnabled');
+    if (bni) {
+      bni.checked = !!a.bniEnabled;
+      ['bniP1GIA','bniP2GIA'].forEach(id => {
+        const el = safeEl(id);
+        if (el) { el.disabled = !a.bniEnabled; el.style.opacity = a.bniEnabled ? '' : '0.45'; }
+      });
+    }
+
+    updateSidebarNames();
+    applyP2State();
+  }
 
   // ─────────────────────────────
   // OWNER NAMES
@@ -745,7 +725,7 @@
       const enabled = e.target.checked;
       ['bniP1GIA', 'bniP2GIA'].forEach(id => {
         const el = safeEl(id);
-        if (el) { el.disabled = false; el.style.opacity = ''; }
+        if (el) { el.disabled = !enabled; el.style.opacity = enabled ? '' : '0.45'; }
       });
       return;
     }
@@ -907,81 +887,66 @@
     applyP2State();
   });
 
-    // ─────────────────────────────
-    // STEPPER BUTTONS
-    // ─────────────────────────────
-    document.addEventListener('click', function (e) {
-      const btn = e.target.closest('.stepper-btn');
-      if (!btn) return;
+  // ─────────────────────────────
+  // STEPPER BUTTONS
+  // ─────────────────────────────
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.stepper-btn');
+    if (!btn) return;
+
+    const targetId = btn.dataset.stepFor;
+    const dir      = Number(btn.dataset.stepDirection);
+    const input    = targetId
+      ? document.getElementById(targetId)
+      : btn.closest('.stepper-input')?.querySelector('input');
+    if (!input) return;
+
+    const step = Number(input.step) || 1;
     
-      const targetId = btn.dataset.stepFor;
-      const dir      = Number(btn.dataset.stepDirection) || 0;
+    let val;
     
-      const input = targetId
-        ? document.getElementById(targetId)
-        : btn.closest('.stepper-input')?.querySelector('input');
-    
-      if (!input) return;
-    
-      // FIX: use button-defined step amount first
-      const step =
-        Number(btn.dataset.stepAmount) ||
-        Number(input.step) ||
-        1;
-    
-      let val;
-    
-      // FIX: correctly parse currency inputs
-      if (input.classList.contains('currency-input')) {
-        val = D.parseCurrency(input.value || 0);
-      } else {
-        val = Number(input.value);
-      }
-    
-      if (isNaN(val)) val = 0;
-    
-      const min = input.min !== '' ? Number(input.min) : -Infinity;
-      const max = input.max !== '' ? Number(input.max) :  Infinity;
-    
-      const next = Math.min(max, Math.max(min, val + (dir * step)));
-    
-      // FIX: preserve formatting for currency fields
-      if (input.classList.contains('currency-input')) {
-        input.value = D.formatCurrency(next);
-      } else {
-        input.value = next;
-      }
-    
-      input.dispatchEvent(new Event('input',  { bubbles: true }));
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-    
-    
-    // ─────────────────────────────
-    // INIT
-    // ─────────────────────────────
-    refreshSetupSummary();
-    R.initialiseCurrencyInputs();
-    RetireTabs.init();
-    CR.initResultsTabs();
-    CR.initTableSelector();
-    
-    const savedPortfolio = localStorage.getItem(STORAGE_KEY);
-    if (savedPortfolio) {
-      try {
-        applySetupInputs(JSON.parse(savedPortfolio));
-      } catch (e) {
-        console.error(e);
-      }
+    if (input.classList.contains('currency-input')) {
+      val = D.parseCurrency(input.value || 0);
+    } else {
+      val = Number(input.value);
     }
     
-    const savedAssumptions = localStorage.getItem(ASSUMPTIONS_KEY);
-    if (savedAssumptions) {
-      try {
-        applyAssumptionsInputs(JSON.parse(savedAssumptions));
-      } catch (e) {
-        console.error(e);
-      }
+    if (isNaN(val)) val = 0;
+
+      
+    const min  = input.min !== '' ? Number(input.min) : -Infinity;
+    const max  = input.max !== '' ? Number(input.max) :  Infinity;
+
+    input.value = Math.min(max, Math.max(min, val + (dir * step)));
+    input.dispatchEvent(new Event('input',  { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
+  // ─────────────────────────────
+  // INIT
+  // ─────────────────────────────
+  refreshSetupSummary();
+  R.initialiseCurrencyInputs();
+  RetireTabs.init();
+  CR.initResultsTabs();
+  CR.initTableSelector();
+
+  const savedPortfolio = localStorage.getItem(STORAGE_KEY);
+  if (savedPortfolio) {
+    try {
+      applySetupInputs(JSON.parse(savedPortfolio));
+    } catch (e) {
+      console.error(e);
     }
+  }
+
+  const savedAssumptions = localStorage.getItem(ASSUMPTIONS_KEY);
+  if (savedAssumptions) {
+    try {
+      applyAssumptionsInputs(JSON.parse(savedAssumptions));
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
 })();
