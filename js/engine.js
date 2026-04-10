@@ -85,18 +85,21 @@
       const effThresholds = C.upratedTaxRules(baseRules, uprateFactor);
       const effCGTExempt  = effThresholds.cgtExempt;
 
-      // FIX 2: GIA dividends — opening balance × yield, treated as cashflow (not reinvested)
+      // GIA dividends — opening balance × yield, paid out as cashflow (not reinvested).
+      // Full amount is taxable when received regardless of spending need.
+      // GIA balance is reduced by dividends before growth to avoid double-counting
+      // (growth rate is total return; extracting dividends separately requires netting them out first).
       const p1GIAOpen  = p1Bal.GIA || 0;
       const p2GIAOpen  = p2Bal.GIA || 0;
       const p1Divs     = p1GIAOpen * dividendYield;
       const p2Divs     = p2GIAOpen * dividendYield;
-      // Cap dividend display to the portion that actually counts toward spending
-      const preDivGap  = Math.max(0, target - (p1SP + p2SP + p1SalInc + p2SalInc));
-      const totalDivs  = p1Divs + p2Divs;
-      const divsUsed   = Math.min(totalDivs, preDivGap);
-      const divRatio   = totalDivs > 0 ? divsUsed / totalDivs : 0;
-      const p1DivsUsed = p1Divs * divRatio;
-      const p2DivsUsed = p2Divs * divRatio;
+      // All dividends are taxable as received — no spending-cap capping
+      const p1DivsUsed = p1Divs;
+      const p2DivsUsed = p2Divs;
+
+      // Deduct dividends from GIA now (before growth) so growth applies to ex-dividend balance
+      p1Bal.GIA = Math.max(0, (p1Bal.GIA || 0) - p1Divs);
+      p2Bal.GIA = Math.max(0, (p2Bal.GIA || 0) - p2Divs);
 
       // FIX 1: annual CGT gain accumulators — reset each year, exemption applied once at year-end
       let p1AnnualGains = 0;
