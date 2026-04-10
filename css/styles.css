@@ -890,11 +890,26 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .total-badge {
-  font-size: 0.76rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
   display: inline-block;
+  line-height: 1;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.status-ok .total-badge {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.status-label {
+  font-size: 11px;
+  color: #16a34a;
 }
 
 .total-ok { background: #dcfce7; color: #16a34a; }
