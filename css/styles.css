@@ -901,6 +901,36 @@ input[type="radio"] { accent-color: var(--accent); }
 .total-warn { background: #fef9c3; color: #a16207; }
 .total-err { background: #fee2e2; color: #b91c1c; }
 
+/* Status badge — used by updateRowBadge() in render.js */
+.status {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 3px 7px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status .value {
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.status .status-text {
+  font-size: 0.65rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.status-ok   { background: #dcfce7; color: #16a34a; }
+.status-warn { background: #fef9c3; color: #a16207; }
+.status-err  { background: #fee2e2; color: #b91c1c; }
+
 .col-name { width: 11%; }
 .col-wrap { width: 7%; }
 .col-owner { width: 7%; }
@@ -909,11 +939,11 @@ input[type="radio"] { accent-color: var(--accent); }
 .col-rate { width: 7%; }
 
 /* Scoped stepper overrides for narrow account table columns */
-.acct-table .stepper-input input {
-  padding-right: 22px;
-  text-align: left;
+.acct-table td .stepper-input input {
+  padding-right: 20px !important;
+  text-align: left !important;
 }
-.acct-table .stepper-btn {
+.acct-table td .stepper-btn {
   width: 16px;
 }
 .col-draw { width: 8%; }
