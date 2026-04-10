@@ -1829,30 +1829,47 @@ input[type="radio"] { accent-color: var(--accent); }
    Sidebar table selector (Tables tab)
    ───────────────────────────── */
 
-.sidebar-table-selector {
+/* ─────────────────────────────
+   Full-width panel (Tables tab)
+   ───────────────────────────── */
+
+.chart-panel--full {
+  grid-template-columns: 1fr;
+}
+
+/* Table toolbar — sits above table content */
+.table-toolbar {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
 }
 
-.sidebar-table-selector button {
-  appearance: none;
-  padding: 6px 10px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-align: left;
-  border-radius: 7px;
-  border: 1px solid var(--border);
-  background: var(--panel-solid);
-  color: var(--muted);
-  cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
+.table-toolbar__left,
+.table-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.sidebar-table-selector button.is-active {
-  background: var(--accent);
-  color: #fff;
-  border-color: transparent;
+.table-toolbar__right .chart-sidebar__label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Horizontal variant of sidebar-toggle */
+.sidebar-toggle--row {
+  flex-direction: row;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.sidebar-toggle--row button {
+  flex: 0 0 auto;
+  padding: 6px 14px;
 }
 
 /* ─────────────────────────────
