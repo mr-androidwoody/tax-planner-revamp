@@ -289,5 +289,14 @@
       // remove commas while editing
       e.target.value = D.parseCurrency(val);
     });
+
+    // ─────────────────────────────
+    // INITIAL FORMAT ON LOAD (ADD THIS)
+    // ─────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.currency-input').forEach(el => {
+        applyCurrencyFormattingToInput(el);
+      });
+    });
     
 })();
