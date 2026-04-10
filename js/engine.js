@@ -424,10 +424,10 @@
 
       const householdGrossIncome = p1GrossIncome + p2GrossIncome;
       const householdTax         = p1TaxTotal + p2TaxTotal;
-      const householdNetIncome   = householdGrossIncome - householdTax;
+      const householdNetCashflow = householdGrossIncome - householdTax;
 
-      const spendingShortfall = Math.max(0, target - householdNetIncome);
-      const spendingSurplus   = Math.max(0, householdNetIncome - target);
+      const cashflowShortfall = Math.max(0, target - householdNetCashflow);
+      const cashflowSurplus   = Math.max(0, householdNetCashflow - target);
 
       const p1NaturalIncome = p1SP + p1SalInc + p1IntDraw + p1Divs;    
       const p2NaturalIncome =  p2SP + p2SalInc + p2IntDraw + p2Divs;
@@ -438,8 +438,8 @@
       const p2NaturalNet = p2NaturalIncome - p2Income.tax - p2NI;
       const householdNaturalNet = p1NaturalNet + p2NaturalNet;
 
-      const p1NetIncome = p1GrossIncome - p1TaxTotal;
-      const p2NetIncome = p2GrossIncome - p2TaxTotal;
+      const p1NetCashflow = p1GrossIncome - p1TaxTotal;
+      const p2NetCashflow = p2GrossIncome - p2TaxTotal;
 
         rows.push({
         year, p1Age, p2Age,
@@ -467,11 +467,11 @@
         p2GrossIncome,
         householdGrossIncome,
         householdTax,
-        householdNetIncome,
-        p1NetIncome,
-        p2NetIncome,
-        spendingShortfall,
-        spendingSurplus,
+        householdNetCashflow,
+        p1NetCashflow,
+        p2NetCashflow,
+        cashflowShortfall,
+        cashflowSurplus,
 
         p1NaturalNet,
         p2NaturalNet,

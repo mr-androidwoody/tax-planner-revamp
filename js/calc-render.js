@@ -295,7 +295,7 @@
     }
 
     if (label === 'Shortfall') {
-      const sfRows = rows.filter(r => (r.spendingShortfall || 0) > 0);
+      const sfRows = rows.filter(r => (r.cashflowShortfall || 0) > 0);
       if (!sfRows.length) return 'Portfolio fully meets the spending target across all years — no shortfall';
       return `Spending target unmet in ${sfRows.length} year${sfRows.length !== 1 ? 's' : ''}, first occurring in ${sfRows[0].year}`;
     }
