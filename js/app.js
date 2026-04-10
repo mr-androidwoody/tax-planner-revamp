@@ -896,13 +896,17 @@
 
     const targetId = btn.dataset.stepFor;
     const dir      = Number(btn.dataset.stepDirection);
-    const input    = document.getElementById(targetId);
+    const input    = targetId
+      ? document.getElementById(targetId)
+      : btn.closest('.stepper-input')?.querySelector('input');
     if (!input) return;
 
     const step = Number(input.step) || 1;
     const val  = Number(input.value) || 0;
+    const min  = input.min !== '' ? Number(input.min) : -Infinity;
+    const max  = input.max !== '' ? Number(input.max) :  Infinity;
 
-    input.value = val + (dir * step);
+    input.value = Math.min(max, Math.max(min, val + (dir * step)));
     input.dispatchEvent(new Event('input',  { bubbles: true }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
   });
