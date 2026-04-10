@@ -213,7 +213,7 @@
       p2Order1:          safeValue('p2Order1'),
       p2Order2:          safeValue('p2Order2'),
       p2Order3:          safeValue('p2Order3'),
-      bniEnabled:        safeEl('bniEnabled')?.checked || false,
+      bniEnabled:        document.querySelector('input[name="bniEnabled"]:checked')?.value === 'true',
       bniP1GIA:          safeValue('bniP1GIA'),
       bniP2GIA:          safeValue('bniP2GIA'),
       dividendYield:     safeValue('dividendYield'),
@@ -285,17 +285,9 @@
     ['p1Order1','p1Order2','p1Order3','p2Order1','p2Order2','p2Order3']
       .forEach(id => sv(id, a[id]));
 
-    const bni = safeEl('bniEnabled');
-    if (bni) {
-      bni.checked = !!a.bniEnabled;
-      ['bniP1GIA','bniP2GIA'].forEach(id => {
-        const el = safeEl(id);
-        if (el) { el.disabled = !a.bniEnabled; el.style.opacity = a.bniEnabled ? '' : '0.45'; }
-        el?.closest('.currency-stepper')?.querySelectorAll('.stepper-btn').forEach(b => {
-          b.disabled = !a.bniEnabled; b.style.opacity = a.bniEnabled ? '' : '0.45';
-        });
-      });
-    }
+    const bniRadio = document.querySelector(`input[name="bniEnabled"][value="${a.bniEnabled ? 'true' : 'false'}"]`);
+    if (bniRadio) bniRadio.checked = true;
+    applyBniState(!!a.bniEnabled);
 
     updateSidebarNames();
     applyP2State();
@@ -409,6 +401,16 @@
     'p2Cash', 'p2SIPP', 'p2ISA', 'p2GIA',
     'p2Order1', 'p2Order2', 'p2Order3', 'bniP2GIA',
   ];
+
+  function applyBniState(enabled) {
+    ['bniP1GIA', 'bniP2GIA'].forEach(id => {
+      const el = safeEl(id);
+      if (el) { el.disabled = !enabled; el.style.opacity = enabled ? '' : '0.45'; }
+      el?.closest('.currency-stepper')?.querySelectorAll('.stepper-btn').forEach(b => {
+        b.disabled = !enabled; b.style.opacity = enabled ? '' : '0.45';
+      });
+    });
+  }
 
   function applyP2State() {
     const enabled = state.p2enabled;
@@ -724,15 +726,8 @@
       return;
     }
 
-    if (e.target.id === 'bniEnabled') {
-      const enabled = e.target.checked;
-      ['bniP1GIA', 'bniP2GIA'].forEach(id => {
-        const el = safeEl(id);
-        if (el) { el.disabled = !enabled; el.style.opacity = enabled ? '' : '0.45'; }
-        el?.closest('.currency-stepper')?.querySelectorAll('.stepper-btn').forEach(b => {
-          b.disabled = !enabled; b.style.opacity = enabled ? '' : '0.45';
-        });
-      });
+    if (e.target.name === 'bniEnabled') {
+      applyBniState(e.target.value === 'true');
       return;
     }
 
@@ -867,15 +862,6 @@
 
       if (el.type === 'checkbox') {
         el.checked = String(v).toLowerCase() === 'true';
-        if (el.id === 'bniEnabled') {
-          ['bniP1GIA', 'bniP2GIA'].forEach(fid => {
-            const f = safeEl(fid);
-            if (f) { f.disabled = !el.checked; f.style.opacity = el.checked ? '' : '0.45'; }
-            f?.closest('.currency-stepper')?.querySelectorAll('.stepper-btn').forEach(b => {
-              b.disabled = !el.checked; b.style.opacity = el.checked ? '' : '0.45';
-            });
-          });
-        }
         return;
       }
 
@@ -886,6 +872,12 @@
     if (params.thresholdMode) {
       const radio = document.querySelector(`input[name="thresholdMode"][value="${params.thresholdMode}"]`);
       if (radio) radio.checked = true;
+    }
+
+    if (params.bniEnabled !== undefined) {
+      const bniRadio = document.querySelector(`input[name="bniEnabled"][value="${params.bniEnabled ? 'true' : 'false'}"]`);
+      if (bniRadio) bniRadio.checked = true;
+      applyBniState(!!params.bniEnabled);
     }
 
     if (params.p1DOB && safeEl('sp-p1dob')) safeEl('sp-p1dob').value = params.p1DOB;
@@ -930,6 +922,7 @@
   // ─────────────────────────────
   refreshSetupSummary();
   R.initialiseCurrencyInputs();
+  applyBniState(false);
   RetireTabs.init();
   CR.initResultsTabs();
   CR.initTableSelector();
