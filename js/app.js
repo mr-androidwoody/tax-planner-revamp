@@ -1179,6 +1179,7 @@
     showToast(`Loaded ${accounts.length} accounts from Excel ✓`);
     updateSidebarNames();
     applyP2State();
+    refreshPortfolioUI();
   });
 
   // ─────────────────────────────
