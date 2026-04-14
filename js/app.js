@@ -14,6 +14,7 @@
     activeTab: 'setup',
     p2enabled: true,
     simulationMode: 'deterministic', // kept for backwards compat with saved assumptions
+    projectionRun: false,
   };
 
   // ─────────────────────────────
@@ -436,7 +437,7 @@
       tabAssumptions.classList.toggle('tab-btn--disabled', !portfolioValid);
     }
     if (tabResults) {
-      const resultsEnabled = portfolioValid && assumptionsSaved;
+      const resultsEnabled = portfolioValid && assumptionsSaved && state.projectionRun;
       tabResults.disabled = !resultsEnabled;
       tabResults.classList.toggle('tab-btn--disabled', !resultsEnabled);
     }
@@ -798,6 +799,8 @@
 
       resetBtn();
 
+      state.projectionRun = true;
+      refreshTabGating(_isPortfolioValid());
       CR.setResults(result);
       CR.renderMetrics();
       CR.renderCharts();
