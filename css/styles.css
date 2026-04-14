@@ -2609,3 +2609,61 @@ input[type="radio"] { accent-color: var(--accent); }
   font-size: 11px;
   color: var(--muted, #9ca3af);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   RISK OUTCOMES — intro section + decade survival bar chart
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-section--intro {
+  background: transparent;
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 20px;
+}
+
+.mc-section--intro p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted, #6b7280);
+}
+
+.mc-decade-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mc-decade-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 52px;
+  align-items: center;
+  gap: 10px;
+}
+
+.mc-decade-row__year {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text, #374151);
+  text-align: right;
+}
+
+.mc-decade-row__bar-wrap {
+  height: 10px;
+  background: var(--border, #e5e7eb);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.mc-decade-row__bar {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  transition: width 400ms ease;
+}
+
+.mc-decade-row__pct {
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+}
