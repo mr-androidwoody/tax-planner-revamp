@@ -134,13 +134,9 @@
    * @returns {number[]} shortfall in £k, ≥ 0
    */
   function buildEngineShortfall(rows, viewPerson, useReal, targetData) {
-    // Use the engine's own cashflowShortfall field — this is authoritative and
-    // avoids false positives from recomputing gross income independently.
-    return rows.map((r, i) => {
-      const sf = r.cashflowShortfall ?? 0;
-      if (sf <= 0) return 0;
-      return adj(sf, r, useReal) / 1000;
-    });
+    // Returns zeros — the real shortfall baseline is computed in renderCharts()
+    // from the capped source datasets vs _targetData, after the capping loop.
+    return rows.map(() => 0);
   }
 
   // ─────────────────────────────────────────────
