@@ -276,8 +276,9 @@
 
           <div class="accounts-toolbar-actions">
 
-            <!-- Left -->
-            <button class="btn-add" data-action="add-account">+ Add account</button>
+            <!-- Left: alert (when invalid) OR add-account button (when valid) -->
+            <div id="portAlertBox" class="port-alert" style="display:none"></div>
+            <button class="btn-add" id="addAccountBtn" data-action="add-account">+ Add account</button>
 
             <!-- Right -->
             <div class="accounts-toolbar-right">
@@ -287,7 +288,7 @@
                 Save portfolio
               </button>
 
-              <button class="btn btn-primary" data-action="switch-tab" data-tab="assumptions">
+              <button class="btn btn-primary" id="continueToAssumptionsBtn" data-action="switch-tab" data-tab="assumptions">
                 Continue to assumptions →
               </button>
 
