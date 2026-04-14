@@ -2567,3 +2567,45 @@ input[type="radio"] { accent-color: var(--accent); }
   margin-bottom: -5px;
   padding-bottom: 12px;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   RISK OUTCOMES — key figures row (10th / Median / 90th)
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-key-figures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 12px 0 16px;
+}
+
+.mc-key-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--surface-2, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+}
+
+.mc-key-figure__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted, #6b7280);
+}
+
+.mc-key-figure__value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text, #111827);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.mc-key-figure__sub {
+  font-size: 11px;
+  color: var(--muted, #9ca3af);
+}
