@@ -621,25 +621,29 @@
 
   function buildShortfallInsight() {
     const NEAR_DEPLETION = 20000;
-    const sfRows = _rows.filter(r => (r.cashflowShortfall || 0) > 0 && (r.totalPortfolio || 0) <= NEAR_DEPLETION);
+    const allSfRows  = _rows.filter(r => (r.cashflowShortfall || 0) > 0);
     const frag = document.createDocumentFragment();
-    if (!sfRows.length) return frag;
+    if (!allSfRows.length) return frag;
 
-    const total    = sfRows.reduce((s, r) => s + (r.cashflowShortfall || 0), 0);
-    const peak     = Math.max(...sfRows.map(r => r.cashflowShortfall || 0));
-    const peakRow  = sfRows.find(r => (r.cashflowShortfall || 0) === peak);
-    const first    = sfRows[0];
-    const last     = sfRows[sfRows.length - 1];
+    const total    = allSfRows.reduce((s, r) => s + (r.cashflowShortfall || 0), 0);
+    const peak     = Math.max(...allSfRows.map(r => r.cashflowShortfall || 0));
+    const peakRow  = allSfRows.find(r => (r.cashflowShortfall || 0) === peak);
+    const first    = allSfRows[0];
+    const last     = allSfRows[allSfRows.length - 1];
+    const sfRows   = allSfRows; // alias kept for items block below
 
-    // Determine severity from first shortfall year's portfolio value
-    const firstPortfolio = first.totalPortfolio || 0;
-    const isExhausted    = firstPortfolio === 0;
+    // Determine severity from minimum portfolio value across all shortfall years
+    const minPortfolio = Math.min(...allSfRows.map(r => r.totalPortfolio || 0));
+    const isExhausted  = minPortfolio === 0;
+    const isNearDepleted = minPortfolio <= NEAR_DEPLETION;
     const severityLabel  = isExhausted
-      ? '🛑 Portfolio exhausted'
-      : `⚠️ Portfolio nearly exhausted (${fmt0(firstPortfolio)} remaining)`;
+      ? '🛑 Portfolio exhausted — spending target cannot be met'
+      : isNearDepleted
+        ? `⚠️ Portfolio nearly exhausted (${fmt0(minPortfolio)} min remaining)`
+        : '⚠️ Spending shortfall — portfolio does not fully meet target';
 
     const banner = document.createElement('div');
-    banner.className = 'chart-insight-banner' + (isExhausted ? ' chart-insight-banner--danger' : ' chart-insight-banner--warn');
+    banner.className = 'chart-insight-banner' + (isExhausted || isNearDepleted ? ' chart-insight-banner--danger' : ' chart-insight-banner--warn');
     banner.textContent = severityLabel;
     frag.appendChild(banner);
 
@@ -866,7 +870,7 @@
         },
       });
       renderIncomeLegend(_incomeChart, recomputeShortfall);
-      const hasGenuineShortfall = _rows.some(r => (r.cashflowShortfall || 0) > 0 && (r.totalPortfolio || 0) <= 20000);
+      const hasGenuineShortfall = _rows.some(r => (r.cashflowShortfall || 0) > 0);
       renderInsightButton('income', hasGenuineShortfall);
     }
 
