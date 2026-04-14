@@ -534,6 +534,8 @@ self.onmessage = function (e) {
     p90Portfolio:     Array.from(p90),
     successRate:      successCount / simCount,
     medianTotalTax:   Array.from(medTax),
+    equityVol,
+    inflationVol,
   };
 
   self.postMessage({ type: 'done', result });
