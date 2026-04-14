@@ -200,12 +200,20 @@
       </section>`;
 
     // ── 6. ASSUMPTIONS NOTE ───────────────────────────────────────────────
-    const eVol = (r.equityVol * 100).toFixed(0);
-    const iVol = (r.inflationVol * 100).toFixed(1);
+    // r.equityVol/inflationVol are decimals (e.g. 0.16). Fall back to the
+    // Assumptions inputs if the worker result doesn't carry them.
+    const eVolRaw = r.equityVol != null
+      ? r.equityVol
+      : (parseFloat(document.getElementById('equityVol')?.value) || 16) / 100;
+    const iVolRaw = r.inflationVol != null
+      ? r.inflationVol
+      : (parseFloat(document.getElementById('inflationVol')?.value) || 1.5) / 100;
+    const eVol = (eVolRaw * 100).toFixed(0);
+    const iVol = (iVolRaw * 100).toFixed(1);
     const volLabel =
-      r.equityVol >= 0.18 ? 'an aggressive set of assumptions reflecting very high uncertainty' :
-      r.equityVol >= 0.14 ? 'a cautious set of assumptions reflecting elevated uncertainty in both markets and inflation' :
-                            'a moderate set of assumptions broadly consistent with long-run historical ranges';
+      eVolRaw >= 0.18 ? 'an aggressive set of assumptions reflecting very high uncertainty' :
+      eVolRaw >= 0.14 ? 'a cautious set of assumptions reflecting elevated uncertainty in both markets and inflation' :
+                        'a moderate set of assumptions broadly consistent with long-run historical ranges';
 
     const assumHTML = `
       <section class="mc-section mc-section--muted">
