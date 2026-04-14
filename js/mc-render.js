@@ -8,8 +8,12 @@
  *   window.RetireData  — for D.formatMoney
  *
  * Public API:
- *   RetireMCRender.setResults(result)  — store result from mc-engine.js
- *   RetireMCRender.render()            — paint stat cards + narrative report
+ *   RetireMCRender.setResults(result, meanInflation)
+ *     — store result from mc-engine.js + mean inflation rate (decimal)
+ *   RetireMCRender.render()
+ *     — paint narrative (real or nominal per _useReal flag)
+ *   RetireMCRender.setReal(bool)
+ *     — switch real/nominal and re-render
  */
 
 (function () {
@@ -28,32 +32,74 @@
   }
 
   // ── State ─────────────────────────────────────────────────────────────────
-  let _result = null;
+  let _result        = null;
+  let _meanInflation = 0.025; // overwritten by setResults
+  let _useReal       = true;  // default real, matching other charts
 
-  // ── Public: store result ──────────────────────────────────────────────────
-  function setResults(result) {
-    _result = result;
+  // ── Deflation ─────────────────────────────────────────────────────────────
+  // Real = Nominal / (1 + meanInflation)^yearIndex
+  function _deflate(nominalValue, yearIndex) {
+    if (!_useReal) return nominalValue;
+    return nominalValue / Math.pow(1 + _meanInflation, yearIndex);
   }
 
-  // ── Public: render everything ─────────────────────────────────────────────
+  function _deflateArr(arr) {
+    return arr.map((v, i) => _deflate(v, i));
+  }
+
+  // ── Public: store result ──────────────────────────────────────────────────
+  function setResults(result, meanInflation) {
+    _result        = result;
+    _meanInflation = (typeof meanInflation === 'number' && !isNaN(meanInflation))
+      ? meanInflation
+      : 0.025;
+  }
+
+  // ── Public: toggle real/nominal and re-render ─────────────────────────────
+  function setReal(useReal) {
+    _useReal = useReal;
+    render();
+  }
+
+  // ── Public: render ────────────────────────────────────────────────────────
   function render() {
     if (!_result) return;
+    _syncToggleButtons();
     _renderNarrative();
+  }
+
+  // ── Sync toggle button active states ─────────────────────────────────────
+  function _syncToggleButtons() {
+    document.querySelectorAll('[data-action="mc-real-on"],[data-action="mc-real-off"]')
+      .forEach(b => b.classList.remove('is-active'));
+    const activeAction = _useReal ? 'mc-real-on' : 'mc-real-off';
+    document.querySelectorAll(`[data-action="${activeAction}"]`)
+      .forEach(b => b.classList.add('is-active'));
   }
 
   // ─────────────────────────────────────────────────────────────────────────
   // NARRATIVE REPORT
-  // Six labelled sections injected into #mc-narrative.
   // ─────────────────────────────────────────────────────────────────────────
   function _renderNarrative() {
     const el = document.getElementById('mc-narrative');
     if (!el) return;
 
-    const r         = _result;
-    const lastIdx   = r.years.length - 1;
-    const lastYear  = r.years[lastIdx];
+    const r        = _result;
+    const lastIdx  = r.years.length - 1;
+    const lastYear = r.years[lastIdx];
+    const modeLabel = _useReal ? 'real' : 'nominal';
 
-    // ── Helper: find first year a percentile array hits zero (depletion) ──
+    // Deflated percentile series
+    const p10 = _deflateArr(r.p10Portfolio);
+    const p50 = _deflateArr(r.p50Portfolio);
+    const p90 = _deflateArr(r.p90Portfolio);
+    const tax = _deflateArr(r.medianTotalTax);
+
+    // Update sim count in subtitle
+    const simCountEl = document.getElementById('mc-sim-count');
+    if (simCountEl) simCountEl.textContent = r.simCount.toLocaleString('en-GB');
+
+    // ── Helpers ───────────────────────────────────────────────────────────
     function depletionYear(arr) {
       for (let i = 0; i < arr.length; i++) {
         if (arr[i] <= 0) return r.years[i];
@@ -61,16 +107,11 @@
       return null;
     }
 
-    // ── Helper: find peak value and year in an array ──────────────────────
     function peak(arr) {
       let maxVal = -Infinity, maxIdx = 0;
       arr.forEach((v, i) => { if (v > maxVal) { maxVal = v; maxIdx = i; } });
       return { value: maxVal, year: r.years[maxIdx] };
     }
-
-    // Update sim count in subtitle
-    const simCountEl = document.getElementById('mc-sim-count');
-    if (simCountEl) simCountEl.textContent = r.simCount.toLocaleString('en-GB');
 
     // ── 1. VERDICT ────────────────────────────────────────────────────────
     const successPaths = Math.round(r.successRate * r.simCount);
@@ -91,29 +132,9 @@
         (${fmtPct(r.successRate)}). ${verdictLabel}</p>
       </section>`;
 
-    // ── 2. KEY FIGURES ────────────────────────────────────────────────────
-    const keyFiguresHTML = `
-      <div class="mc-key-figures">
-        <div class="mc-key-figure">
-          <span class="mc-key-figure__label">10th percentile</span>
-          <span class="mc-key-figure__value">${fmt(r.p10Portfolio[lastIdx])}</span>
-          <span class="mc-key-figure__sub">final portfolio</span>
-        </div>
-        <div class="mc-key-figure">
-          <span class="mc-key-figure__label">Median</span>
-          <span class="mc-key-figure__value">${fmt(r.p50Portfolio[lastIdx])}</span>
-          <span class="mc-key-figure__sub">final portfolio</span>
-        </div>
-        <div class="mc-key-figure">
-          <span class="mc-key-figure__label">90th percentile</span>
-          <span class="mc-key-figure__value">${fmt(r.p90Portfolio[lastIdx])}</span>
-          <span class="mc-key-figure__sub">final portfolio</span>
-        </div>
-      </div>`;
-
-    // ── 3. MEDIAN OUTCOME ─────────────────────────────────────────────────
-    const p50Peak     = peak(r.p50Portfolio);
-    const p50Depletes = depletionYear(r.p50Portfolio);
+    // ── 2. MEDIAN OUTCOME ─────────────────────────────────────────────────
+    const p50Peak     = peak(p50);
+    const p50Depletes = depletionYear(p50);
     let medianBody;
     if (p50Depletes) {
       const yearsEarly = lastYear - p50Depletes;
@@ -123,7 +144,7 @@
     } else {
       medianBody = `In the median scenario, your portfolio peaks at
         ${fmt(p50Peak.value)} around ${p50Peak.year} and finishes at
-        ${fmt(r.p50Portfolio[lastIdx])} in ${lastYear}.`;
+        ${fmt(p50[lastIdx])} in ${lastYear} (${modeLabel} terms).`;
     }
 
     const medianHTML = `
@@ -133,7 +154,7 @@
       </section>`;
 
     // ── 3. STRESS CASE (p10) ──────────────────────────────────────────────
-    const p10Depletes = depletionYear(r.p10Portfolio);
+    const p10Depletes = depletionYear(p10);
     let stressBody;
     if (p10Depletes) {
       const yearsEarly = lastYear - p10Depletes;
@@ -143,9 +164,9 @@
         combination of poor early returns and elevated inflation.`;
     } else {
       stressBody = `In a poor returns environment (bottom 10%), your portfolio
-        retains ${fmt(r.p10Portfolio[lastIdx])} by ${lastYear}. While significantly
-        below the median, the plan remains solvent throughout the projection under
-        this stress scenario.`;
+        retains ${fmt(p10[lastIdx])} by ${lastYear} (${modeLabel} terms). While
+        significantly below the median, the plan remains solvent throughout the
+        projection under this stress scenario.`;
     }
 
     const stressHTML = `
@@ -155,23 +176,23 @@
       </section>`;
 
     // ── 4. OPTIMISTIC CASE (p90) ──────────────────────────────────────────
-    const p90Final    = r.p90Portfolio[lastIdx];
-    const legacyNote  = p90Final > 500_000
+    const p90Final   = p90[lastIdx];
+    const legacyNote = p90Final > 500_000
       ? ' This would leave meaningful wealth to pass on or deploy in later life.'
       : '';
     const optimisticHTML = `
       <section class="mc-section">
         <h4 class="mc-section-heading">Optimistic case (p90)</h4>
         <p>In a favourable environment (top 10% of outcomes), your portfolio
-        reaches ${fmt(p90Final)} by ${lastYear}.${legacyNote}</p>
+        reaches ${fmt(p90Final)} by ${lastYear} (${modeLabel} terms).${legacyNote}</p>
       </section>`;
 
     // ── 5. TAX DRAG ───────────────────────────────────────────────────────
-    const nonZeroTax  = r.medianTotalTax.filter(v => v > 0);
-    const avgTax      = nonZeroTax.length
+    const nonZeroTax = tax.filter(v => v > 0);
+    const avgTax     = nonZeroTax.length
       ? nonZeroTax.reduce((s, v) => s + v, 0) / nonZeroTax.length
       : 0;
-    const taxPeak     = peak(r.medianTotalTax);
+    const taxPeak     = peak(tax);
     const taxPeakYear = taxPeak.value > 0 ? taxPeak.year : null;
 
     let taxBody;
@@ -195,14 +216,8 @@
       </section>`;
 
     // ── 6. ASSUMPTIONS NOTE ───────────────────────────────────────────────
-    // r.equityVol/inflationVol are decimals (e.g. 0.16). Fall back to the
-    // Assumptions inputs if the worker result doesn't carry them.
-    const eVolRaw = r.equityVol != null
-      ? r.equityVol
-      : (parseFloat(document.getElementById('equityVol')?.value) || 16) / 100;
-    const iVolRaw = r.inflationVol != null
-      ? r.inflationVol
-      : (parseFloat(document.getElementById('inflationVol')?.value) || 1.5) / 100;
+    const eVolRaw = r.equityVol  != null ? r.equityVol  : 0.16;
+    const iVolRaw = r.inflationVol != null ? r.inflationVol : 0.015;
     const eVol = (eVolRaw * 100).toFixed(0);
     const iVol = (iVolRaw * 100).toFixed(1);
     const volLabel =
@@ -217,13 +232,14 @@
         volatility — ${volLabel}. Each of the
         ${r.simCount.toLocaleString('en-GB')} paths independently samples annual
         returns and inflation, compounding uncertainty across the full
-        ${r.years.length}-year projection.</p>
+        ${r.years.length}-year projection.
+        All values shown in ${modeLabel} terms.</p>
       </section>`;
 
-    el.innerHTML = verdictHTML + keyFiguresHTML + medianHTML + stressHTML + optimisticHTML + taxHTML + assumHTML;
+    el.innerHTML = verdictHTML + medianHTML + stressHTML + optimisticHTML + taxHTML + assumHTML;
   }
 
   // ── Register global ───────────────────────────────────────────────────────
-  window.RetireMCRender = { setResults, render };
+  window.RetireMCRender = { setResults, render, setReal };
 
 })();

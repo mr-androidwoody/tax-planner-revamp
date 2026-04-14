@@ -768,7 +768,7 @@
 
       const MCR = window.RetireMCRender;
       if (!MCR) throw new Error('RetireMCRender not loaded');
-      MCR.setResults(result);
+      MCR.setResults(result, inputs.inflation);
       MCR.render();
 
       // Switch to Results → Risk Outcomes sub-tab and mark ready (red).
@@ -884,6 +884,9 @@
     if (action === 'view-p2')   return CR.setView('p2', el);
     if (action === 'real-on')   return CR.setReal(true, el);
     if (action === 'real-off')  return CR.setReal(false, el);
+
+    if (action === 'mc-real-on')  return window.RetireMCRender?.setReal(true);
+    if (action === 'mc-real-off') return window.RetireMCRender?.setReal(false);
   });
 
   // ─────────────────────────────
