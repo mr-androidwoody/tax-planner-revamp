@@ -10,22 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link href="css/styles.css" rel="stylesheet"/>
   <link href="css/home-btn.css" rel="stylesheet"/>
-  <style>
-    /* ── Monte Carlo narrative sections ── */
-    #mc-narrative { margin: 0 0 20px; }
-    .mc-section { margin-bottom: 16px; padding: 14px 16px; border-radius: 8px; background: var(--color-surface, #f9fafb); border: 1px solid var(--color-border, #e5e7eb); }
-    .mc-section-heading { margin: 0 0 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-muted, #6b7280); }
-    .mc-section p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--color-text, #374151); }
-    .mc-verdict.mc-verdict--strong   { background: #f0fdf4; border-color: #86efac; border-left: 4px solid #16a34a; }
-    .mc-verdict.mc-verdict--strong .mc-section-heading { color: #15803d; }
-    .mc-verdict.mc-verdict--moderate { background: #fffbeb; border-color: #fde68a; border-left: 4px solid #d97706; }
-    .mc-verdict.mc-verdict--moderate .mc-section-heading { color: #b45309; }
-    .mc-verdict.mc-verdict--weak     { background: #fef2f2; border-color: #fecaca; border-left: 4px solid #dc2626; }
-    .mc-verdict.mc-verdict--weak .mc-section-heading { color: #b91c1c; }
-    .mc-section--muted { background: transparent; border-color: transparent; padding-left: 0; padding-right: 0; }
-    .mc-section--muted .mc-section-heading { color: var(--color-muted, #9ca3af); }
-    .mc-section--muted p { font-size: 13px; color: var(--color-muted, #6b7280); font-style: italic; }
-  </style>
+
 </head>
 
 <body>
@@ -684,49 +669,6 @@
             </div>
           </div>
 
-          <!-- Simulation Mode -->
-          <div class="assump-card">
-            <div class="assump-card-title">
-              <span class="assump-tooltip-anchor">Simulation Mode<span class="assump-tooltip">Deterministic runs a single projection using your exact growth and inflation inputs. Monte Carlo runs 10,000 paths with returns sampled from a normal distribution around your mean inputs, showing a range of outcomes.</span></span>
-            </div>
-            <div class="assump-section">
-              <p class="assump-section__label">Mode</p>
-              <div class="assump-radio-group">
-                <label class="assump-radio-label">
-                  <input type="radio" name="simulationMode" value="deterministic" checked> <strong>Deterministic</strong> <span class="assump-inline-field__hint">Single path using exact inputs</span>
-                </label>
-                <label class="assump-radio-label">
-                  <input type="radio" name="simulationMode" value="montecarlo"> <strong>Monte Carlo</strong> <span class="assump-inline-field__hint">10,000 paths — shows range of outcomes</span>
-                </label>
-              </div>
-            </div>
-            <div id="mcVolatilityBlock" class="assump-section" style="display:none">
-              <p class="assump-section__label">Return volatility</p>
-              <div class="assump-section__body">
-                <div class="assump-inline-field" style="margin-bottom:8px">
-                  <label class="assump-inline-field__label" for="equityVol">
-                    <span class="assump-tooltip-anchor">Equity volatility<span class="assump-tooltip">Annualised standard deviation of real equity returns. Set to 16% as a cautious assumption reflecting higher uncertainty in markets. The mean return is taken from your Growth input above.</span></span>
-                  </label>
-                  <div class="stepper-input">
-                    <input type="number" id="equityVol" value="16" min="1" max="40" step="0.5"> %
-                    <button class="stepper-btn" data-step-for="equityVol" data-step-direction="1"  data-step-amount="0.5" type="button">&#x25B2;</button>
-                    <button class="stepper-btn" data-step-for="equityVol" data-step-direction="-1" data-step-amount="0.5" type="button">&#x25BC;</button>
-                  </div>
-                </div>
-                <div class="assump-inline-field">
-                  <label class="assump-inline-field__label" for="inflationVol">
-                    <span class="assump-tooltip-anchor">Inflation volatility<span class="assump-tooltip">Annualised standard deviation of inflation. A typical value is 1–2%. The mean is taken from your Inflation input above.</span></span>
-                  </label>
-                  <div class="stepper-input">
-                    <input type="number" id="inflationVol" value="1.5" min="0.1" max="10" step="0.1"> %
-                    <button class="stepper-btn" data-step-for="inflationVol" data-step-direction="1"  data-step-amount="0.1" type="button">&#x25B2;</button>
-                    <button class="stepper-btn" data-step-for="inflationVol" data-step-direction="-1" data-step-amount="0.1" type="button">&#x25BC;</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div><!-- /.assump-row-bottom -->
 
       </div><!-- /.assump-layout -->
@@ -740,8 +682,15 @@
     <div id="tab-results" class="tab-panel">
 
       <div class="results-intro">
-        <h1>Projection</h1>
-        <p class="results-projection">Projection <span id="ai-startyear">–</span> → <span id="ai-endyear">–</span></p>
+        <div class="results-intro__left">
+          <h1>Projection</h1>
+          <p class="results-projection">Projection <span id="ai-startyear">–</span> → <span id="ai-endyear">–</span></p>
+        </div>
+        <div class="results-intro__right">
+          <button id="runRiskBtn" class="btn-run-risk" data-action="run-risk" disabled>
+            Run risk outcomes
+          </button>
+        </div>
       </div>
 
       <!-- Stat cards — always visible -->
