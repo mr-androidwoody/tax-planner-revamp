@@ -337,7 +337,7 @@
       spending: '', stepDownPct: '0', growth: '', inflation: '',
       thresholdMode: 'frozen', withdrawalMode: 'tax-aware',
       dividendYield: '1.5', bniEnabled: false,
-      simulationMode: 'deterministic', equityVol: '12', inflationVol: '1.5',
+      simulationMode: 'deterministic', equityVol: '16', inflationVol: '1.5',
     });
     showToast('Assumptions deleted');
   }
