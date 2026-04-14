@@ -1207,7 +1207,6 @@
   // INIT
   // ─────────────────────────────
   refreshSetupSummary();
-  refreshPortfolioUI();
   R.initialiseCurrencyInputs();
   applyBniState(false);
   RetireTabs.init();
@@ -1240,5 +1239,9 @@
       console.error(e);
     }
   }
+
+  // Gate tabs after everything is loaded — must run after RetireTabs.init()
+  // so our disabled state wins over any defaults set by the tab system
+  refreshPortfolioUI();
 
 })();
