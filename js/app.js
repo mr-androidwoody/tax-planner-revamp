@@ -720,7 +720,6 @@
     const tabBtn = document.querySelector('.results-tab[data-results-tab="risk"]');
     if (!tabBtn) return;
     tabBtn.classList.toggle('results-tab--risk-ready', ready);
-    if (ready) tabBtn.classList.remove('results-tab--hidden');
   }
 
   async function runRisk() {
@@ -782,23 +781,29 @@
       let sustainableSpending = null;
       let sustainableIsFloor  = false; // true = "at least £X", false = exact estimate
 
+      // Linear interpolation: given two bracketing points (s1, r1) and (s2, r2)
+      // where r1 > TARGET_CONFIDENCE > r2 and s1 < s2, find spending at target.
+      function interpolateSpending(s1, r1, s2, r2) {
+        const denom = Math.abs(r1 - r2);
+        if (denom < 0.0001) return Math.round((s1 + s2) / 2);
+        return Math.round(s1 + (r1 - TARGET_CONFIDENCE) / (r1 - r2) * (s2 - s1));
+      }
+
       if (rH >= TARGET_CONFIDENCE) {
-        // All three points are above 95% — plan is very strong.
+        // All three points at or above 95% -- plan is very strong.
         // Report the high bracket as a lower-bound floor.
         sustainableSpending = Math.round(sH);
         sustainableIsFloor  = true;
-      } else if (rC >= TARGET_CONFIDENCE && rH < TARGET_CONFIDENCE) {
-        // Target straddles current and high — interpolate between them.
-        const t = (rC - TARGET_CONFIDENCE) / Math.max(rC - rH, 0.001);
-        sustainableSpending = Math.round(S + t * (sH - S));
-      } else if (rL >= TARGET_CONFIDENCE && rC < TARGET_CONFIDENCE) {
-        // Target straddles low and current — interpolate between them.
-        const t = (rL - TARGET_CONFIDENCE) / Math.max(rL - rC, 0.001);
-        sustainableSpending = Math.round(sL + t * (S - sL));
+      } else if (rC >= TARGET_CONFIDENCE) {
+        // 95% threshold lies between current and high spending -- interpolate upward.
+        sustainableSpending = interpolateSpending(S, rC, sH, rH);
+      } else if (rL >= TARGET_CONFIDENCE) {
+        // 95% threshold lies between low and current spending -- interpolate downward.
+        sustainableSpending = interpolateSpending(sL, rL, S, rC);
       } else {
-        // All three points are below 95% — plan is under stress.
-        // Extrapolate below sL cautiously.
-        const slope = (rL - rH) / (sH - sL); // rate change per £ of spending (positive)
+        // All three points below 95% -- plan is under stress.
+        // Extrapolate below sL using the slope of the low->current segment.
+        const slope = (rL - rC) / Math.max(S - sL, 1);
         if (slope > 0.0001) {
           sustainableSpending = Math.round(sL - (TARGET_CONFIDENCE - rL) / slope);
         }
