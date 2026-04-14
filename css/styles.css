@@ -2568,6 +2568,10 @@ input[type="radio"] { accent-color: var(--accent); }
   padding-bottom: 12px;
 }
 
+.results-tab--hidden {
+  display: none;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    RISK OUTCOMES — key figures row (10th / Median / 90th)
    ═══════════════════════════════════════════════════════════════ */
@@ -2619,7 +2623,7 @@ input[type="radio"] { accent-color: var(--accent); }
   border-color: transparent;
   padding-left: 0;
   padding-right: 0;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .mc-section--intro p {
