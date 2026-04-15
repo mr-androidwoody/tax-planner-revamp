@@ -163,7 +163,7 @@
 
     const verdictHTML = `
       <section class="mc-section mc-verdict ${verdictClass}">
-        <h4 class="mc-section-heading">Verdict</h4>
+        <h4 class="mc-section-heading">Will your plan last?</h4>
         <p>Your plan succeeds in <strong>${successPaths.toLocaleString('en-GB')}</strong> of
         ${r.simCount.toLocaleString('en-GB')} simulations
         (<strong>${fmtPct(r.successRate)}</strong>). ${verdictLabel}</p>
@@ -210,7 +210,7 @@
 
       sustainHTML = `
         <section class="mc-section mc-sustain ${sClass}">
-          <h4 class="mc-section-heading">Sustainable spending estimate</h4>
+          <h4 class="mc-section-heading">How much can you safely spend?</h4>
           <p>${sustainBody}</p>
           <p class="mc-sustain__note">All spending figures are in today's money (real, year-0 terms) and do not change with the Real/Nominal toggle above, which affects portfolio values only. Sustainable spending is estimated via bisection across 12 simulation runs; accuracy ±1%.</p>
         </section>`;
@@ -233,7 +233,7 @@
 
     const medianHTML = `
       <section class="mc-section">
-        <h4 class="mc-section-heading">Median outcome</h4>
+        <h4 class="mc-section-heading">What typically happens</h4>
         <p>${medianBody}</p>
       </section>`;
 
@@ -270,7 +270,7 @@
 
     const stressHTML = `
       <section class="mc-section${stressClass ? ' mc-sustain ' + stressClass : ''}">
-        <h4 class="mc-section-heading">10th percentile – stress case</h4>
+        <h4 class="mc-section-heading">Worst-case scenario – 1 in 10 outcomes</h4>
         <p>${stressBody}</p>
       </section>`;
 
@@ -286,7 +286,7 @@
 
     const optimisticHTML = `
       <section class="mc-section">
-        <h4 class="mc-section-heading"${optimisticHeadingStyle}>90th percentile – optimistic case</h4>
+        <h4 class="mc-section-heading"${optimisticHeadingStyle}>Best-case scenario – 1 in 10 outcomes</h4>
         <p>In a favourable environment (90th percentile), your portfolio reaches
         <strong>${fmt(p90Final)}</strong> by ${lastYear} (${modeLabel} terms).${legacyNote}</p>
       </section>`;
@@ -297,7 +297,7 @@
     const iqrWide  = (p75Final - p25Final) / Math.max(p50[lastIdx], 1) > 1.5;
     const iqrHTML = `
       <section class="mc-section">
-        <h4 class="mc-section-heading">Middle 50% of outcomes</h4>
+        <h4 class="mc-section-heading">Likely range of outcomes</h4>
         <p>In the central half of all simulated paths, your portfolio finishes
         between <strong>${fmt(p25Final)}</strong> (25th percentile) and <strong>${fmt(p75Final)}</strong>
         (75th percentile) by ${lastYear} (${modeLabel} terms). A tight range
@@ -315,7 +315,7 @@
       const yearsIn = r.earliestDepletion - firstYear;
       earliestHTML = `
         <section class="mc-section">
-          <h4 class="mc-section-heading">Earliest depletion</h4>
+          <h4 class="mc-section-heading">When could money run out?</h4>
           <p>In the worst-case paths, funds could be exhausted as early as
           <strong>${r.earliestDepletion}</strong> – just ${yearsIn} year${yearsIn !== 1 ? 's' : ''}
           into the projection. This typically occurs when a severe market downturn
@@ -349,7 +349,7 @@
 
     const ruinHTML = decadeRows ? `
       <section class="mc-section">
-        <h4 class="mc-section-heading">Portfolio survival by year</h4>
+        <h4 class="mc-section-heading">How risk builds over time</h4>
         <p style="margin-bottom:12px">Percentage of the ${r.simCount.toLocaleString('en-GB')} simulated paths
         where the portfolio remains above zero at each point in time.</p>
         <div class="mc-decade-chart">${decadeRows}</div>
@@ -396,7 +396,7 @@
       // Strong plan — no material actions needed
       actionsHTML = `
         <section class="mc-section mc-sustain mc-sustain--safe">
-          <h4 class="mc-section-heading">Plan assessment</h4>
+          <h4 class="mc-section-heading">Your plan looks solid</h4>
           <p>No material changes needed. Your plan is resilient across the full range of simulated scenarios — success rate, sustainable spending, and stress-case outcomes are all within strong bounds.</p>
         </section>`;
     } else {
@@ -405,7 +405,7 @@
       const aClass  = isWarn ? 'mc-sustain--warn' : 'mc-sustain--safe';
       actionsHTML = `
         <section class="mc-section mc-sustain ${aClass}">
-          <h4 class="mc-section-heading">How to improve this plan</h4>
+          <h4 class="mc-section-heading">What you could do differently</h4>
           <ul style="margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--text,#374151)">${liItems}</ul>
         </section>`;
     }
@@ -422,7 +422,7 @@
 
     const assumHTML = `
       <section class="mc-section mc-section--muted">
-        <h4 class="mc-section-heading">Assumptions</h4>
+        <h4 class="mc-section-heading">How this was calculated</h4>
         <p>This stress test uses <strong>${eVol}%</strong> equity volatility and <strong>${iVol}%</strong> inflation
         volatility – ${volLabel}. Each of the
         ${r.simCount.toLocaleString('en-GB')} paths independently samples annual
