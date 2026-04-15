@@ -87,7 +87,7 @@
     const noInterest = _isCashlikeless(acc);
 
     const wrapperOptions = D.WRAPPERS.map(
-      (w) => `<option value="${w}" ${acc.wrapper === w ? 'selected' : ''}>${w}</option>`
+      (w) => `<option value="${w}" ${acc.wrapper === w ? 'selected' : ''}>${w === 'SIPP' ? 'SIPP/WP' : w}</option>`
     ).join('');
 
     const ownerOptions = [
