@@ -177,18 +177,17 @@
     rows.forEach((row) => {
       const name    = String(row[0] || '').trim();
       const wrapper = normaliseWrapper(row[1]);
-      // Skip rows with no name or unrecognisable wrapper
-      if (!name || (!VALID_WRAPPERS.has(wrapper) && wrapper === String(row[1] || '').trim())) {
-        // If name is present but wrapper is unrecognisable, still push so validate() can report it
-        if (name) {
-          accounts.push({ name, wrapper, owner: normaliseOwner(row[2] || 'p1'),
-            value: parseNum(row[3]),
-            alloc: { equities: 0, bonds: 0, cashlike: 0, cash: 0 },
-            rate: null, monthlyDraw: null, _rawWrapper: String(row[1] || '').trim() });
-        }
+      // Skip rows with no name, or where wrapper is blank (catches legend/footer rows)
+      const rawWrapper = String(row[1] || '').trim();
+      if (!name || !rawWrapper) return;
+      // If name is present but wrapper is unrecognisable, push so validate() can report it
+      if (!VALID_WRAPPERS.has(wrapper)) {
+        accounts.push({ name, wrapper, owner: normaliseOwner(row[2] || 'p1'),
+          value: parseNum(row[3]),
+          alloc: { equities: 0, bonds: 0, cashlike: 0, cash: 0 },
+          rate: null, monthlyDraw: null, _rawWrapper: rawWrapper });
         return;
       }
-      if (!name) return;
 
       const owner       = normaliseOwner(row[2] || 'p1');
       const value       = parseNum(row[3]);
