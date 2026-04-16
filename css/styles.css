@@ -3279,14 +3279,22 @@ input[type="radio"] { accent-color: var(--accent); }
   border-right: 1px solid var(--border);
 }
 
-.wiz-col-pair__intro {
+.wiz-col-pair__header {
   grid-column: 1 / -1;
   padding-bottom: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid var(--border);
+}
+
+.wiz-col-pair__header .wiz-col-heading {
+  margin-bottom: 0;
+}
+
+.wiz-col-pair__intro {
   font-size: 0.8rem;
   line-height: 1.6;
   color: var(--muted);
+  margin: 10px 0 0;
 }
 
 .wiz-col-pair .wiz-col {
