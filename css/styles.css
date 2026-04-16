@@ -3251,6 +3251,13 @@ input[type="radio"] { accent-color: var(--accent); }
 .wiz-val .stepper-input,
 .wiz-val .currency-stepper {
   width: 100%;
+  max-width: 130px;
+}
+
+.wiz-table select {
+  max-width: 130px;
+  margin-left: auto;
+  display: block;
 }
 
 .wiz-val .assump-radio-group {
