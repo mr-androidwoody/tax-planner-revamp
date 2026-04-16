@@ -3264,6 +3264,43 @@ input[type="radio"] { accent-color: var(--accent); }
   width: 100%;
 }
 
+.wiz-grid--2-1 {
+  grid-template-columns: 2fr 1fr;
+}
+
+/* Paired columns — intro spans both, then two sub-cols side by side */
+.wiz-col-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0;
+  padding-right: 28px;
+  margin-right: 28px;
+  border-right: 1px solid var(--border);
+}
+
+.wiz-col-pair__intro {
+  grid-column: 1 / -1;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.wiz-col-pair .wiz-col {
+  padding-right: 16px;
+  margin-right: 16px;
+  border-right: 1px solid var(--border);
+}
+
+.wiz-col-pair .wiz-col:last-child {
+  padding-right: 0;
+  margin-right: 0;
+  border-right: none;
+}
+
 /* ── Segmented control (binary / short-label radio groups) ── */
 .wiz-seg {
   display: inline-flex;
