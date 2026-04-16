@@ -36,6 +36,14 @@
     _annotations = result.annotations || [];
     _depletions  = result.depletions  || {};
     if (strategy) _strategy = strategy;
+
+    // Update the Results page h1 to show active strategy
+    const strategyLabels = { balanced: 'Balanced', isaFirst: 'ISA-first', sippFirst: 'SIPP-first' };
+    document.querySelectorAll('h1').forEach(el => {
+      if (el.textContent.startsWith('Projection')) {
+        el.textContent = 'Projection: ' + (strategyLabels[_strategy] || _strategy);
+      }
+    });
   }
 
   // ─────────────────────────────────────────────
