@@ -480,7 +480,10 @@
 
           <!-- Paired balance columns with spanning intro -->
           <div class="wiz-col-pair">
-            <p class="wiz-col-pair__intro">Your current account balances are shown below, pulled from Your assets. To change them, go back and edit your accounts.</p>
+            <div class="wiz-col-pair__header">
+              <div class="wiz-col-heading">Your balances</div>
+              <p class="wiz-col-pair__intro">These figures are pulled from Your assets and show your starting position for the projection. Check they look right before continuing. If anything needs updating, go back and edit your accounts.</p>
+            </div>
 
             <!-- P1 balances -->
             <div class="wiz-col">
@@ -515,6 +518,7 @@
             <div class="wiz-col-heading">
               <span class="assump-tooltip-anchor">Income target<span class="assump-tooltip">Set your annual pre-tax income target, which the projection will meet by calculating optimal withdrawals from your accounts.</span></span>
             </div>
+            <p class="wiz-col-intro">Set the gross annual household income you want the projection to fund.</p>
             <table class="wiz-table">
               <tr>
                 <td class="wiz-label"><span class="assump-tooltip-anchor">Annual income (£)<span class="assump-tooltip">The gross household income you need each year, before tax. The engine works backwards from this to determine how much to withdraw from each wrapper.</span></span></td>
