@@ -2928,3 +2928,333 @@ input[type="radio"] { accent-color: var(--accent); }
 .btn-split__item:hover {
   background: #f0f4ff;
 }
+
+/* ═══════════════════════════════════════════
+   WIZARD — Assumptions tab redesign
+   Five-step wizard: tab bar + panels + footer nav
+   ═══════════════════════════════════════════ */
+
+/* ── Tab bar ── */
+.wiz-tab-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  padding-bottom: 4px;
+}
+
+.wiz-tab {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  background: var(--panel-soft);
+  color: var(--muted);
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.wiz-tab:hover {
+  background: rgba(255,255,255,0.8);
+  color: var(--text);
+}
+
+.wiz-tab--active {
+  background: var(--panel-solid);
+  color: var(--accent);
+  font-weight: 700;
+  border-top: 3px solid var(--accent);
+  border-bottom: 1px solid var(--panel-solid);
+  margin-bottom: -5px;
+  padding-bottom: 12px;
+}
+
+.wiz-tab--done {
+  color: var(--green-2);
+  background: var(--panel-soft);
+}
+
+.wiz-tab--done .wiz-step {
+  background: var(--green-2);
+  color: #fff;
+}
+
+.wiz-step {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--border);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.wiz-tab--active .wiz-step {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Panels ── */
+.wiz-panel {
+  display: none;
+  background: var(--panel-solid);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  padding: 28px 28px 20px;
+}
+
+.wiz-panel--active {
+  display: block;
+}
+
+/* ── Column grid ── */
+.wiz-grid {
+  display: grid;
+  gap: 32px;
+  align-items: start;
+}
+
+.wiz-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wiz-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ── Column headings ── */
+.wiz-col-heading {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wiz-col-heading--sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: none;
+  padding-bottom: 4px;
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+/* ── Table layout ── */
+.wiz-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0;
+}
+
+.wiz-table tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.wiz-table tr:last-child {
+  border-bottom: none;
+}
+
+.wiz-table td {
+  padding: 10px 0;
+  vertical-align: middle;
+}
+
+.wiz-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  width: 52%;
+  padding-right: 12px;
+  line-height: 1.35;
+}
+
+.wiz-val {
+  text-align: right;
+  width: 48%;
+}
+
+/* Span full width for hint rows */
+.wiz-label.wiz-muted {
+  font-size: 0.74rem;
+  color: var(--muted);
+  padding-top: 0;
+  padding-bottom: 6px;
+  font-style: italic;
+  width: 100%;
+}
+
+/* ── Read-only value display ── */
+.wiz-readonly {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Total row ── */
+.wiz-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.wiz-total-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.wiz-total-val {
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+/* ── Section divider ── */
+.wiz-section-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+/* ── Body text ── */
+.wiz-body-text {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+
+.wiz-body-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── Hint + link ── */
+.wiz-hint {
+  font-size: 0.74rem;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+
+.wiz-link {
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wiz-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Coming soon badge ── */
+.wiz-badge-soon {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+/* ── Footer nav ── */
+.wiz-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.wiz-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wiz-progress-bar {
+  width: 80px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.wiz-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+}
+
+.wiz-progress-label {
+  font-size: 0.76rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ── Stepper inputs right-aligned inside wiz-val ── */
+.wiz-val .stepper-input,
+.wiz-val .currency-stepper {
+  width: 100%;
+}
+
+.wiz-val .assump-radio-group {
+  text-align: left;
+}
+
+/* ── Input sizing inside tables ── */
+.wiz-table input[type="number"],
+.wiz-table input[type="text"],
+.wiz-table select {
+  width: 100%;
+}
+
+/* ── Responsive: stack to 2-col on narrow viewports ── */
+@media (max-width: 900px) {
+  .wiz-grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .wiz-grid--2,
+  .wiz-grid--3 {
+    grid-template-columns: 1fr;
+  }
+
+  .wiz-panel {
+    padding: 20px 16px 16px;
+  }
+}
