@@ -445,6 +445,56 @@
   }
 
   // ─────────────────────────────────────────────
+  // DRAWDOWN TABLE
+  // ─────────────────────────────────────────────
+
+  /**
+   * Build per-row objects for the drawdown table.
+   * Shows how much was drawn from each wrapper per person per year.
+   *
+   * @param {object[]} rows
+   * @param {boolean} useReal
+   * @returns {object[]} Array of draw amounts per year
+   */
+  function buildTableDrawdownRows(rows, useReal) {
+    const a = (val, row) => useReal ? val * row.realDeflator : val;
+    let cumTotal = 0;
+    return rows.map(r => {
+      const p1Cash = a(r.p1Drawn?.Cash  ?? 0, r);
+      const p1GIA  = a(r.p1Drawn?.GIA   ?? 0, r);
+      const p1SIPP = a(r.p1Drawn?.SIPP  ?? 0, r);
+      const p1ISA  = a(r.p1Drawn?.ISA   ?? 0, r);
+      const p2Cash = a(r.p2Drawn?.Cash  ?? 0, r);
+      const p2GIA  = a(r.p2Drawn?.GIA   ?? 0, r);
+      const p2SIPP = a(r.p2Drawn?.SIPP  ?? 0, r);
+      const p2ISA  = a(r.p2Drawn?.ISA   ?? 0, r);
+      // Also include guaranteed income sources for a complete picture
+      const p1SP     = a(r.p1SP     ?? 0, r);
+      const p2SP     = a(r.p2SP     ?? 0, r);
+      const p1Sal    = a(r.p1SalInc ?? 0, r);
+      const p2Sal    = a(r.p2SalInc ?? 0, r);
+      const p1Int    = a(r.p1IntDraw ?? 0, r);
+      const p2Int    = a(r.p2IntDraw ?? 0, r);
+      const p1Divs   = a(r.p1DivsUsed ?? 0, r);
+      const p2Divs   = a(r.p2DivsUsed ?? 0, r);
+      const rowTotal = p1Cash + p1GIA + p1SIPP + p1ISA
+                     + p2Cash + p2GIA + p2SIPP + p2ISA
+                     + p1SP + p2SP + p1Sal + p2Sal
+                     + p1Int + p2Int + p1Divs + p2Divs;
+      cumTotal += rowTotal;
+      return {
+        year: r.year, p1Age: r.p1Age, p2Age: r.p2Age,
+        p1SP, p2SP, p1Sal, p2Sal, p1Int, p2Int, p1Divs, p2Divs,
+        p1Cash, p1GIA, p1SIPP, p1ISA,
+        p2Cash, p2GIA, p2SIPP, p2ISA,
+        rowTotal, cumTotal,
+        target: a(r.target ?? 0, r),
+        shortfall: a(r.cashflowShortfall ?? 0, r),
+      };
+    });
+  }
+
+  // ─────────────────────────────────────────────
   // SCHEMA VALIDATION
   // ─────────────────────────────────────────────
 
@@ -500,6 +550,7 @@
     buildWealthDatasets,
     buildTableTaxRows,
     buildTableWealthRows,
+    buildTableDrawdownRows,
     buildMetrics,
   };
 })();

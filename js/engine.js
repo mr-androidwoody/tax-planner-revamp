@@ -22,8 +22,12 @@
       dividendYield,
       dividendMode,
       strategy,
-      p1Order, p2Order,
     } = inputs;
+
+    // Fallback wrapper order used by applyFallback inside withdrawalStrategy.
+    // Cash is excluded here; SIPP lock is applied per-year below.
+    // app.js no longer supplies p1Order/p2Order — order is fixed as GIA→SIPP→ISA.
+    const BASE_WRAPPER_ORDER = ['GIA', 'SIPP', 'ISA'];
 
     // Deep-copy balances so the engine never mutates the caller's object
     const p1Bal = { ...inputs.p1Bal };
@@ -285,8 +289,8 @@
       L.consumeGains(p1Ledger, p1AnnualGains);
       L.consumeGains(p2Ledger, p2AnnualGains);
 
-      const p1WrapperOrder = p1Order.filter(w => w !== 'Cash' && !(w === 'SIPP' && p1SIPPLocked));
-      const p2WrapperOrder = p2Order.filter(w => w !== 'Cash' && !(w === 'SIPP' && p2SIPPLocked));
+      const p1WrapperOrder = BASE_WRAPPER_ORDER.filter(w => !(w === 'SIPP' && p1SIPPLocked));
+      const p2WrapperOrder = BASE_WRAPPER_ORDER.filter(w => !(w === 'SIPP' && p2SIPPLocked));
 
       const { p1Drawn, p2Drawn } = window.RetireWithdrawalStrategy.withdrawalStrategy({
         strategy,

@@ -98,8 +98,9 @@
         });
 
         // Show matching sub-view
-        document.getElementById('tables-tax-view').style.display    = which === 'tax'    ? '' : 'none';
-        document.getElementById('tables-wealth-view').style.display  = which === 'wealth' ? '' : 'none';
+        document.getElementById('tables-tax-view').style.display      = which === 'tax'      ? '' : 'none';
+        document.getElementById('tables-wealth-view').style.display    = which === 'wealth'   ? '' : 'none';
+        document.getElementById('tables-drawdown-view').style.display  = which === 'drawdown' ? '' : 'none';
       });
     });
   }
@@ -1167,6 +1168,78 @@
         <th>${p2}'s Cash</th><th>${p2}'s Interest</th><th>${p2}'s GIA</th><th>${p2}'s SIPP</th><th>${p2}'s ISA</th>
         <th>Total</th>
       </tr></thead>` + body;
+    }
+
+    // Drawdown table
+    const dTbl = document.getElementById('drawdown-table');
+    if (dTbl) {
+      const drawRows = L.buildTableDrawdownRows(_rows, _useReal);
+      let body = '<tbody>';
+      let grandP1SP = 0, grandP2SP = 0, grandP1Sal = 0, grandP2Sal = 0;
+      let grandP1Int = 0, grandP2Int = 0, grandP1Divs = 0, grandP2Divs = 0;
+      let grandP1Cash = 0, grandP1GIA = 0, grandP1SIPP = 0, grandP1ISA = 0;
+      let grandP2Cash = 0, grandP2GIA = 0, grandP2SIPP = 0, grandP2ISA = 0;
+      drawRows.forEach(row => {
+        const { year, p1Age, p2Age,
+                p1SP, p2SP, p1Sal, p2Sal, p1Int, p2Int, p1Divs, p2Divs,
+                p1Cash, p1GIA, p1SIPP, p1ISA,
+                p2Cash, p2GIA, p2SIPP, p2ISA,
+                rowTotal, shortfall } = row;
+        grandP1SP += p1SP; grandP2SP += p2SP;
+        grandP1Sal += p1Sal; grandP2Sal += p2Sal;
+        grandP1Int += p1Int; grandP2Int += p2Int;
+        grandP1Divs += p1Divs; grandP2Divs += p2Divs;
+        grandP1Cash += p1Cash; grandP1GIA += p1GIA; grandP1SIPP += p1SIPP; grandP1ISA += p1ISA;
+        grandP2Cash += p2Cash; grandP2GIA += p2GIA; grandP2SIPP += p2SIPP; grandP2ISA += p2ISA;
+        const sfCell = shortfall > 100
+          ? `<td class="depleted">${f(shortfall)}</td>`
+          : `<td>—</td>`;
+        body += `<tr>
+          <td>${year}</td><td>${p1Age}</td><td>${p2Age}</td>
+          <td>${f(p1SP)}</td><td>${f(p2SP)}</td>
+          <td>${f(p1Sal)}</td><td>${f(p2Sal)}</td>
+          <td>${f(p1Int)}</td><td>${f(p2Int)}</td>
+          <td>${f(p1Divs)}</td><td>${f(p2Divs)}</td>
+          <td>${f(p1Cash)}</td><td>${f(p1GIA)}</td><td>${f(p1SIPP)}</td><td>${f(p1ISA)}</td>
+          <td>${f(p2Cash)}</td><td>${f(p2GIA)}</td><td>${f(p2SIPP)}</td><td>${f(p2ISA)}</td>
+          <td>${f(rowTotal)}</td>${sfCell}
+        </tr>`;
+      });
+      const grandTotal = grandP1SP + grandP2SP + grandP1Sal + grandP2Sal
+                       + grandP1Int + grandP2Int + grandP1Divs + grandP2Divs
+                       + grandP1Cash + grandP1GIA + grandP1SIPP + grandP1ISA
+                       + grandP2Cash + grandP2GIA + grandP2SIPP + grandP2ISA;
+      body += `<tr class="total-row">
+        <td colspan="3">Total</td>
+        <td>${f(grandP1SP)}</td><td>${f(grandP2SP)}</td>
+        <td>${f(grandP1Sal)}</td><td>${f(grandP2Sal)}</td>
+        <td>${f(grandP1Int)}</td><td>${f(grandP2Int)}</td>
+        <td>${f(grandP1Divs)}</td><td>${f(grandP2Divs)}</td>
+        <td>${f(grandP1Cash)}</td><td>${f(grandP1GIA)}</td><td>${f(grandP1SIPP)}</td><td>${f(grandP1ISA)}</td>
+        <td>${f(grandP2Cash)}</td><td>${f(grandP2GIA)}</td><td>${f(grandP2SIPP)}</td><td>${f(grandP2ISA)}</td>
+        <td>${f(grandTotal)}</td><td>—</td>
+      </tr></tbody>`;
+      dTbl.innerHTML = `<thead>
+        <tr>
+          <th rowspan="2">Year</th><th rowspan="2">${p1} age</th><th rowspan="2">${p2} age</th>
+          <th colspan="2">State Pension</th>
+          <th colspan="2">Salary</th>
+          <th colspan="2">Interest</th>
+          <th colspan="2">Dividends</th>
+          <th colspan="4">${p1}'s wrapper draws</th>
+          <th colspan="4">${p2}'s wrapper draws</th>
+          <th rowspan="2">Total</th>
+          <th rowspan="2">Shortfall</th>
+        </tr>
+        <tr>
+          <th>${p1}</th><th>${p2}</th>
+          <th>${p1}</th><th>${p2}</th>
+          <th>${p1}</th><th>${p2}</th>
+          <th>${p1}</th><th>${p2}</th>
+          <th>Cash</th><th>GIA</th><th>SIPP</th><th>ISA</th>
+          <th>Cash</th><th>GIA</th><th>SIPP</th><th>ISA</th>
+        </tr>
+      </thead>` + body;
     }
   }
 
