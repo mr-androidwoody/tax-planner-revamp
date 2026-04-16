@@ -9,35 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <link href="css/styles.css" rel="stylesheet"/>
-  <style>
-    .assump-subtab-bar {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 16px;
-      background: var(--color-background-primary);
-      border: 0.5px solid var(--color-border-tertiary);
-      border-radius: 10px;
-      padding: 4px;
-      width: fit-content;
-    }
-    .assump-subtab {
-      padding: 6px 18px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: var(--color-text-secondary);
-      font-size: 13px;
-      cursor: pointer;
-      font-weight: 400;
-      transition: background 0.15s;
-    }
-    .assump-subtab:hover { background: var(--color-background-secondary); }
-    .assump-subtab--active {
-      background: var(--color-background-secondary);
-      color: var(--color-text-primary);
-      font-weight: 500;
-    }
-  </style>
+
   <link href="css/home-btn.css" rel="stylesheet"/>
 
 </head>
@@ -405,13 +377,13 @@
       </div>
 
       <!-- Assumptions sub-tabs -->
-      <div class="assump-subtab-bar">
-        <button class="assump-subtab assump-subtab--active" data-assump-tab="core" type="button">Assumptions</button>
-        <button class="assump-subtab" data-assump-tab="lifecycle" type="button">Lifecycle Events</button>
+      <div class="results-tab-bar assump-subtab-bar">
+        <button class="results-tab results-tab--active" data-assump-tab="core" type="button">Assumptions</button>
+        <button class="results-tab results-tab--inactive" data-assump-tab="lifecycle" type="button">Lifecycle Events</button>
       </div>
 
       <!-- Panel: core assumptions -->
-      <div id="assump-panel-core" class="assump-panel assump-panel--active">
+      <div id="assump-panel-core" class="assump-panel" style="display:block">
       <div class="assump-layout">
         <div class="assump-row-top">
 
@@ -1206,11 +1178,12 @@
 </div>
 
 <script>
-  document.querySelectorAll('.assump-subtab').forEach(function(btn) {
+  document.querySelectorAll('.assump-subtab-bar .results-tab').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var target = btn.dataset.assumpTab;
-      document.querySelectorAll('.assump-subtab').forEach(function(b) {
-        b.classList.toggle('assump-subtab--active', b === btn);
+      document.querySelectorAll('.assump-subtab-bar .results-tab').forEach(function(b) {
+        b.classList.toggle('results-tab--active', b === btn);
+        b.classList.toggle('results-tab--inactive', b !== btn);
       });
       document.querySelectorAll('.assump-panel').forEach(function(p) {
         p.style.display = p.id === 'assump-panel-' + target ? '' : 'none';
