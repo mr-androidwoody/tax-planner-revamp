@@ -3298,6 +3298,8 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .wiz-col-pair .wiz-col {
+  display: flex;
+  flex-direction: column;
   padding-right: 16px;
   padding-top: 30px;
   margin-right: 16px;
@@ -3308,6 +3310,12 @@ input[type="radio"] { accent-color: var(--accent); }
   padding-right: 0;
   margin-right: 0;
   border-right: none;
+}
+
+.wiz-col-pair .wiz-hint,
+.wiz-col-pair .wiz-total-row {
+  margin-top: auto;
+  padding-top: 16px;
 }
 
 /* ── Segmented control (binary / short-label radio groups) ── */
