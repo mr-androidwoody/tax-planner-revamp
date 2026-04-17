@@ -180,9 +180,12 @@
   }) {
     if (shortfall <= 0) return { p1Drawn: zero(), p2Drawn: zero() };
 
-    // SIPP only to fill remaining PA headroom (often 0 once SP/salary consumed it)
-    const p1SippTarget = !p1SIPPLocked ? sippPACap(p1Ledger, p1Bal.SIPP) : 0;
-    const p2SippTarget = !p2SIPPLocked ? sippPACap(p2Ledger, p2Bal.SIPP) : 0;
+    // SIPP only to fill remaining PA headroom, capped at half the shortfall.
+    // Without the cap, large PA headroom can cause SIPP to over-draw beyond
+    // the spending need before ISA/GIA draws even run.
+    const half         = shortfall / 2;
+    const p1SippTarget = !p1SIPPLocked ? Math.min(sippPACap(p1Ledger, p1Bal.SIPP), half) : 0;
+    const p2SippTarget = !p2SIPPLocked ? Math.min(sippPACap(p2Ledger, p2Bal.SIPP), half) : 0;
 
     const p1Drawn = C.withdraw(p1Bal, ['SIPP'], p1SippTarget);
     const p2Drawn = C.withdraw(p2Bal, ['SIPP'], p2SippTarget);
@@ -335,9 +338,6 @@
       const totalEx  = p1Exempt + p2Exempt;
 
       if (totalEx > 0) {
-        // Max GIA we can draw per person without exceeding their CGT exemption.
-        // If gainRatio is 0 (pure return of capital) the full draw is tax-free;
-        // guard against division by zero with a cap at the GIA balance.
         const p1MaxGIA = p1GainRatio > 0
           ? Math.min(p1Exempt / p1GainRatio, p1Bal.GIA || 0)
           : (p1Bal.GIA || 0);
@@ -388,12 +388,10 @@
     }
 
     // ── Step 5: Taxable SIPP into basic-rate band only (20% IT) ───────────
-    // Only as much as covers the remaining shortfall — not topped to ceiling.
     if (rem > 0) {
       const p1Cap = !p1SIPPLocked ? Math.min(sippBasicRateCap(p1Ledger, p1Bal.SIPP), rem / 2) : 0;
       const p2Cap = !p2SIPPLocked ? Math.min(sippBasicRateCap(p2Ledger, p2Bal.SIPP), rem / 2) : 0;
 
-      // Split by band room, not cap, so the person with more band absorbs more
       const p1Band = p1Ledger.basicBandRemaining;
       const p2Band = p2Ledger.basicBandRemaining;
       const totalBand = p1Band + p2Band;
@@ -425,7 +423,6 @@
       const draw     = Math.min(totalGIA, rem);
 
       if (draw > 0 && totalGIA > 0) {
-        // Weight by band room where available, fall back to GIA balance weight
         const p1Weight = totalBand > 0 ? (p1Band / totalBand) : (p1GIA / totalGIA);
         const p2Weight = totalBand > 0 ? (p2Band / totalBand) : (p2GIA / totalGIA);
         const p1Share  = Math.min(draw * p1Weight, p1GIA);
