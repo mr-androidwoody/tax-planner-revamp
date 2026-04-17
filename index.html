@@ -731,23 +731,31 @@
             <div class="wiz-col-heading wiz-col-heading--sub">
               <span class="assump-tooltip-anchor">GIA dividends<span class="assump-tooltip">Pay out: dividends are taxable income each year. Reinvest: dividends compound inside GIA avoiding immediate tax.</span></span>
             </div>
-            <p class="wiz-body-text" style="margin-bottom:8px">Set the expected yield on your GIA holdings and choose whether dividends are paid out as taxable income or reinvested back into the account.</p>
+            <p class="wiz-body-text" style="margin-bottom:8px">Set how dividends from your GIA holdings are handled each year.</p>
             <table class="wiz-table">
               <tr>
                 <td class="wiz-label">Expected dividend yield (%/yr)</td>
                 <td class="wiz-val" style="text-align:right">
-                  <div class="stepper-input" >
+                  <div class="stepper-input" style="margin-left:auto">
                     <input type="number" id="dividendYield" value="1.5" min="0" max="10" step="0.1">
                     <button class="stepper-btn" data-step-for="dividendYield" data-step-direction="1" type="button">&#x25B2;</button>
                     <button class="stepper-btn" data-step-for="dividendYield" data-step-direction="-1" type="button">&#x25BC;</button>
                   </div>
                 </td>
               </tr>
+              <tr>
+                <td class="wiz-label">Treatment</td>
+                <td class="wiz-val" style="text-align:right">
+                  <div class="wiz-seg" style="margin-left:auto;display:flex;width:fit-content">
+                    <label class="wiz-seg__btn"><input type="radio" name="dividendMode" id="dividendPayout" value="payout" checked> Pay out</label>
+                    <label class="wiz-seg__btn"><input type="radio" name="dividendMode" id="dividendReinvest" value="reinvest"> Reinvest</label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="wiz-label wiz-muted" colspan="2">Pay out counts as taxable income each year. Reinvest compounds inside the GIA and defers the tax.</td>
+              </tr>
             </table>
-            <div class="wiz-seg" style="margin-top:8px;margin-left:auto;display:flex;width:fit-content">
-              <label class="wiz-seg__btn"><input type="radio" name="dividendMode" id="dividendPayout" value="payout" checked> Pay out</label>
-              <label class="wiz-seg__btn"><input type="radio" name="dividendMode" id="dividendReinvest" value="reinvest"> Reinvest</label>
-            </div>
           </div>
 
           <!-- Bed & ISA -->
