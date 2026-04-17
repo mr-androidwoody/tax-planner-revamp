@@ -3674,13 +3674,18 @@ input[type="radio"] { accent-color: var(--accent); }
 .mc-verdict-right {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   align-items: flex-end;
-  padding-top: 6px;
+  padding-top: 4px;
 }
 
 .mc-vstat {
   text-align: right;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  padding: 10px 16px;
+  min-width: 160px;
 }
 
 .mc-vstat-label {
@@ -3689,7 +3694,7 @@ input[type="radio"] { accent-color: var(--accent); }
   text-transform: uppercase;
   letter-spacing: .07em;
   color: var(--muted, #9ca3af);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .mc-vstat-primary {
@@ -3700,8 +3705,7 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .mc-vstat-secondary {
   font-size: 18px;
-  font-weight: 500;
-  color: var(--muted, #9ca3af);
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -3721,8 +3725,8 @@ input[type="radio"] { accent-color: var(--accent); }
   border: 1px solid rgba(0,0,0,0.07);
   border-radius: 10px;
   background: var(--surface-1, #fff);
-  padding: 18px 20px;
-  margin-bottom: 12px;
+  padding: 24px 24px;
+  margin-bottom: 14px;
 }
 
 .mc-section-label {
@@ -3748,15 +3752,15 @@ input[type="radio"] { accent-color: var(--accent); }
 .mc-decade-chart {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 14px;
+  margin-top: 8px;
 }
 
 .mc-decade-row {
   display: grid;
-  grid-template-columns: 60px 1fr 52px;
+  grid-template-columns: 64px 1fr 58px;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .mc-decade-row__year {
@@ -3767,21 +3771,21 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .mc-decade-row--rising .mc-decade-row__year {
-  color: #BA7517;
-  font-weight: 600;
+  color: #9A5E00;
+  font-weight: 700;
 }
 
 .mc-decade-row__bar-wrap {
-  height: 20px;
-  background: #F1EFE8;
-  border-radius: 4px;
+  height: 22px;
+  background: #E2E8F0;
+  border-radius: 0;
   overflow: hidden;
 }
 
 .mc-decade-row__bar {
   display: block;
   height: 100%;
-  border-radius: 4px;
+  border-radius: 0;
   transition: width 500ms ease;
 }
 
@@ -3793,8 +3797,8 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .mc-survival-note {
   font-size: 12px;
-  color: var(--muted, #9ca3af);
-  margin-top: 10px;
+  color: var(--muted, #6b7280);
+  margin-top: 14px;
   font-style: italic;
 }
 
@@ -3822,15 +3826,15 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .mc-lever-row--primary {
   background: #F1EFE8;
-  margin: 0 -20px;
-  padding: 12px 20px;
+  margin: 0 -24px;
+  padding: 12px 24px;
   border-radius: 6px;
   border-bottom: none;
   margin-bottom: 2px;
 }
 
 .mc-lever-row--secondary {
-  opacity: 0.45;
+  opacity: 0.7;
 }
 
 .mc-lever-name {
@@ -3863,9 +3867,40 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .mc-lever-outcome {
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--muted, #6b7280);
   padding-top: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — reassurance block (strong plan, no action needed)
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-reassurance {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mc-reassurance-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text, #374151);
+}
+
+.mc-reassurance-item::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3B6D11;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
