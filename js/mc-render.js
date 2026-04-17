@@ -456,10 +456,11 @@
             outcome: `You have around ${fmt(hr)} per year of headroom before reaching the ${confPct}% confidence threshold.` });
         }
       }
-      const effectiveDelay = delayPerturbations.find(p => p.successRate >= targetConfidence);
-      if (effectiveDelay) {
-        items.push({ name: 'Delay withdrawals', pill: 'Reinforces', pillClass: 'mc-lever-pill--safe',
-          outcome: `Delaying withdrawals by ${effectiveDelay.yearsDelay} year${effectiveDelay.yearsDelay > 1 ? 's' : ''} would push your success rate to ${fmtPct(effectiveDelay.successRate)}.` });
+      const hr = roundToNearest(headroom, 500);
+      if (hr > 0) {
+        const higherSpend = roundToNearest(currentSpending + hr, 500);
+        items.push({ name: 'Consider spending more', pill: 'Headroom available', pillClass: 'mc-lever-pill--safe',
+          outcome: `Your plan stays above the ${confPct}% threshold even with around ${fmt(hr)} more per year — you could spend up to ${fmt(higherSpend)}/yr and remain resilient.` });
       }
       items.push({ name: 'Flexible spending', pill: iqrWide ? 'Material gain' : 'Small gain',
         pillClass: iqrWide ? 'mc-lever-pill--safe' : 'mc-lever-pill--neutral',
