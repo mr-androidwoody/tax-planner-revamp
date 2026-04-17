@@ -3536,3 +3536,232 @@ input[type="radio"] { accent-color: var(--accent); }
   transition: opacity 0.15s, background 0.15s, color 0.15s;
 }
 .wiz-remove-btn:hover { opacity: 1; background: #e74c3c; color: #fff; }
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK TAB — active state
+   ═══════════════════════════════════════════════════════════════ */
+
+.results-tab--outlook.results-tab--active,
+.results-tab--outlook.results-tab--risk-ready {
+  color: #185FA5;
+  border-top-color: #185FA5;
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MC LOADING STATE
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px 0 24px;
+  max-width: 480px;
+}
+
+.mc-loading__phase {
+  font-size: 14px;
+  color: var(--muted, #6b7280);
+  margin: 0;
+  min-height: 1.5em;
+}
+
+.mc-loading__bar-wrap {
+  height: 6px;
+  background: var(--border, #e5e7eb);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.mc-loading__bar-fill {
+  height: 100%;
+  width: 0%;
+  background: #185FA5;
+  border-radius: 99px;
+  transition: width 300ms ease;
+}
+
+.mc-loading__pct {
+  font-size: 12px;
+  color: var(--muted, #9ca3af);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pulsing dot on the outlook tab while simulation is running */
+.results-tab--outlook.results-tab--simulating::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #185FA5;
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: mc-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes mc-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — narrative cards
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted, #6b7280);
+  margin-bottom: 10px;
+}
+
+.mc-outlook-card {
+  padding: 18px 20px;
+  background: var(--surface-2, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: var(--radius-sm, 8px);
+  margin-bottom: 12px;
+}
+
+.mc-verdict-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.mc-outlook-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mc-outlook-verdict {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.mc-outlook-sentence {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted, #6b7280);
+  margin: 0 0 14px;
+}
+
+.mc-stat-row {
+  display: flex;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: var(--radius-sm, 8px);
+  overflow: hidden;
+}
+
+.mc-stat-cell {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--surface-1, #fff);
+}
+
+.mc-stat-cell + .mc-stat-cell {
+  border-left: 1px solid var(--border, #e5e7eb);
+}
+
+.mc-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted, #6b7280);
+  margin-bottom: 4px;
+}
+
+.mc-stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text, #111827);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — lever table
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-lever-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.mc-lever-row {
+  display: grid;
+  grid-template-columns: 130px 120px 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+}
+
+.mc-lever-row:last-child {
+  border-bottom: none;
+}
+
+.mc-lever-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text, #111827);
+  padding-top: 3px;
+}
+
+.mc-lever-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.mc-lever-pill--safe {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.mc-lever-pill--warn {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.mc-lever-pill--risk {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.mc-lever-pill--neutral {
+  background: var(--surface-2, #f3f4f6);
+  color: var(--muted, #6b7280);
+}
+
+.mc-lever-outcome {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted, #6b7280);
+  padding-top: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — primary action
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-primary-action {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-left: 4px solid #3B6D11;
+  border-radius: 0;
+  background: var(--surface-2, #f9fafb);
+}
