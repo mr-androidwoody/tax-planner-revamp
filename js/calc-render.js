@@ -1160,7 +1160,7 @@
         grandWI += wi; grandWC += wc; grandWN += wn;
         grandHI += hi; grandHC += hc; grandHN += hn;
         body += `<tr>
-          <td>${year}</td><td>${p1Age}</td><td>${p2Age}</td>
+          <td>${year}</td><td>${p1Age}</td><td ${tcs(TCOL.p2)}>${_p2enabled ? p2Age : '—'}</td>
           <td ${tcs(TCOL.p1)}>${f(wi)}</td><td ${tcs(TCOL.p1)}>${f(wc)}</td><td ${tcs(TCOL.p1)}>${f(wn)}</td><td ${tcs(TCOL.p1)}><strong>${f(wt)}</strong></td>
           <td ${tcs(TCOL.p2)}>${tp2(hi)}</td><td ${tcs(TCOL.p2)}>${tp2(hc)}</td><td ${tcs(TCOL.p2)}>${tp2(hn)}</td><td ${tcs(TCOL.p2)}><strong>${tp2(ht)}</strong></td>
           <td ${tcs(TCOL.total)}><strong>${f(hh)}</strong></td><td ${tcs(TCOL.total)}>${f(cumTax)}</td>
@@ -1221,8 +1221,7 @@
           return `<td ${wcs(col)}${adjVal < 1 && snapVal > 0 ? ' class="depleted"' : ''}>${f(adjVal)}</td>`;
         };
         body += `<tr>
-          <td>${year}</td><td>${p1Age}</td><td>${p2Age}</td>
-          ${cell(WCOL.p1, p1Cash,   s.p1Cash   ?? 0)}${cell(WCOL.p1, p1IntBal, s.p1IntBal ?? 0)}${cell(WCOL.p1, p1GIA,   s.p1GIA   ?? 0)}${cell(WCOL.p1, p1SIPP, s.p1SIPP ?? 0)}${cell(WCOL.p1, p1ISA, s.p1ISA ?? 0)}
+          <td>${year}</td><td>${p1Age}</td><td ${wcs(WCOL.p2)}>${_p2enabled ? p2Age : '—'}</td>   s.p1Cash   ?? 0)}${cell(WCOL.p1, p1IntBal, s.p1IntBal ?? 0)}${cell(WCOL.p1, p1GIA,   s.p1GIA   ?? 0)}${cell(WCOL.p1, p1SIPP, s.p1SIPP ?? 0)}${cell(WCOL.p1, p1ISA, s.p1ISA ?? 0)}
           ${cell(WCOL.p2, p2Cash,   s.p2Cash   ?? 0)}${cell(WCOL.p2, p2IntBal, s.p2IntBal ?? 0)}${cell(WCOL.p2, p2GIA,   s.p2GIA   ?? 0)}${cell(WCOL.p2, p2SIPP, s.p2SIPP ?? 0)}${cell(WCOL.p2, p2ISA, s.p2ISA ?? 0)}
           <td ${wcs(WCOL.total)}><strong>${f(total)}</strong></td>
         </tr>`;
@@ -1290,8 +1289,7 @@
           : `<td style="background:${COL.total.bg}">—</td>`;
 
         body += `<tr>
-          <td>${year}</td><td>${p1Age}</td><td>${p2Age}</td>
-          <td ${cs(COL.sp)}>${f(p1SP)}</td><td ${cs(COL.sp)}>${dp2(p2SP)}</td>
+          <td>${year}</td><td>${p1Age}</td><td ${cs(COL.p2)}>${_p2enabled ? p2Age : '—'}</td><td ${cs(COL.sp)}>${dp2(p2SP)}</td>
           <td ${cs(COL.sal)}>${f(p1Sal)}</td><td ${cs(COL.sal)}>${dp2(p2Sal)}</td>
           <td ${cs(COL.int)}>${f(p1Int)}</td><td ${cs(COL.int)}>${dp2(p2Int)}</td>
           <td ${cs(COL.div)}>${f(p1Divs)}</td><td ${cs(COL.div)}>${dp2(p2Divs)}</td>
