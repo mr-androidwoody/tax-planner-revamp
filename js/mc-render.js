@@ -104,17 +104,34 @@
       rate >= 0.90 ? 'Good'       :
       rate >= 0.80 ? 'Borderline' : 'At risk';
 
+    // heroBg: solid 800-stop fill for the full-bleed hero band
+    // actionBg / actionBorder / actionLabel / actionText / actionImpact: terminal block colours
     const verdictColour =
-      rate >= 0.95 ? { main:'#27500A', bg:'rgba(59,109,17,0.09)',  border:'#3B6D11', eyebrow:'#173404', text:'#173404' } :
-      rate >= 0.90 ? { main:'#0C447C', bg:'rgba(24,95,165,0.09)',  border:'#185FA5', eyebrow:'#042C53', text:'#042C53' } :
-      rate >= 0.80 ? { main:'#854F0B', bg:'rgba(186,117,23,0.09)', border:'#BA7517', eyebrow:'#412402', text:'#412402' } :
-                     { main:'#791F1F', bg:'rgba(163,45,45,0.09)',  border:'#A32D2D', eyebrow:'#501313', text:'#501313' };
+      rate >= 0.95 ? {
+        heroBg: '#27500A',
+        actionBg: '#EAF3DE', actionBorder: '#3B6D11',
+        actionLabel: '#27500A', actionText: '#173404', actionImpact: '#3B6D11'
+      } :
+      rate >= 0.90 ? {
+        heroBg: '#0C447C',
+        actionBg: '#E6F1FB', actionBorder: '#185FA5',
+        actionLabel: '#0C447C', actionText: '#042C53', actionImpact: '#185FA5'
+      } :
+      rate >= 0.80 ? {
+        heroBg: '#854F0B',
+        actionBg: '#FAEEDA', actionBorder: '#BA7517',
+        actionLabel: '#854F0B', actionText: '#412402', actionImpact: '#633806'
+      } : {
+        heroBg: '#791F1F',
+        actionBg: '#FCEBEB', actionBorder: '#A32D2D',
+        actionLabel: '#791F1F', actionText: '#501313', actionImpact: '#A32D2D'
+      };
 
     const verdictSentence =
       rate >= 0.95 ? 'Your plan is on track throughout retirement, with room to absorb a sustained run of poor returns.' :
-      rate >= 0.90 ? 'Your plan is well-founded — it holds in the large majority of scenarios, with only modest vulnerability at the edges.' :
-      rate >= 0.80 ? 'Your plan holds in most scenarios but carries real risk in a meaningful share of poor sequences — a small adjustment removes most of that risk.' :
-                     'Your plan needs attention — a significant share of simulated paths end in depletion before retirement ends.';
+      rate >= 0.90 ? 'Your plan is well-founded. It holds in the large majority of scenarios, with only modest vulnerability at the edges.' :
+      rate >= 0.80 ? 'Your plan holds in most scenarios but carries real risk across a meaningful share of poor sequences. A small adjustment removes most of that risk.' :
+                     'Your plan needs attention. A significant share of simulated paths end in depletion before retirement ends.';
 
     // ── Headroom / gap ────────────────────────────────────────────────
     let headroom = null;
@@ -125,21 +142,21 @@
         shortfallHTML = `
           <div class="mc-vstat">
             <div class="mc-vstat-label">Spending headroom</div>
-            <div class="mc-vstat-secondary" style="color:${verdictColour.main}">Substantial</div>
+            <div class="mc-vstat-secondary">Substantial</div>
           </div>`;
       } else if (headroom >= 0) {
         const hr = roundToNearest(headroom, 500);
         shortfallHTML = `
           <div class="mc-vstat">
             <div class="mc-vstat-label">Typical headroom</div>
-            <div class="mc-vstat-secondary" style="color:${verdictColour.main}">+${fmt(hr)} / yr</div>
+            <div class="mc-vstat-secondary">+${fmt(hr)} / yr</div>
           </div>`;
       } else {
         const gap = roundToNearest(Math.abs(headroom), 500);
         shortfallHTML = `
           <div class="mc-vstat">
             <div class="mc-vstat-label">Typical shortfall</div>
-            <div class="mc-vstat-secondary" style="color:${verdictColour.main}">−${fmt(gap)} / yr</div>
+            <div class="mc-vstat-secondary">${fmt(gap)} / yr</div>
           </div>`;
       }
     // shortfallHTML is empty string if no spending context — right column shows only success rate
@@ -147,21 +164,20 @@
 
     // ── Section 1: VERDICT HEADER ─────────────────────────────────────
     const s1 = `
-      <div class="mc-verdict-header" style="border-left-color:${verdictColour.border};background:${verdictColour.bg}">
-        <div class="mc-verdict-eyebrow" style="color:${verdictColour.eyebrow}">Your retirement outlook</div>
-        <div class="mc-verdict-left">
-          <div class="mc-verdict-main">
-            <span class="mc-verdict-word" style="color:${verdictColour.main}">${verdictWord}</span>
-            <span class="mc-verdict-rate" style="color:${verdictColour.main}">${fmtPct(rate)}</span>
+      <div class="mc-verdict-header" style="background:${verdictColour.heroBg}">
+        <div class="mc-verdict-eyebrow">Your retirement outlook</div>
+        <div class="mc-verdict-body">
+          <div class="mc-verdict-left">
+            <div class="mc-verdict-word">${verdictWord}</div>
+            <p class="mc-verdict-sentence">${verdictSentence}</p>
           </div>
-          <p class="mc-verdict-sentence">${verdictSentence}</p>
-        </div>
-        <div class="mc-verdict-right">
-          <div class="mc-vstat">
-            <div class="mc-vstat-label">Success rate</div>
-            <div class="mc-vstat-primary" style="color:${verdictColour.main}">${fmtPct(rate)}</div>
+          <div class="mc-verdict-right">
+            <div class="mc-vstat">
+              <div class="mc-vstat-label">Success rate</div>
+              <div class="mc-vstat-primary">${fmtPct(rate)}</div>
+            </div>
+            ${shortfallHTML}
           </div>
-          ${shortfallHTML}
         </div>
         <div class="mc-verdict-meta">Based on ${r.simCount.toLocaleString('en-GB')} simulations · ${firstYear} → ${lastYear}</div>
       </div>`;
@@ -186,7 +202,7 @@
         depAge < 70    ? 'your late 60s'        :
         depAge < 80    ? 'your 70s'             :
         depAge < 90    ? 'your 80s'             : 'your 90s';
-      pressureSentence = `In a poor sequence of returns, funds would begin to deplete in ${lifeStage} — at a point when flexibility to adjust is limited.`;
+      pressureSentence = `In a poor sequence of returns, funds would begin to deplete in ${lifeStage}, at a point when flexibility to adjust is limited.`;
     } else {
       pressureSentence = `Even in a poor sequence of returns, the portfolio survives through the end of the projection in 9 out of 10 simulated paths.`;
     }
@@ -220,16 +236,16 @@
       survivalNote =
         minSurv >= 0.95 ? 'Risk remains low throughout.' :
         minSurv >= 0.80 ? 'Risk is low early in retirement but rises in later years.' :
-                          'Risk builds significantly — later years carry real pressure.';
+                          'Risk builds significantly. Later years carry real pressure.';
     }
 
-    const s2 = `
-      <section class="mc-section">
-        <div class="mc-section-label">When pressure occurs</div>
+    const s2Left = `
+      <div class="mc-evidence-pane mc-evidence-pane--left">
+        <div class="mc-section-label">Stress test</div>
         <p class="mc-outlook-sentence">${pressureSentence}</p>
         ${decadeRowsHTML ? `<div class="mc-decade-chart">${decadeRowsHTML}</div>` : ''}
         ${survivalNote   ? `<p class="mc-survival-note">${survivalNote}</p>` : ''}
-      </section>`;
+      </div>`;
 
     // ── Section 3: LEVERS ─────────────────────────────────────────────
 
@@ -244,14 +260,14 @@
     } else if (headroom >= 0) {
       const hr = roundToNearest(headroom, 500);
       l1Pill = 'No cut needed'; l1PillClass = 'mc-lever-pill--safe';
-      l1Outcome = `You have around ${fmt(hr)} per year of headroom — already within the ${confPct}% confidence band.`;
+      l1Outcome = `You have around ${fmt(hr)} per year of headroom, already within the ${confPct}% confidence band.`;
     } else {
       const gap = roundToNearest(Math.abs(headroom), 500);
       const newTarget = roundToNearest(currentSpending - gap, 500);
       const isSmall = Math.abs(headroom) / currentSpending <= 0.15;
       l1Pill = isSmall ? 'Modest cut' : 'Cut needed';
       l1PillClass = isSmall ? 'mc-lever-pill--warn' : 'mc-lever-pill--risk';
-      l1Outcome = `Reducing spending by around ${fmt(gap)} per year — to ${fmt(newTarget)} — would bring your plan to the ${confPct}% confidence threshold.`;
+      l1Outcome = `Reducing spending by around ${fmt(gap)} per year to ${fmt(newTarget)} would bring your plan to the ${confPct}% confidence threshold.`;
     }
 
     // Lever 2 — Delay withdrawals
@@ -272,7 +288,7 @@
       } else {
         const best = delayPerturbations.reduce((a, b) => b.successRate > a.successRate ? b : a);
         l2Pill = 'Helps but not enough'; l2PillClass = 'mc-lever-pill--warn';
-        l2Outcome = `Even delaying by 3 years does not fully remove shortfall risk — best result is ${fmtPct(best.successRate)}, still below ${confPct}%.`;
+        l2Outcome = `Even delaying by 3 years does not fully remove shortfall risk. Best result is ${fmtPct(best.successRate)}, still below ${confPct}%.`;
       }
     }
 
@@ -297,61 +313,72 @@
       (rate < targetConfidence && delayPerturbations.some(p => p.successRate >= targetConfidence)) ? 1 :
       (rate < targetConfidence && iqrWide) ? 2 : 0;
 
-    function leverRow(name, pill, pillClass, outcome, isPrimary) {
-      const cls = isPrimary
-        ? 'mc-lever-row mc-lever-row--primary'
-        : planIsStrong
-          ? 'mc-lever-row'
-          : 'mc-lever-row mc-lever-row--secondary';
+    function leverBlock(name, pill, pillClass, outcome, isPrimary, isStrongPlan) {
+      let cls = 'mc-lever';
+      if (isPrimary)          cls += ' mc-lever--primary';
+      else if (!isStrongPlan) cls += ' mc-lever--secondary';
       return `
         <div class="${cls}">
-          <span class="mc-lever-name">${name}</span>
-          <span class="mc-lever-pill ${pillClass}">${pill}</span>
-          <span class="mc-lever-outcome">${outcome}</span>
+          <div class="mc-lever-top">
+            <span class="mc-lever-name">${name}</span>
+            <span class="mc-lever-pill ${pillClass}">${pill}</span>
+          </div>
+          <p class="mc-lever-outcome">${outcome}</p>
         </div>`;
     }
 
-    // Strong plan: reassurance block instead of lever table
-    let s3;
+    // Strong plan: reassurance items rendered as lever-style blocks with safe pills
+    let s2Right;
     if (planIsStrong) {
       const items = [];
       if (sustainableSpending !== null) {
         if (sustainableIsFloor) {
-          items.push(`Your plan remains sustainable well above your current spending — substantial headroom exists.`);
+          items.push({ name: 'Spend less', pill: 'No cut needed', pillClass: 'mc-lever-pill--safe',
+            outcome: 'Your plan remains sustainable well above your current spending.' });
         } else {
           const hr = roundToNearest(headroom, 500);
-          items.push(`You have around ${fmt(hr)} per year of headroom before reaching the ${confPct}% confidence threshold.`);
+          items.push({ name: 'Spend less', pill: 'No cut needed', pillClass: 'mc-lever-pill--safe',
+            outcome: `You have around ${fmt(hr)} per year of headroom before reaching the ${confPct}% confidence threshold.` });
         }
       }
       const effectiveDelay = delayPerturbations.find(p => p.successRate >= targetConfidence);
       if (effectiveDelay) {
-        items.push(`Delaying withdrawals by ${effectiveDelay.yearsDelay} year${effectiveDelay.yearsDelay > 1 ? 's' : ''} would push your success rate to ${fmtPct(effectiveDelay.successRate)}.`);
+        items.push({ name: 'Delay withdrawals', pill: 'Reinforces', pillClass: 'mc-lever-pill--safe',
+          outcome: `Delaying withdrawals by ${effectiveDelay.yearsDelay} year${effectiveDelay.yearsDelay > 1 ? 's' : ''} would push your success rate to ${fmtPct(effectiveDelay.successRate)}.` });
       }
-      items.push(iqrWide
-        ? `Flexible spending in weak years would further improve your downside position.`
-        : `Flexible spending in weak years adds a modest incremental margin.`
-      );
-      s3 = `
-        <section class="mc-section">
-          <div class="mc-section-label">Your plan has room to breathe</div>
-          <div class="mc-reassurance">
-            ${items.map(t => `<div class="mc-reassurance-item">${t}</div>`).join('')}
-          </div>
-        </section>`;
-    } else {
-      s3 = `
-        <section class="mc-section">
-          <div class="mc-section-label">What if you change something?</div>
+      items.push({ name: 'Flexible spending', pill: iqrWide ? 'Material gain' : 'Small gain',
+        pillClass: iqrWide ? 'mc-lever-pill--safe' : 'mc-lever-pill--neutral',
+        outcome: iqrWide
+          ? 'Flexible spending in weak years would further improve your downside position.'
+          : 'Flexible spending in weak years adds a modest incremental margin.' });
+
+      s2Right = `
+        <div class="mc-evidence-pane">
+          <div class="mc-section-label">What changes this</div>
           <div class="mc-lever-table">
-            ${leverRow('Spend less',        l1Pill, l1PillClass, l1Outcome, _primary === 0)}
-            ${leverRow('Delay withdrawals', l2Pill, l2PillClass, l2Outcome, _primary === 1)}
-            ${leverRow('Flexible spending', l3Pill, l3PillClass, l3Outcome, _primary === 2)}
+            ${items.map(it => leverBlock(it.name, it.pill, it.pillClass, it.outcome, false, true)).join('')}
           </div>
-        </section>`;
+        </div>`;
+    } else {
+      s2Right = `
+        <div class="mc-evidence-pane">
+          <div class="mc-section-label">What changes this</div>
+          <div class="mc-lever-table">
+            ${leverBlock('Spend less',        l1Pill, l1PillClass, l1Outcome, _primary === 0, false)}
+            ${leverBlock('Delay withdrawals', l2Pill, l2PillClass, l2Outcome, _primary === 1, false)}
+            ${leverBlock('Flexible spending', l3Pill, l3PillClass, l3Outcome, _primary === 2, false)}
+          </div>
+        </div>`;
     }
 
+    const s23 = `
+      <div class="mc-evidence-card">
+        ${s2Left}
+        ${s2Right}
+      </div>`;
+
     // ── Section 4: PRIMARY ACTION ─────────────────────────────────────
-    let actionLine, actionImpact, actionBorderColour, actionBg, actionLabelColour, actionTextColour, actionImpactColour;
+    let actionLine, actionImpact;
 
     const hasGap         = sustainableSpending !== null && !sustainableIsFloor && headroom < 0;
     const delayMin       = delayPerturbations.find(p => p.successRate >= targetConfidence);
@@ -362,38 +389,26 @@
       const newTarget = roundToNearest(currentSpending - gap, 500);
       actionLine   = `Reduce annual spending by around ${fmt(gap)} to ${fmt(newTarget)}.`;
       actionImpact = `This single change brings your plan to the ${confPct}% confidence threshold.`;
-      const isSmall = Math.abs(headroom) / currentSpending <= 0.15;
-      actionBorderColour = isSmall ? '#BA7517' : '#A32D2D';
-      actionBg           = isSmall ? 'rgba(186,117,23,0.08)' : 'rgba(163,45,45,0.08)';
-      actionLabelColour  = isSmall ? '#854F0B' : '#791F1F';
-      actionTextColour   = isSmall ? '#412402' : '#501313';
-      actionImpactColour = isSmall ? '#633806' : '#791F1F';
     } else if (rate < targetConfidence && delayEffective) {
       actionLine   = `Delay drawing from your portfolio by ${delayMin.yearsDelay} year${delayMin.yearsDelay > 1 ? 's' : ''}.`;
       actionImpact = `This allows the portfolio to compound without draws and lifts your success rate to ${fmtPct(delayMin.successRate)}.`;
-      actionBorderColour = '#BA7517'; actionBg = 'rgba(186,117,23,0.08)';
-      actionLabelColour = '#854F0B'; actionTextColour = '#412402'; actionImpactColour = '#633806';
     } else if (rate < targetConfidence && iqrWide) {
       actionLine   = `Adopt a flexible spending rule.`;
-      actionImpact = `Reducing withdrawals by 10–15% in down years is the most practical lever available.`;
-      actionBorderColour = '#BA7517'; actionBg = 'rgba(186,117,23,0.08)';
-      actionLabelColour = '#854F0B'; actionTextColour = '#412402'; actionImpactColour = '#633806';
+      actionImpact = `Reducing withdrawals by 10 to 15% in down years is the most practical lever available.`;
     } else {
       actionLine   = `No changes needed.`;
       actionImpact = `Your plan is resilient across all tested scenarios.`;
-      actionBorderColour = '#3B6D11'; actionBg = 'rgba(59,109,17,0.08)';
-      actionLabelColour = '#27500A'; actionTextColour = '#173404'; actionImpactColour = '#3B6D11';
     }
 
     const s4 = `
-      <div class="mc-primary-action" style="border-left-color:${actionBorderColour};background:${actionBg}">
-        <div class="mc-primary-action__label" style="color:${actionLabelColour}">Recommended action</div>
-        <p class="mc-primary-action__text" style="color:${actionTextColour}">${actionLine}</p>
-        <p class="mc-primary-action__impact" style="color:${actionImpactColour}">${actionImpact}</p>
-      </div>
-      <p class="mc-bridge-note">Use the tabs at the top to explore charts and tables of your expected plan under fixed assumptions. They show how your plan unfolds over time, while this outcome summary reflects how results may vary across different market conditions.</p>`;
+      <div class="mc-primary-action" style="border-top-color:${verdictColour.actionBorder};background:${verdictColour.actionBg}">
+        <div class="mc-primary-action__label" style="color:${verdictColour.actionLabel}">Recommended action</div>
+        <p class="mc-primary-action__text" style="color:${verdictColour.actionText}">${actionLine}</p>
+        <p class="mc-primary-action__impact" style="color:${verdictColour.actionImpact}">${actionImpact}</p>
+        <p class="mc-bridge-note">Use the tabs above to explore charts and tables showing how your plan unfolds year by year under fixed assumptions.</p>
+      </div>`;
 
-    el.innerHTML = s1 + s2 + s3 + s4;
+    el.innerHTML = s1 + s23 + s4;
   }
   window.RetireMCRender = { setResults, render, setReal };
 
