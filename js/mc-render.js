@@ -129,34 +129,35 @@
         headroomHTML = `
           <div class="mc-stat-cell">
             <div class="mc-stat-label">Spending headroom</div>
-            <div class="mc-stat-value" style="color:var(--mc-dot-strong,#3B6D11);font-size:13px;padding-top:3px">
-              Substantial — sustainable at all tested levels
-            </div>
+            <div class="mc-stat-value mc-stat-value--secondary">Substantial</div>
           </div>`;
       } else if (headroom >= 0) {
         const hr = roundToNearest(headroom, 500);
         headroomHTML = `
           <div class="mc-stat-cell">
             <div class="mc-stat-label">Typical headroom</div>
-            <div class="mc-stat-value" style="color:var(--mc-dot-strong,#3B6D11)">+${fmt(hr)} / yr</div>
+            <div class="mc-stat-value mc-stat-value--secondary">+${fmt(hr)} / yr</div>
           </div>`;
       } else {
         const gap = roundToNearest(Math.abs(headroom), 500);
-        const gapColour = Math.abs(headroom) / currentSpending <= 0.15
-          ? 'var(--mc-dot-warn,#BA7517)'
-          : 'var(--mc-dot-risk,#A32D2D)';
         headroomHTML = `
           <div class="mc-stat-cell">
             <div class="mc-stat-label">Typical shortfall</div>
-            <div class="mc-stat-value" style="color:${gapColour}">−${fmt(gap)} / yr</div>
+            <div class="mc-stat-value mc-stat-value--secondary">−${fmt(gap)} / yr</div>
           </div>`;
       }
     }
 
+    // Verdict card tint: very faint wash matching status colour
+    const verdictBg =
+      rate >= 0.95 ? 'background:rgba(59,109,17,0.04)'  :
+      rate >= 0.90 ? 'background:rgba(24,95,165,0.04)'  :
+      rate >= 0.80 ? 'background:rgba(186,117,23,0.05)' :
+                     'background:rgba(162,50,45,0.05)';
+
     // ── Section 1: RETIREMENT OUTLOOK ─────────────────────────────────────
     const s1 = `
-      <section class="mc-section mc-outlook-card" style="border-left-color:${verdictDotColour}">
-        <div class="mc-section-label">Retirement outlook</div>
+      <section class="mc-outlook-card" style="border-left-color:${verdictDotColour};${verdictBg}">
         <div class="mc-verdict-row">
           <span class="mc-outlook-dot" style="background:${verdictDotColour}"></span>
           <span class="mc-outlook-verdict" style="${verdictWordColour}">${verdictWord}</span>
@@ -169,6 +170,7 @@
           </div>
           ${headroomHTML}
         </div>
+        <p class="mc-sim-footnote">Based on ${r.simCount.toLocaleString('en-GB')} simulations</p>
       </section>`;
 
     // ── Section 2: WHEN PRESSURE OCCURS ───────────────────────────────────
@@ -330,7 +332,9 @@
       (rate < targetConfidence && iqrWide) ? 2 : 0;
 
     function leverRow(name, pill, pillClass, outcome, isPrimary) {
-      const rowClass = isPrimary ? 'mc-lever-row' : 'mc-lever-row mc-lever-row--secondary';
+      const rowClass = isPrimary
+        ? 'mc-lever-row mc-lever-row--primary'
+        : 'mc-lever-row mc-lever-row--secondary';
       return `
         <div class="${rowClass}">
           <span class="mc-lever-name">${name}</span>
@@ -351,27 +355,34 @@
 
     // ── Section 4: PRIMARY ACTION ──────────────────────────────────────────
     // Priority order: spending gap → delay → flexibility → all clear.
-    let actionText, actionBorderColour;
+    let actionBorderColour;
 
     const hasGap         = sustainableSpending !== null && !sustainableIsFloor && headroom < 0;
     const delayMin       = delayPerturbations.find(p => p.successRate >= targetConfidence);
     const delayEffective = !!delayMin;
 
+    // Each action is split: { text: action line, impact: impact line }
+    let actionLine, actionImpact;
+
     if (hasGap) {
       const gap       = roundToNearest(Math.abs(headroom), 500);
       const newTarget = roundToNearest(currentSpending - gap, 500);
-      actionText         = `Reduce annual spending by around ${fmt(gap)} to ${fmt(newTarget)} — this single change brings your plan to the ${confPct}% confidence threshold and is the highest-impact move available.`;
+      actionLine         = `Reduce annual spending by around ${fmt(gap)} to ${fmt(newTarget)}.`;
+      actionImpact       = `This single change brings your plan to the ${confPct}% confidence threshold.`;
       actionBorderColour = Math.abs(headroom) / currentSpending <= 0.15
         ? 'var(--mc-dot-warn,#BA7517)'
         : 'var(--mc-dot-risk,#A32D2D)';
     } else if (rate < targetConfidence && delayEffective) {
-      actionText         = `Delay drawing from your portfolio by ${delayMin.yearsDelay} year${delayMin.yearsDelay > 1 ? 's' : ''} — this allows the portfolio to compound without draws and lifts your success rate to ${fmtPct(delayMin.successRate)}.`;
+      actionLine         = `Delay drawing from your portfolio by ${delayMin.yearsDelay} year${delayMin.yearsDelay > 1 ? 's' : ''}.`;
+      actionImpact       = `This allows the portfolio to compound without draws and lifts your success rate to ${fmtPct(delayMin.successRate)}.`;
       actionBorderColour = 'var(--mc-dot-warn,#BA7517)';
     } else if (rate < targetConfidence && iqrWide) {
-      actionText         = `Adopt a flexible spending rule — reduce withdrawals by 10–15% in years when your portfolio has fallen in real terms. This is the most practical lever available given your current spending level.`;
+      actionLine         = `Adopt a flexible spending rule.`;
+      actionImpact       = `Reducing withdrawals by 10–15% in down years is the most practical lever available given your current spending level.`;
       actionBorderColour = 'var(--mc-dot-warn,#BA7517)';
     } else {
-      actionText         = `No changes needed — your plan is resilient across all tested scenarios. Review again if your spending target changes materially or markets deliver a sustained poor sequence early in retirement.`;
+      actionLine         = `No changes needed.`;
+      actionImpact       = `Your plan is resilient across all tested scenarios.`;
       actionBorderColour = 'var(--mc-dot-strong,#3B6D11)';
     }
 
@@ -388,9 +399,10 @@
     const s4 = `
       <section class="mc-primary-action" style="border-left-color:${actionBorderColour};${actionBg}">
         <div class="mc-primary-action__label" style="${actionLabelColour}">Recommended action</div>
-        <p class="mc-primary-action__text">${actionText}</p>
+        <p class="mc-primary-action__text">${actionLine}</p>
+        <p class="mc-primary-action__impact">${actionImpact}</p>
       </section>
-      <p class="mc-bridge-note">Charts below show your expected baseline plan — actual outcomes may vary as modelled above.</p>`;
+      <p class="mc-bridge-note">The charts below show your expected baseline plan. Actual outcomes may vary as modelled above.</p>`;
 
     el.innerHTML = s1 + s2 + s3 + s4;
   }
