@@ -917,14 +917,9 @@
       // the portfolio compounds normally. SP / salary timing is age-based
       // and therefore unaffected. startYear and endYear are unchanged.
       const DELAY_SIMS = 2_000;
-      const [delay1, delay2, delay3] = await Promise.all([1, 2, 3].map(n =>
-        MCE.run({
-          inputs:       { ...inputs, deferYears: n },
-          simCount:     DELAY_SIMS,
-          equityVol:    0.16,
-          inflationVol: 0.015,
-        })
-      ));
+      const delay1 = await MCE.run({ inputs: { ...inputs, deferYears: 1 }, simCount: DELAY_SIMS, equityVol: 0.16, inflationVol: 0.015 });
+      const delay2 = await MCE.run({ inputs: { ...inputs, deferYears: 2 }, simCount: DELAY_SIMS, equityVol: 0.16, inflationVol: 0.015 });
+      const delay3 = await MCE.run({ inputs: { ...inputs, deferYears: 3 }, simCount: DELAY_SIMS, equityVol: 0.16, inflationVol: 0.015 });
       const delayPerturbations = [
         { yearsDelay: 1, successRate: delay1.successRate },
         { yearsDelay: 2, successRate: delay2.successRate },
