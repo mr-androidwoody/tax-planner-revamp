@@ -3594,7 +3594,6 @@ input[type="radio"] { accent-color: var(--accent); }
   font-variant-numeric: tabular-nums;
 }
 
-/* Pulsing dot on the outlook tab while simulation is running */
 .results-tab--outlook.results-tab--simulating::after {
   content: '';
   display: inline-block;
@@ -3613,93 +3612,182 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   YOUR OUTLOOK — narrative cards
+   YOUR OUTLOOK — verdict header (full-bleed, no card border)
    ═══════════════════════════════════════════════════════════════ */
 
-.mc-section-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted, #6b7280);
-  margin-bottom: 10px;
-}
-
-.mc-outlook-card {
-  padding: 32px 24px 28px 28px;
-  background: transparent;
-  border: none;
-  border-left: 6px solid transparent;
-  border-radius: 0;
+.mc-verdict-header {
+  border-left: 6px solid #BA7517;
+  background: rgba(186,117,23,0.06);
+  padding: 32px 32px 28px 28px;
   margin-bottom: 24px;
 }
 
-.mc-verdict-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.mc-outlook-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.mc-outlook-verdict {
-  font-size: 44px;
+.mc-verdict-eyebrow {
+  font-size: 11px;
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #854F0B;
+  margin-bottom: 12px;
 }
 
-.mc-outlook-sentence {
+.mc-verdict-main {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.mc-verdict-word {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1;
+}
+
+.mc-verdict-rate {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: .7;
+}
+
+.mc-verdict-sentence {
   font-size: 14px;
   line-height: 1.65;
   color: var(--muted, #6b7280);
-  margin: 0 0 16px;
+  margin: 0 0 20px;
+  max-width: 600px;
 }
 
-.mc-stat-row {
+.mc-verdict-stats {
   display: flex;
-  border: 1px solid var(--border, #e5e7eb);
-  border-radius: var(--radius-sm, 8px);
+  border: 1px solid rgba(186,117,23,0.25);
+  border-radius: 8px;
   overflow: hidden;
-  max-width: 420px;
+  max-width: 380px;
+  background: #fff;
 }
 
-.mc-stat-cell {
+.mc-vstat {
   flex: 1;
-  padding: 9px 14px;
-  background: var(--surface-1, #fff);
+  padding: 10px 16px;
 }
 
-.mc-stat-cell + .mc-stat-cell {
-  border-left: 1px solid var(--border, #e5e7eb);
+.mc-vstat + .mc-vstat {
+  border-left: 1px solid rgba(186,117,23,0.2);
 }
 
-.mc-stat-label {
-  font-size: 11px;
+.mc-vstat-label {
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted, #6b7280);
+  letter-spacing: .07em;
+  color: var(--muted, #9ca3af);
   margin-bottom: 4px;
 }
 
-.mc-stat-value {
-  font-size: 18px;
+.mc-vstat-primary {
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.2;
-  color: var(--text, #111827);
 }
 
-.mc-stat-value--secondary {
+.mc-vstat-secondary {
   font-size: 13px;
   font-weight: 500;
-  color: var(--muted, #6b7280) !important;
+  color: var(--muted, #9ca3af);
+}
+
+.mc-verdict-meta {
+  font-size: 10px;
+  color: var(--muted, #b0b8c4);
+  margin-top: 12px;
+  letter-spacing: .01em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — supporting sections (light cards)
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-section {
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 10px;
+  background: var(--surface-1, #fff);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+
+.mc-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--muted, #888);
+  margin-bottom: 10px;
+}
+
+.mc-outlook-sentence {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted, #6b7280);
+  margin: 0 0 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — decade survival bars
+   ═══════════════════════════════════════════════════════════════ */
+
+.mc-decade-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.mc-decade-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 52px;
+  align-items: center;
+  gap: 12px;
+}
+
+.mc-decade-row__year {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted, #6b7280);
+  text-align: right;
+}
+
+.mc-decade-row--rising .mc-decade-row__year {
+  color: #BA7517;
+  font-weight: 600;
+}
+
+.mc-decade-row__bar-wrap {
+  height: 20px;
+  background: #F1EFE8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mc-decade-row__bar {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  transition: width 500ms ease;
+}
+
+.mc-decade-row__pct {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.mc-survival-note {
+  font-size: 12px;
+  color: var(--muted, #9ca3af);
+  margin-top: 10px;
+  font-style: italic;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3713,15 +3801,28 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .mc-lever-row {
   display: grid;
-  grid-template-columns: 130px 120px 1fr;
+  grid-template-columns: 120px 110px 1fr;
   align-items: start;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border, #e5e7eb);
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 .mc-lever-row:last-child {
   border-bottom: none;
+}
+
+.mc-lever-row--primary {
+  background: #F1EFE8;
+  margin: 0 -20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border-bottom: none;
+  margin-bottom: 2px;
+}
+
+.mc-lever-row--secondary {
+  opacity: 0.45;
 }
 
 .mc-lever-name {
@@ -3731,36 +3832,26 @@ input[type="radio"] { accent-color: var(--accent); }
   padding-top: 3px;
 }
 
+.mc-lever-row--secondary .mc-lever-name {
+  font-weight: 400;
+}
+
 .mc-lever-pill {
   display: inline-block;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: .05em;
   text-transform: uppercase;
   padding: 3px 9px;
   border-radius: 99px;
   white-space: nowrap;
+  margin-top: 2px;
 }
 
-.mc-lever-pill--safe {
-  background: #f0fdf4;
-  color: #166534;
-}
-
-.mc-lever-pill--warn {
-  background: #fffbeb;
-  color: #92400e;
-}
-
-.mc-lever-pill--risk {
-  background: #fef2f2;
-  color: #991b1b;
-}
-
-.mc-lever-pill--neutral {
-  background: var(--surface-2, #f3f4f6);
-  color: var(--muted, #6b7280);
-}
+.mc-lever-pill--safe    { background: #EAF3DE; color: #27500A; }
+.mc-lever-pill--warn    { background: #FAEEDA; color: #633806; }
+.mc-lever-pill--risk    { background: #FCEBEB; color: #791F1F; }
+.mc-lever-pill--neutral { background: #F1EFE8; color: #5F5E5A; }
 
 .mc-lever-outcome {
   font-size: 13px;
@@ -3769,76 +3860,47 @@ input[type="radio"] { accent-color: var(--accent); }
   padding-top: 3px;
 }
 
-.mc-lever-row--primary {
-  background: var(--surface-2, #f3f4f6);
-  margin: 0 -14px;
-  padding: 11px 14px;
-  border-radius: var(--radius-sm, 8px);
-  border-left: 3px solid var(--border, #d1d5db);
-}
-
-.mc-lever-row--secondary {
-  opacity: 0.5;
-}
-
-.mc-lever-row--secondary .mc-lever-pill {
-  font-size: 9px;
-}
-
 /* ═══════════════════════════════════════════════════════════════
-   YOUR OUTLOOK — primary action
+   YOUR OUTLOOK — primary action (terminal block)
    ═══════════════════════════════════════════════════════════════ */
 
 .mc-primary-action {
   margin-top: 20px;
-  padding: 20px 22px;
-  border-left: 6px solid #3B6D11;
-  border-radius: 0 var(--radius-sm, 8px) var(--radius-sm, 8px) 0;
-  background: var(--surface-2, #f9fafb);
+  border-left: 6px solid #BA7517;
+  border-radius: 0 10px 10px 0;
+  padding: 20px 24px;
+  background: rgba(186,117,23,0.08);
 }
 
 .mc-primary-action__label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 6px;
+  letter-spacing: .09em;
+  margin-bottom: 8px;
 }
 
 .mc-primary-action__text {
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.6;
-  color: var(--text, #111827);
-  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 5px;
 }
 
 .mc-primary-action__impact {
   font-size: 13px;
   line-height: 1.55;
-  color: var(--muted, #6b7280);
   margin: 0;
 }
 
-.mc-sim-footnote {
-  font-size: 10px;
-  color: var(--muted, #b0b8c4);
-  margin: 10px 0 0;
-  letter-spacing: 0.01em;
-}
-
-.mc-survival-note {
-  font-size: 12px;
-  color: var(--muted, #9ca3af);
-  margin-top: 10px;
-  font-style: italic;
-}
+/* ═══════════════════════════════════════════════════════════════
+   YOUR OUTLOOK — bridge note
+   ═══════════════════════════════════════════════════════════════ */
 
 .mc-bridge-note {
-  margin-top: 28px;
-  padding-top: 18px;
-  border-top: 1px solid var(--border, #d1d5db);
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.1);
   font-size: 13px;
   color: var(--text, #4b5563);
-  font-style: normal;
 }
