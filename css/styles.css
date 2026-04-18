@@ -269,6 +269,8 @@ canvas { display: block; width: 100%; height: auto; }
 
 .btn-secondary:hover { background: #fff; }
 
+.btn-delete:hover { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+
 .run-btn {
   width: 100%;
   padding: 10px 16px;
