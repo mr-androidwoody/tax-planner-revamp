@@ -44,7 +44,7 @@
   // ── Loader state ──────────────────────────────────────────────────────────
   const LOADER_DURATION_MS = 4000;
   const LOADER_MESSAGES = [
-    'Simulating 10,000 retirement paths…',
+    'Testing your plan against thousands of market scenarios…',
     'Stress-testing against poor sequence returns…',
     'Calculating sustainable spending…',
     'Preparing your outlook…',
@@ -246,11 +246,41 @@
         actionLabel: '#791F1F', actionText: '#501313', actionImpact: '#A32D2D'
       };
 
+    // p10DepletesAtYi not yet computed here — derive it early for the verdict sentence
+    let _p10DepletesAtYiEarly = null;
+    for (let i = 0; i < r.p10Portfolio.length; i++) {
+      if (r.p10Portfolio[i] <= 0) { _p10DepletesAtYiEarly = i; break; }
+    }
+    const _lateRisk = _p10DepletesAtYiEarly !== null && _p10DepletesAtYiEarly > lastIdx * 0.6;
+    const _earlyRisk = _p10DepletesAtYiEarly !== null && !_lateRisk;
+    const _p10DepAge = (_p10DepletesAtYiEarly !== null && r.p1StartAge != null)
+      ? r.p1StartAge + _p10DepletesAtYiEarly : null;
+    const _depStage =
+      _p10DepAge === null ? 'later in retirement' :
+      _p10DepAge < 70    ? 'your late 60s'        :
+      _p10DepAge < 80    ? 'your 70s'             :
+      _p10DepAge < 90    ? 'your 80s'             : 'your 90s';
+
     const verdictSentence =
-      rate >= 0.95 ? 'Your plan is on track throughout retirement, with room to absorb a sustained run of poor returns.' :
-      rate >= 0.90 ? 'Your plan is well-founded. It holds in the large majority of scenarios, with only modest vulnerability at the edges.' :
-      rate >= 0.80 ? 'Your plan holds in most scenarios but carries real risk across a meaningful share of poor sequences. A small adjustment removes most of that risk.' :
-                     'Your plan needs attention. A significant share of simulated paths end in depletion before retirement ends.';
+      rate >= 0.95 && _p10DepletesAtYiEarly === null
+        ? 'Your plan is resilient across all tested scenarios, including sustained poor returns. No meaningful risk at any stage.' :
+      rate >= 0.95 && _lateRisk
+        ? `Your plan is secure through the early years. Some pressure emerges in ${_depStage} in the weakest scenarios, but overall resilience is high.` :
+      rate >= 0.95
+        ? 'Your plan holds well in the large majority of scenarios, with only limited vulnerability at the edges.' :
+      rate >= 0.90 && _p10DepletesAtYiEarly === null
+        ? 'Your plan is well-founded and survives intact in 9 out of 10 paths. The remaining scenarios are edge cases, not central outcomes.' :
+      rate >= 0.90 && _lateRisk
+        ? `Your plan is solid through the early and middle years. Risk is concentrated in ${_depStage} in weaker scenarios — the point when adjustment options are more limited.` :
+      rate >= 0.90
+        ? 'Your plan holds in most scenarios. Some vulnerability exists, but it is not the dominant outcome.' :
+      rate >= 0.80 && _lateRisk
+        ? `Your plan works in most scenarios, but a meaningful share of poor sequences lead to depletion in ${_depStage}. A small adjustment removes most of that risk.` :
+      rate >= 0.80
+        ? 'Your plan holds in most scenarios but carries real risk across a meaningful share of poor sequences. A small adjustment removes most of that risk.' :
+      _earlyRisk
+        ? `Your plan needs attention. Depletion occurs early — in ${_depStage} — across a significant share of simulated paths.` :
+        'Your plan needs attention. A significant share of simulated paths end in depletion before retirement ends.';
 
     // ── Headroom / gap ────────────────────────────────────────────────
     let headroom = null;
@@ -353,9 +383,9 @@
       }).join('');
 
       survivalNote =
-        minSurv >= 0.95 ? 'Risk remains low throughout.' :
-        minSurv >= 0.80 ? 'Risk is low early in retirement but rises in later years.' :
-                          'Risk builds significantly. Later years carry real pressure.';
+        minSurv >= 0.95 ? 'Risk remains low throughout the projection.' :
+        minSurv >= 0.80 ? 'No meaningful risk early on. Pressure builds later as withdrawals compound against a smaller asset base.' :
+                          'Risk builds significantly. Later years carry real pressure as the portfolio base declines.';
     }
 
     const s2Left = `
@@ -507,8 +537,8 @@
     if (hasGap) {
       const gap = roundToNearest(Math.abs(headroom), 500);
       const newTarget = roundToNearest(currentSpending - gap, 500);
-      actionLine   = `Reduce annual spending by around ${fmtB(gap)} to ${fmtB(newTarget)}.`;
-      actionImpact = `This single change brings your plan to the ${confPct}% confidence threshold.`;
+      actionLine   = `Reduce annual spending by ${fmtB(gap)} to ${fmtB(newTarget)}.`;
+      actionImpact = `This closes the sustainability gap and removes most of the risk in weaker market scenarios.`;
     } else if (rate < targetConfidence && delayEffective) {
       actionLine   = `Delay drawing from your portfolio by ${delayMin.yearsDelay} year${delayMin.yearsDelay > 1 ? 's' : ''}.`;
       actionImpact = `This allows the portfolio to compound without draws and lifts your success rate to ${fmtPctB(delayMin.successRate)}.`;
@@ -516,8 +546,12 @@
       actionLine   = `Adopt a flexible spending rule.`;
       actionImpact = `Reducing withdrawals by 10 to 15% in down years is the most practical lever available.`;
     } else {
-      actionLine   = `No changes needed.`;
-      actionImpact = `Your plan is resilient across all tested scenarios.`;
+      const hrForAction = sustainableSpending !== null && !sustainableIsFloor && headroom > 0
+        ? roundToNearest(headroom, 500) : null;
+      actionLine   = hrForAction
+        ? `No changes needed. You could increase spending by up to ${fmtB(hrForAction)} per year.`
+        : `No changes needed.`;
+      actionImpact = `Your plan is already robust across the range of tested scenarios.`;
     }
 
     // ── Contextual bullets (right half of action block) ───────────────
@@ -545,32 +579,32 @@
     let bulletItems = [];
 
     if (rate >= 0.95) {
-      // Strong
-      if (sustainableSpending !== null && !sustainableIsFloor && headroom !== null && headroom >= 0) {
-        const ceil = roundToNearest(sustainableSpending, 500);
-        bulletItems.push(`Your plan supports up to ${fmtB(ceil)} / yr at ${confPct}% confidence , ${fmtB(roundToNearest(headroom, 500))} above your current spending.`);
-      }
-      if (p50Mid > 0) {
-        bulletItems.push(`In a typical market, your portfolio is around ${fmtB(roundToNearest(p50Mid, 10000))} at ${age80label}.`);
-      }
+      // Strong — depletion timing first, then upside context
       if (p10DepletesAge !== null) {
         bulletItems.push(`In the worst 1 in 10 paths, funds run low around age ${p10DepletesAge}.`);
       } else {
         bulletItems.push(`Even in the worst 1 in 10 paths, your portfolio remains intact throughout the projection.`);
       }
-    } else if (rate >= 0.90) {
-      // Good
       if (sustainableSpending !== null && !sustainableIsFloor && headroom !== null && headroom >= 0) {
         const ceil = roundToNearest(sustainableSpending, 500);
-        bulletItems.push(`Sustainable spending ceiling is ${fmtB(ceil)} , ${fmtB(roundToNearest(headroom, 500))} above where you are now.`);
+        bulletItems.push(`Your plan supports up to ${fmtB(ceil)} / yr at ${confPct}% confidence, ${fmtB(roundToNearest(headroom, 500))} above your current spending.`);
+      }
+      if (p50Mid > 0) {
+        bulletItems.push(`In a typical market, your portfolio is around ${fmtB(roundToNearest(p50Mid, 10000))} at ${age80label}.`);
+      }
+    } else if (rate >= 0.90) {
+      // Good — depletion timing first, then ceiling and median
+      if (p10DepletesAge !== null) {
+        bulletItems.push(`In the worst 1 in 10 paths, funds run low around age ${p10DepletesAge}. Adjustments remain possible.`);
+      } else {
+        bulletItems.push(`Even in the worst 1 in 10 paths, the portfolio survives the full projection.`);
+      }
+      if (sustainableSpending !== null && !sustainableIsFloor && headroom !== null && headroom >= 0) {
+        const ceil = roundToNearest(sustainableSpending, 500);
+        bulletItems.push(`Sustainable spending ceiling is ${fmtB(ceil)}, ${fmtB(roundToNearest(headroom, 500))} above where you are now.`);
       }
       if (p50End > 0) {
         bulletItems.push(`Median portfolio at end of projection: ${fmtB(roundToNearest(p50End, 10000))}.`);
-      }
-      if (p10DepletesAge !== null) {
-        bulletItems.push(`In the worst 1 in 10 paths, funds run low around age ${p10DepletesAge} . Adjustments remain possible.`);
-      } else {
-        bulletItems.push(`Even in the worst 1 in 10 paths, the portfolio survives the full projection.`);
       }
     } else if (rate >= 0.80) {
       // Borderline
