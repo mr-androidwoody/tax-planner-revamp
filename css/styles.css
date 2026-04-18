@@ -1957,9 +1957,9 @@ input[type="radio"] { accent-color: var(--accent); }
 
 #results-panel-outlook .chart-canvas-area {
   border-top-left-radius: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
+  padding: 8px;
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
   box-shadow: none;
 }
 
