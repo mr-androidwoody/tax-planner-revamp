@@ -300,7 +300,14 @@
       headroom = sustainableSpending - currentSpending;
     }
 
-    // ── Margin of safety classification ──────────────────────────────
+    // ── Gap / rounded gap ─────────────────────────────────────────────
+    // Computed early so both the levers block and action block can use roundedGap.
+    // hasGap requires the rounded gap to be >= 500 to avoid spurious £0 messages.
+    const roundedGap = sustainableSpending !== null && !sustainableIsFloor && headroom < 0
+      ? roundToNearest(Math.abs(headroom), 500) : 0;
+    const hasGap     = roundedGap >= 500;
+
+        // ── Margin of safety classification ──────────────────────────────
     // marginRatio: headroom as a fraction of current spending.
     // tight       < 8%  — plan passes but buffer is very thin (~£3,200 on £40k spend)
     // moderate    < 20% — plan passes with some room but not genuinely comfortable
@@ -447,13 +454,16 @@
       l1Outcome = hr >= 500
         ? `You have around ${fmtB(hr)} per year of headroom, already within the ${confPct}% confidence band.`
         : `Your plan is right at the ${confPct}% confidence threshold. No cut needed, but there is negligible room to increase spending.`;
-    } else {
-      const gap = roundToNearest(Math.abs(headroom), 500);
-      const newTarget = roundToNearest(currentSpending - gap, 500);
-      const isSmall = Math.abs(headroom) / currentSpending <= 0.15;
+    } else if (roundedGap >= 500) {
+      const newTarget = roundToNearest(currentSpending - roundedGap, 500);
+      const isSmall = roundedGap / currentSpending <= 0.15;
       l1Pill = isSmall ? 'Modest cut' : 'Cut needed';
       l1PillClass = isSmall ? 'mc-lever-pill--warn' : 'mc-lever-pill--risk';
-      l1Outcome = `Reducing spending by around ${fmtB(gap)} per year to ${fmtB(newTarget)} would bring your plan to the ${confPct}% confidence threshold.`;
+      l1Outcome = `Reducing spending by ${fmtB(roundedGap)} per year to ${fmtB(newTarget)} would bring your plan to the ${confPct}% confidence threshold.`;
+    } else {
+      // Gap rounds to zero — treat as at threshold
+      l1Pill = 'No cut needed'; l1PillClass = 'mc-lever-pill--safe';
+      l1Outcome = `Your plan is right at the ${confPct}% confidence threshold. No cut needed, but there is negligible room to increase spending.`;
     }
 
     // Lever 2 — Delay withdrawals
@@ -492,10 +502,6 @@
     }
 
     // Is the plan already strong (no action needed)?
-    const roundedGap     = sustainableSpending !== null && !sustainableIsFloor && headroom < 0
-      ? roundToNearest(Math.abs(headroom), 500) : 0;
-    const hasGap         = roundedGap >= 500;
-
         const effectiveHeadroom = headroom !== null ? roundToNearest(headroom, 500) : null;
     const planIsStrong = rate >= targetConfidence &&
       (sustainableSpending === null || sustainableIsFloor || (headroom !== null && headroom >= 0 && effectiveHeadroom >= 0));
