@@ -400,7 +400,12 @@
         if (yi === -1) return '';
         const survRate  = r.survivalByYear[yi] / r.simCount;
         if (survRate < minSurv) minSurv = survRate;
-        const barColour = survRate >= 0.95 ? '#3B6D11' : survRate >= 0.80 ? '#BA7517' : '#A32D2D';
+        const barColour  = survRate >= 0.95 ? '#3B6D11' : survRate >= 0.80 ? '#BA7517' : '#A32D2D';
+        const subLabel   = survRate >= 0.95
+          ? '<span class="mc-decade-row__sublabel mc-decade-row__sublabel--safe">Ready</span>'
+          : survRate >= 0.80
+          ? '<span class="mc-decade-row__sublabel mc-decade-row__sublabel--warn">Watch</span>'
+          : '<span class="mc-decade-row__sublabel mc-decade-row__sublabel--risk">Risk</span>';
         const isRising  = !risingMarked && survRate < 0.95;
         if (isRising) risingMarked = true;
         const rowClass  = isRising ? 'mc-decade-row mc-decade-row--rising' : 'mc-decade-row';
@@ -410,7 +415,7 @@
             <span class="mc-decade-row__bar-wrap">
               <span class="mc-decade-row__bar" style="width:${(survRate*100).toFixed(1)}%;background:${barColour}"></span>
             </span>
-            <span class="mc-decade-row__pct" style="color:${barColour}">${fmtPct(survRate)}</span>
+            <span class="mc-decade-row__pct" style="color:${barColour}">${fmtPct(survRate)}${subLabel}</span>
           </div>`;
       }).join('');
 
