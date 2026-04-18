@@ -4361,20 +4361,22 @@ input[type="radio"] { accent-color: var(--accent); }
   margin-top: 1.5rem;
   display: inline-flex;
   align-items: center;
-  height: 38px;
-  padding: 0 1.4rem;
-  background: var(--accent);
-  color: #fff;
+  gap: 6px;
+  appearance: none;
   border: none;
-  border-radius: 10px;
-  font-size: 13px;
+  background: linear-gradient(180deg, #4774ff 0%, #315ce8 100%);
+  border-radius: 12px;
+  padding: 8px 18px;
+  font-size: 0.88rem;
   font-weight: 600;
+  color: #fff;
   cursor: pointer;
-  letter-spacing: 0.01em;
-  transition: background 0.15s;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(49,92,232,0.28);
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.splash-cta:hover { background: var(--accent-2); }
+.splash-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(49,92,232,0.35); }
 
 /* ========================================
    Footer (shared by splash + main app)
