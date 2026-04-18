@@ -1673,9 +1673,9 @@ input[type="radio"] { accent-color: var(--accent); }
   color: var(--accent);
   font-weight: 700;
   border-top: 3px solid var(--accent);
-  border-bottom: 2px solid var(--panel-soft);
-  margin-bottom: -2px;
-  padding-bottom: 10px;
+  border-bottom: 3px solid var(--panel-soft);
+  margin-bottom: -4px;
+  padding-bottom: 12px;
   position: relative;
   z-index: 2;
 }
