@@ -15,6 +15,8 @@
     p2enabled: true,
     simulationMode: 'deterministic', // kept for backwards compat with saved assumptions
     projectionRun: false,
+    riskRun: false,    // true once MC has completed at least once
+    riskStale: false,  // true when projection has been re-run since last MC run
   };
 
   // ─────────────────────────────
@@ -790,10 +792,22 @@
       CR.renderCharts();
       RetireTabs.switchTab('results');
       state.activeTab = 'results';
-      // Land on Your outlook tab and kick off MC run immediately
-      const outlookBtn = document.querySelector('.results-tab[data-results-tab="outlook"]');
-      if (outlookBtn) outlookBtn.click();
-      runRisk();
+
+      // Land on Sources of Income (first chart tab) — never auto-trigger MC
+      const incomeBtn = document.querySelector('.results-tab[data-results-tab="income"]');
+      if (incomeBtn) incomeBtn.click();
+
+      // If risk has been run before, mark results as stale and hide outlook tab
+      if (state.riskRun) {
+        state.riskStale = true;
+        window.RetireMCRender?.setStale(true);
+        const outlookTab = document.getElementById('tab-btn-outlook');
+        if (outlookTab) outlookTab.classList.add('results-tab--hidden');
+      }
+
+      // Show the Test my plan button
+      const testPlanBtn = document.getElementById('btn-test-plan');
+      if (testPlanBtn) testPlanBtn.style.display = '';
 
     } catch (err) {
       resetBtn();
@@ -881,10 +895,24 @@
       return;
     }
 
+    // ── Button: loading state ─────────────────────────────────────────────
+    const testPlanBtn = document.getElementById('btn-test-plan');
+    if (testPlanBtn) {
+      testPlanBtn.classList.add('btn-test-plan--loading');
+      testPlanBtn.disabled = true;
+    }
+
+    // ── Reveal and navigate to the outlook tab immediately ────────────────
+    const outlookTab = document.getElementById('tab-btn-outlook');
+    if (outlookTab) {
+      outlookTab.classList.remove('results-tab--hidden');
+      outlookTab.click();
+    }
+
     _showLoadingState();
     _setRiskReady(false);
-    const _outlookTab = document.querySelector('.results-tab[data-results-tab="outlook"]');
-    if (_outlookTab) _outlookTab.classList.add('results-tab--simulating');
+    const _outlookTabBtn = document.querySelector('.results-tab[data-results-tab="outlook"]');
+    if (_outlookTabBtn) _outlookTabBtn.classList.add('results-tab--simulating');
 
     const _loaderStart   = Date.now();
     const _MIN_LOADER_MS = 4000;
@@ -895,6 +923,12 @@
         ? new Promise(res => setTimeout(res, remaining))
         : Promise.resolve();
     };
+
+    function _resetTestPlanBtn() {
+      if (!testPlanBtn) return;
+      testPlanBtn.classList.remove('btn-test-plan--loading');
+      testPlanBtn.disabled = false;
+    }
 
     try {
       // ── Main run: 10,000 paths at current spending ─────────────────────
@@ -907,18 +941,13 @@
       });
 
       // ── Bisection: find spending level at TARGET_CONFIDENCE ─────────────
-      // 12 iterations at 2,000 paths each → ±0.1% spending accuracy.
-      // Bounds: 40%–150% of current spending, guaranteed to straddle the
-      // crossover for all realistic plans.
       const TARGET_CONFIDENCE = 0.90;
       const BISECT_SIMS       = 2_000;
       const BISECT_ITERS      = 12;
 
       let sustainableSpending = null;
-      let sustainableIsFloor  = false; // true = "at least £X" (very strong plan)
+      let sustainableIsFloor  = false;
 
-      // Fast-path: if the main run already hit the target, check whether the
-      // plan is so strong the crossover is above 150% of current spending.
       if (result.successRate >= TARGET_CONFIDENCE) {
         const rHigh = (await MCE.run({
           inputs:      { ...inputs, spending: inputs.spending * 1.50 },
@@ -928,23 +957,19 @@
         })).successRate;
 
         if (rHigh >= TARGET_CONFIDENCE) {
-          // Plan is exceptionally strong — report 150% as a floor.
           sustainableSpending = Math.round(inputs.spending * 1.50);
           sustainableIsFloor  = true;
         }
-        // Otherwise fall through to bisection with lo = current spending.
       }
 
       _setLoadingPhase('Finding sustainable spending level…');
       _setLoadingProgress(0);
 
       if (!sustainableIsFloor) {
-        // Bisect between lo (40% of spending, expected high success) and
-        // hi (150% of spending, expected low success — or current if above target).
         let lo = inputs.spending * 0.40;
         let hi = result.successRate >= TARGET_CONFIDENCE
           ? inputs.spending * 1.50
-          : inputs.spending;           // main run already below target → hi = current
+          : inputs.spending;
 
         for (let i = 0; i < BISECT_ITERS; i++) {
           const mid    = (lo + hi) / 2;
@@ -954,9 +979,6 @@
             equityVol:    0.16,
             inflationVol: 0.015,
           });
-          // Higher spending → lower success rate. Target is on the lo side when
-          // midRate < TARGET, so push hi down; on the hi side when midRate ≥ TARGET,
-          // so push lo up.
           if (midRes.successRate >= TARGET_CONFIDENCE) {
             lo = mid;
           } else {
@@ -967,10 +989,7 @@
         sustainableSpending = Math.round((lo + hi) / 2);
       }
 
-      // ── Delay perturbations: 1 / 2 / 3 years, 2,000 paths each ───────────
-      // deferYears suppresses portfolio draws for the first N years while
-      // the portfolio compounds normally. SP / salary timing is age-based
-      // and therefore unaffected. startYear and endYear are unchanged.
+      // ── Delay perturbations ───────────────────────────────────────────
       const DELAY_SIMS = 2_000;
       const delay1 = await MCE.run({ inputs: { ...inputs, deferYears: 1 }, simCount: DELAY_SIMS, equityVol: 0.16, inflationVol: 0.015 });
       const delay2 = await MCE.run({ inputs: { ...inputs, deferYears: 2 }, simCount: DELAY_SIMS, equityVol: 0.16, inflationVol: 0.015 });
@@ -981,7 +1000,6 @@
         { yearsDelay: 3, successRate: delay3.successRate },
       ];
 
-      // ── Loading: switch phase label before delay perturbations ──────────
       _setLoadingPhase('Stress-testing delay scenarios…');
       _setLoadingProgress(0);
 
@@ -1001,12 +1019,21 @@
       });
       MCR.render();
       _setRiskReady(true);
-      if (_outlookTab) _outlookTab.classList.remove('results-tab--simulating');
+      if (_outlookTabBtn) _outlookTabBtn.classList.remove('results-tab--simulating');
+
+      // ── Mark risk as complete and fresh ──────────────────────────────
+      state.riskRun   = true;
+      state.riskStale = false;
+      MCR.setStale(false);
+      _resetTestPlanBtn();
 
     } catch (err) {
       _hideLoader();
-      if (_outlookTab) _outlookTab.classList.remove('results-tab--simulating');
-      _setLoadingPhase('Simulation failed — please try running the projection again.');
+      if (_outlookTabBtn) _outlookTabBtn.classList.remove('results-tab--simulating');
+      // On error: hide the tab again and restore button
+      if (outlookTab) outlookTab.classList.add('results-tab--hidden');
+      _setLoadingPhase('Simulation failed — please try again.');
+      _resetTestPlanBtn();
       console.error('runRisk error:', err);
       showToast('Simulation failed — see console', true);
     }

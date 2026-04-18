@@ -36,6 +36,7 @@
   let _meanInflation   = 0.025;
   let _useReal         = true;
   let _spendingContext = null; // { currentSpending, sustainableSpending, targetConfidence, openingPortfolio }
+  let _stale           = false; // true when projection has been re-run since last MC run
 
   // ── Loader state ──────────────────────────────────────────────────────────
   const LOADER_DURATION_MS = 4000;
@@ -620,7 +621,10 @@
       </div>
       <p class="mc-bridge-note">Use the tabs above to explore charts and tables showing how your plan unfolds year by year under fixed assumptions.</p>`;
 
-    el.innerHTML = s1 + s23 + s4;
+    const staleBanner = _stale
+      ? `<div class="mc-stale-banner">⚠ Based on previous inputs — re-run to update</div>`
+      : '';
+    el.innerHTML = staleBanner + s1 + s23 + s4;
 
     // Push verdict colour onto the outlook tab button
     const outlookBtn = document.querySelector('.results-tab--outlook');
@@ -629,6 +633,18 @@
       outlookBtn.classList.add('results-tab--risk-ready');
     }
   }
-  window.RetireMCRender = { setResults, render, setReal, showLoader };
+  function setStale(stale) {
+    _stale = !!stale;
+    // Toggle stale dot on the Plan outlook tab button
+    const outlookTab = document.getElementById('tab-btn-outlook');
+    if (outlookTab) outlookTab.classList.toggle('results-tab--stale', _stale);
+    // Toggle amber tint on the Test my plan CTA button
+    const ctaBtn = document.getElementById('btn-test-plan');
+    if (ctaBtn) ctaBtn.classList.toggle('btn-test-plan--stale', _stale);
+    // If results are already rendered, update the banner in place
+    if (_result) render();
+  }
+
+  window.RetireMCRender = { setResults, render, setReal, showLoader, setStale };
 
 })();
