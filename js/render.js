@@ -39,7 +39,7 @@
     const lbl = document.getElementById('alloc-total-label');
     if (lbl) {
       const pct = Math.round(summary.overallPct);
-      lbl.textContent = pct === 100 ? '100.0% Balanced' : summary.overallPct.toFixed(1) + '%';
+      lbl.textContent = pct === 100 ? '100%' : summary.overallPct.toFixed(1) + '%';
       lbl.style.color = pct === 100 ? '#16a34a' : '#a16207';
     }
   }
@@ -201,8 +201,7 @@
       if (pct === 100) {
         el.innerHTML = `
           <div class="status status-ok">
-            <span class="value">${pct}%</span>
-            <span class="status-text">Ready</span>
+            <span class="value">100%</span>
           </div>
         `;
         return;
@@ -210,11 +209,11 @@
     
       // ⚠️ Under-allocated
       if (pct < 100) {
-        const diff = 100 - pct;
+        const diff = (100 - total).toFixed(1);
         if (tr) tr.classList.add('row-warn');
         el.innerHTML = `
           <div class="status status-warn">
-            <span class="value">${pct}%</span>
+            <span class="value">${total.toFixed(1)}%</span>
             <span class="status-text">Allocate ${diff}% more</span>
           </div>
         `;
@@ -222,11 +221,11 @@
       }
     
       // ❌ Over-allocated
-      const diff = pct - 100;
+      const diff = (total - 100).toFixed(1);
       if (tr) tr.classList.add('row-err');
       el.innerHTML = `
         <div class="status status-err">
-          <span class="value">${pct}%</span>
+          <span class="value">${total.toFixed(1)}%</span>
           <span class="status-text">Reduce ${diff}%</span>
         </div>
       `;
