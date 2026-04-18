@@ -3335,6 +3335,17 @@ input[type="radio"] { accent-color: var(--accent); }
   color: #334155;
 }
 
+.wiz-table select {
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2341526f'/%3E%3C/svg%3E");
+  background-position: calc(100% - 9px) center;
+  background-repeat: no-repeat;
+  background-size: 8px 5px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
 .wiz-table input[type="number"]:focus,
 .wiz-table input[type="text"]:focus,
 .wiz-table select:focus {
