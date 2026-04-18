@@ -807,7 +807,10 @@
 
       // Show the Test my plan button
       const testPlanBtn = document.getElementById('btn-test-plan');
-      if (testPlanBtn) testPlanBtn.style.display = '';
+      if (testPlanBtn) {
+        testPlanBtn.style.display = '';
+        testPlanBtn.classList.remove('btn-test-plan--stale');
+      }
 
     } catch (err) {
       resetBtn();
