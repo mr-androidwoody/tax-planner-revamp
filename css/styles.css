@@ -4496,7 +4496,7 @@ input[type="radio"] { accent-color: var(--accent); }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--muted);
+  color: var(--text);
   margin-bottom: 8px;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--border);
@@ -4562,6 +4562,13 @@ input[type="radio"] { accent-color: var(--accent); }
   font-weight: 600;
   color: var(--text);
   min-width: 0;
+}
+
+/* Secondary muted text — used for projection end ages */
+.ps-age {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
 }
 
 /* Col 3: coloured header label above note text, right-padded */
