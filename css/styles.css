@@ -3422,10 +3422,10 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .drawdown-rate-card__value {
-  font-size: 1.35rem;
+  font-size: 0.95rem;
   font-weight: 500;
   margin: 0 0 4px;
-  text-align: right;
+  text-align: center;
   color: var(--text);
 }
 
