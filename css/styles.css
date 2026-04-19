@@ -1968,14 +1968,11 @@ input[type="radio"] { accent-color: var(--accent); }
 #results-panel-outlook .chart-canvas-area,
 #results-panel-summary .chart-canvas-area {
   border-top-left-radius: 0;
-  padding: 16px;
+  border-top: none;
+  padding: 10px;
   background: var(--panel-soft);
   border: 1px solid var(--border);
   box-shadow: none;
-}
-
-#results-panel-summary .chart-canvas-area {
-  padding: 10px;
 }
 
 /* Summary panel: close the gap between tab bar and content */
