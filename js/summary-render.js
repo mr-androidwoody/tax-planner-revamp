@@ -283,7 +283,8 @@
       ) +
 
       row('Projection end',
-        vline('From ' + inputs.startYear + ' to ' + inputs.endYear + ' (' + (inputs.endYear - inputs.startYear) + ' years)') +
+        vline('From ' + inputs.startYear + ' to ' + inputs.endYear) +
+        vline('Duration ' + (inputs.endYear - inputs.startYear) + ' years') +
         (dual && p2EndAge
           ? '<div class="ps-val-line"><span class="ps-pname">' + p1 + '</span><span class="ps-age">age ' + p1EndAge + '</span></div>' +
             '<div class="ps-val-line"><span class="ps-pname">' + p2 + '</span><span class="ps-age">age ' + p2EndAge + '</span></div>'
@@ -340,8 +341,8 @@
 
       row('Total portfolio',
         dual
-          ? vline(money(p1Total), p1) + vline(money(p2Total), p2) + vline(money(totalPort) + ' total')
-          : vline(money(totalPort)),
+          ? vline(money(p1Total), p1) + vline(money(p2Total), p2) + vline('Total ' + money(totalPort))
+          : vline('Total ' + money(totalPort)),
         chip('info', 'Note'),
         'Combined starting portfolio across all wrappers and both people. This is the base from which the withdrawal rate is calculated.'
       ) +
