@@ -22,11 +22,13 @@
       dividendYield,
       dividendMode,
       strategy,
+      mgmtFee,
     } = inputs;
 
-    // Deduct fixed investment management charge before any growth calculations.
-    const MGMT_FEE = 0.0022;
-    const netGrowth = growth - MGMT_FEE;
+    // Deduct investment management charge before any growth calculations.
+    // Defaults to 0.0022 (0.22%/yr) if not supplied — test harnesses can pass
+    // mgmtFee: 0 to isolate other logic from the fee.
+    const netGrowth = growth - (mgmtFee ?? 0.0022);
 
     // Fallback wrapper order used by applyFallback inside withdrawalStrategy.
     // Cash is excluded here; SIPP lock is applied per-year below.
