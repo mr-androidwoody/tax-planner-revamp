@@ -454,7 +454,9 @@
       );
     }
 
-    return '<div class="ps-grid">' + c1 + c2 + c3 + c4 + c5 + '</div>';
+    var intro = '<p class="ps-intro">This page summarises every assumption driving your projection and gives each one a verdict. Green means the assumption is sound. Amber means it’s worth a second look. Red means it’s likely to cause a problem and should be addressed. If you want to change anything, go back to Your plan, adjust the inputs, and re-run the projection to see the updated results here.</p>';
+
+    return intro + '<div class="ps-grid">' + c1 + c2 + c3 + c4 + c5 + '</div>';
   }
 
   window.RetireSummary = { setData: setData, render: render };
