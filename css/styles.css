@@ -1974,14 +1974,9 @@ input[type="radio"] { accent-color: var(--accent); }
   box-shadow: none;
 }
 
-/* Summary panel: close the gap between tab bar and content,
-   and remove the top border so the active tab bleeds in cleanly */
+/* Summary panel: close the gap between tab bar and content */
 #results-panel-summary {
   margin-top: 0;
-}
-
-#results-panel-summary .chart-canvas-area {
-  border-top: none;
 }
 
 /* Table toolbar — sits above table content */
@@ -4114,7 +4109,6 @@ input[type="radio"] { accent-color: var(--accent); }
   padding-bottom: 0;
   position: relative;
   z-index: 1;
-  border-bottom: 1px solid var(--border);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -4465,14 +4459,16 @@ input[type="radio"] { accent-color: var(--accent); }
   padding: 0 0 24px;
 }
 
-/* Intro paragraph between tab bar and cards */
+/* Intro box — bordered container above the card grid */
 .ps-intro {
   font-size: 12px;
   color: var(--muted);
   line-height: 1.6;
-  padding: 12px 0 14px;
-  border-bottom: 1px solid var(--border);
+  padding: 12px 14px;
   margin-bottom: 14px;
+  background: var(--panel-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
 }
 
 /* Two-column card grid */
