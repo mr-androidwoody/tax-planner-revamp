@@ -1965,9 +1965,10 @@ input[type="radio"] { accent-color: var(--accent); }
   margin-top: 0;
 }
 
-#results-panel-outlook .chart-canvas-area {
+#results-panel-outlook .chart-canvas-area,
+#results-panel-summary .chart-canvas-area {
   border-top-left-radius: 0;
-  padding: 8px;
+  padding: 16px;
   background: var(--panel-soft);
   border: 1px solid var(--border);
   box-shadow: none;
@@ -4461,7 +4462,7 @@ input[type="radio"] { accent-color: var(--accent); }
 }
 
 .ps-card {
-  background: var(--panel-soft);
+  background: var(--panel-solid);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
