@@ -570,33 +570,54 @@
   function _updateBniMaxYears() {
     const config = [
       {
-        giaId:    ['p1GIAeq', 'p1GIAcash'],
-        cashId:   'p1Cash',
-        amtId:    'bniP1GIA',
-        yearsId:  'bniP1Years',
-        noteId:   'bniP1YearsNote',
+        giaIds:  ['p1GIAeq', 'p1GIAcash'],
+        cashId:  'p1Cash',
+        amtId:   'bniP1GIA',
+        yearsId: 'bniP1Years',
+        noteId:  'bniP1YearsNote',
+        tableId: null,
       },
       {
-        giaId:    ['p2GIAeq', 'p2GIAcash'],
-        cashId:   'p2Cash',
-        amtId:    'bniP2GIA',
-        yearsId:  'bniP2Years',
-        noteId:   'bniP2YearsNote',
+        giaIds:  ['p2GIAeq', 'p2GIAcash'],
+        cashId:  'p2Cash',
+        amtId:   'bniP2GIA',
+        yearsId: 'bniP2Years',
+        noteId:  'bniP2YearsNote',
+        tableId: 'bniP2Table',
       },
     ];
 
-    config.forEach(({ giaId, cashId, amtId, yearsId, noteId }) => {
+    config.forEach(({ giaIds, cashId, amtId, yearsId, noteId, tableId }) => {
       const yearsEl = safeEl(yearsId);
       const noteEl  = safeEl(noteId);
       if (!yearsEl || !noteEl) return;
 
-      const gia  = giaId.reduce((sum, id) => sum + (gv(id) || 0), 0);
-      const cash = gv(cashId) || 0;
-      const amt  = gv(amtId)  || 0;
+      const gia       = giaIds.reduce((sum, id) => sum + (gv(id) || 0), 0);
+      const cash      = gv(cashId) || 0;
+      const amt       = gv(amtId)  || 0;
       const available = gia + cash;
+      const tableEl   = tableId ? safeEl(tableId) : null;
 
-      if (amt <= 0 || available <= 0) {
-        yearsEl.max       = 30;
+      if (available <= 0) {
+        // No GIA or cash — grey out section and show warning
+        noteEl.textContent = 'No GIA available to fund transfers';
+        noteEl.style.color = '#a32d2d';
+        if (tableEl) {
+          tableEl.style.opacity       = '0.45';
+          tableEl.style.pointerEvents = 'none';
+        }
+        yearsEl.max = 1;
+        return;
+      }
+
+      // GIA available — restore section
+      if (tableEl) {
+        tableEl.style.opacity       = '';
+        tableEl.style.pointerEvents = '';
+      }
+
+      if (amt <= 0) {
+        yearsEl.max        = 30;
         noteEl.textContent = '';
         return;
       }
@@ -605,9 +626,7 @@
       yearsEl.max = maxYears;
 
       // Clamp current value if it exceeds new max
-      if (parseInt(yearsEl.value) > maxYears) {
-        yearsEl.value = maxYears;
-      }
+      if (parseInt(yearsEl.value) > maxYears) yearsEl.value = maxYears;
 
       if (maxYears < 30) {
         noteEl.textContent = `GIA + cash funds up to ${maxYears} year${maxYears !== 1 ? 's' : ''} at this amount`;
