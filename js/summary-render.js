@@ -449,8 +449,8 @@
             : 'Not configured')
         : null;
 
-      // p2 is "active" in BnI only if they have a configured annual amount
-      var p2BniActive = dual && inputs.bniP2GIA > 0;
+      // p2 is "active" in BnI only if they have a configured amount AND actual GIA to fund it
+      var p2BniActive = dual && inputs.bniP2GIA > 0 && p2GIA > 0;
 
       var survChip = p1BniV.survival[0] === 'red' || (p2BniActive && p2BniV && p2BniV.survival[0] === 'red')
         ? chip('red', 'At risk')
