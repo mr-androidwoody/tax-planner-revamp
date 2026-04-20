@@ -629,9 +629,56 @@
       // Clamp current value if it exceeds new max
       if (parseInt(yearsEl.value) > maxYears) yearsEl.value = maxYears;
 
+      // ── WR-adjusted range ────────────────────────────────────────────────
+      // Compute a withdrawal-rate-adjusted likely range alongside the static max.
+      // WR uses non-pension portfolio only (ISA + GIA + Cash) as the denominator,
+      // since pension is inaccessible early in retirement and including it flatters WR.
+      const spending = D.parseCurrency(safeEl('spending')?.value || '') || 0;
+      const nonPensionTotal =
+        (gv('p1GIAeq') || 0) + (gv('p1GIAcash') || 0) + (gv('p1Cash') || 0) + (gv('p1ISA') || 0) +
+        (state.p2enabled ? ((gv('p2GIAeq') || 0) + (gv('p2GIAcash') || 0) + (gv('p2Cash') || 0) + (gv('p2ISA') || 0)) : 0);
+      const wr = (spending > 0 && nonPensionTotal > 0) ? (spending / nonPensionTotal) * 100 : null;
+
+      // Midpoint multiplier by WR band, then build a ±1 year range capped at maxYears
+      let noteText = '';
+      let noteColor = '#854f0b';
+
       if (maxYears < 30) {
-        noteEl.textContent = `GIA + cash funds up to ${maxYears} year${maxYears !== 1 ? 's' : ''} at this amount`;
-        noteEl.style.color = maxYears <= 3 ? '#a32d2d' : '#854f0b';
+        noteText = `Up to ${maxYears} year${maxYears !== 1 ? 's' : ''} based on starting balances`;
+        noteColor = maxYears <= 3 ? '#a32d2d' : '#854f0b';
+
+        if (wr !== null && maxYears >= 2) {
+          let midpointFrac;
+          if (wr < 4)      { midpointFrac = 0.95; }
+          else if (wr < 5) { midpointFrac = 0.80; }
+          else             { midpointFrac = 0.62; }
+
+          const midpoint  = maxYears * midpointFrac;
+          const rangeLow  = Math.max(1, Math.round(midpoint) - 1);
+          const rangeHigh = Math.min(maxYears, Math.round(midpoint) + 1);
+
+          if (rangeHigh < maxYears) {
+            // Only show range if it's meaningfully lower than the static max
+            noteText += ` · Likely ${rangeLow}–${rangeHigh} yrs at your withdrawal rate`;
+          }
+        }
+
+        noteEl.style.color     = noteColor;
+        noteEl.style.fontStyle = 'italic';
+        noteEl.textContent     = noteText;
+      } else if (wr !== null) {
+        // maxYears is 30 (unconstrained by GIA) — still show WR guidance alone
+        let midpointFrac;
+        if (wr < 4)      { midpointFrac = 0.95; }
+        else if (wr < 5) { midpointFrac = 0.80; }
+        else             { midpointFrac = 0.62; }
+
+        const midpoint  = 30 * midpointFrac;
+        const rangeLow  = Math.max(1, Math.round(midpoint) - 1);
+        const rangeHigh = Math.round(midpoint) + 1;
+
+        noteEl.textContent     = `Likely ${rangeLow}–${rangeHigh} yrs sustainable at your withdrawal rate`;
+        noteEl.style.color     = wr >= 5 ? '#a32d2d' : '#854f0b';
         noteEl.style.fontStyle = 'italic';
       } else {
         noteEl.textContent = '';
