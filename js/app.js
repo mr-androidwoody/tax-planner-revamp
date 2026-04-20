@@ -1030,6 +1030,7 @@
     const _mcGrowth      = _mcAssume.growth;
     const _mcEquityVol   = _mcAssume.equityVol;
     const _mcInflationVol = _mcAssume.inflationVol;
+    window._mcDebug = { alloc: _mcAlloc, assume: _mcAssume };
 
     try {
       // ── Main run: 10,000 paths at current spending ─────────────────────
