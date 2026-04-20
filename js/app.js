@@ -423,6 +423,31 @@
 
     // Gate nav tabs
     refreshTabGating(isValid);
+
+    // ── Growth rate suggestion ────────────────────────────────────────────
+    const suggEl = document.getElementById('growth-suggestion');
+    if (suggEl && window.RetireGrowthAssumptions && isValid) {
+      const alloc = C.summarisePortfolio(state.portfolioAccounts).overallAllocation;
+      const sugg  = window.RetireGrowthAssumptions.getSuggestedGrowth(
+        alloc.equities  || 0,
+        alloc.bonds     || 0,
+        alloc.cashlike  || 0,
+        alloc.cash      || 0,
+      );
+      if (sugg) {
+        const ratePct = (sugg.rate * 100).toFixed(1);
+        const parts = [];
+        if (sugg.equityPct   > 0) parts.push(`${sugg.equityPct}% equity`);
+        if (sugg.bondPct     > 0) parts.push(`${sugg.bondPct}% bond`);
+        if (sugg.cashlikePct > 0) parts.push(`${sugg.cashlikePct}% cashlike`);
+        if (sugg.cashPct     > 0) parts.push(`${sugg.cashPct}% cash`);
+        suggEl.innerHTML = `Suggested growth rate: <strong>${ratePct}%</strong> · reflects your ${parts.join(' / ')} allocation`;
+      } else {
+        suggEl.textContent = '';
+      }
+    } else if (suggEl) {
+      suggEl.textContent = '';
+    }
   }
 
   // ─────────────────────────────
