@@ -2773,8 +2773,16 @@ input[type="radio"] { accent-color: var(--accent); }
    ═══════════════════════════════════════════════════════════════ */
 
 .results-tab--risk-ready {
-  color: var(--tab-verdict-colour, #dc2626);
+  background: var(--tab-verdict-colour, #dc2626);
+  color: #ffffff;
+  border-color: var(--tab-verdict-colour, #dc2626);
   font-weight: 700;
+}
+
+.results-tab--risk-ready:hover {
+  background: var(--tab-verdict-colour, #dc2626);
+  color: #ffffff;
+  filter: brightness(1.08);
 }
 
 .results-tab--risk-ready.results-tab--active {
