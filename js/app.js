@@ -950,18 +950,20 @@
     const el = safeEl('mc-narrative');
     if (!el) return;
 
+    // Building squares: 3x3 grid, light blue → accent blue → green (last square)
+    const colours = [
+      '#b8c8e8', '#8aaad4', '#5c87bf',
+      '#8aaad4', '#2d5bff', '#5c87bf',
+      '#5c87bf', '#2d5bff', '#16a34a',
+    ];
+    const squares = colours.map((c, i) =>
+      `<div class="mc-sq" style="animation-delay:${(i * 0.18).toFixed(2)}s;background:${c}"></div>`
+    ).join('');
+
     el.innerHTML = `
       <div class="mc-loading">
-        <svg class="mc-loading__wave" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true">
-          <path class="mc-loading__wave-path mc-loading__wave-path--back"
-            d="M-300,30 C-225,10 -175,50 -100,30 C-25,10 25,50 100,30 C175,10 225,50 300,30 C375,10 425,50 500,30 C575,10 625,50 700,30"/>
-          <path class="mc-loading__wave-path mc-loading__wave-path--front"
-            d="M-300,30 C-225,15 -175,45 -100,30 C-25,15 25,45 100,30 C175,15 225,45 300,30 C375,15 425,45 500,30 C575,15 625,45 700,30"/>
-        </svg>
+        <div class="mc-sq-grid">${squares}</div>
         <p class="mc-loading__phase" id="mc-loading-phase">${_LOADER_MESSAGES[0]}</p>
-        <div class="mc-loading__bar-wrap">
-          <div class="mc-loading__bar-fill" id="mc-loading-bar-fill"></div>
-        </div>
       </div>`;
 
     // Cycle through messages on an interval, cross-fading each
