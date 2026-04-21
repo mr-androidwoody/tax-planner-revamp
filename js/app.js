@@ -603,10 +603,16 @@
   function _applySweepSurplusVisibility() {
     const p1Sal = D.parseCurrency(safeEl('p1Salary')?.value || '') || 0;
     const p2Sal = D.parseCurrency(safeEl('p2Salary')?.value || '') || 0;
-    const p1Row = safeEl('p1SweepRow');
-    const p2Row = safeEl('p2SweepRow');
-    if (p1Row) p1Row.style.display = p1Sal > 0 ? '' : 'none';
-    if (p2Row) p2Row.style.display = (p2Sal > 0 && state.p2enabled) ? '' : 'none';
+    const p1Show = p1Sal > 0;
+    const p2Show = p2Sal > 0 && state.p2enabled;
+    ['p1SweepRow','p1SweepToggleCol'].forEach(id => {
+      const el = safeEl(id);
+      if (el) el.style.display = p1Show ? '' : 'none';
+    });
+    ['p2SweepRow','p2SweepToggleCol'].forEach(id => {
+      const el = safeEl(id);
+      if (el) el.style.display = p2Show ? '' : 'none';
+    });
   }
 
   function _updateBniMaxYears() {
