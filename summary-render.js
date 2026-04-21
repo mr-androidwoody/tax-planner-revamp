@@ -127,7 +127,7 @@
         planned: [plannedC, plannedL],
         survival: ['red', 'At risk'],
         survivalLabel: 'GIA runs out in year ' + failYr,
-        survivalNote: 'GIA is exhausted before all transfers complete. Years ' + failYr + ' onwards will not execute. Reduce the duration to ' + safeYrs + (safeYrs !== 1 ? ' years' : ' year') + ' to match what the GIA can fund.',
+        survivalNote: 'GIA is exhausted before all transfers complete. Year ' + failYr + ' of the programme will not execute. Reduce "Number of years" to ' + safeYrs + (safeYrs !== 1 ? ' years' : ' year') + ' to match what the GIA can fund.',
       };
     }
     var finalRow = rows.find(function(r) { return r.year === lastTransferYear; });
