@@ -19,9 +19,9 @@
  * Sources: Vanguard Capital Markets Model 2024,
  *          BlackRock Capital Market Assumptions 2024
  *
- *   Global equities (MSCI World, GBP):  8.00% return, 16.0% vol
- *   Global bonds (agg, GBP hedged):     4.50% return,  7.0% vol
- *   Cashlike (money market / QMMF):     3.50% return,  1.0% vol
+ *   Global equities (MSCI World, GBP):  6.50% return, 16.0% vol
+ *   Global bonds (agg, GBP hedged):     4.00% return,  7.0% vol
+ *   Cashlike (money market / QMMF):     2.50% return,  1.5% vol
  *   Cash (uninvested):                  0.00% return,  0.0% vol
  *
  * Correlation assumptions:

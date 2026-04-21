@@ -19,9 +19,9 @@
  * Assumes 2.5% inflation. Real midpoints split the difference between
  * conservative long-run DMS figures and forward-looking CMA estimates.
  *
- *   Global equities (MSCI World / VWRL):  8.00% nominal gross  (~6.0% real)
- *   Global bonds (agg, GBP hedged):       4.75% nominal gross  (~2.25% real)
- *   Cashlike (money market / QMMF):       3.25% nominal gross  (~0.75% real)
+ *   Global equities (MSCI World / VWRL):  6.50% nominal gross  (~6.0% real)
+ *   Global bonds (agg, GBP hedged):       4.00% nominal gross  (~2.25% real)
+ *   Cashlike (money market / QMMF):       2.50% nominal gross  (~0.75% real)
  *   Cash (uninvested):                    0.00% nominal gross  (~-2.5% real drag)
  *
  * ── Fee deduction ─────────────────────────────────────────────────────────
