@@ -255,8 +255,10 @@
                 <button class="stepper-btn" data-step-for="p1SalaryStopAge" data-step-direction="-1" type="button">&#x25BC;</button>
               </div>
             </div>
-            <div id="p1SweepRow" class="full sweep-surplus-row" style="display:none">
-              <label>Sweep surplus to GIA</label>
+            <div id="p1SweepRow" class="sweep-surplus-label-col" style="display:none">
+              <label><span class="dotted-hint" title="When your salary exceeds your share of the household spending target, the surplus is swept into your GIA each year, compounding tax-efficiently rather than sitting idle in cash.">Sweep surplus cash to GIA</span></label>
+            </div>
+            <div id="p1SweepToggleCol" class="sweep-surplus-toggle-col" style="display:none">
               <div class="wiz-seg">
                 <label class="wiz-seg__btn"><input type="radio" name="p1SweepSurplus" value="true"> Yes</label>
                 <label class="wiz-seg__btn"><input type="radio" name="p1SweepSurplus" value="false" checked> No</label>
@@ -318,8 +320,10 @@
                 <button class="stepper-btn" data-step-for="p2SalaryStopAge" data-step-direction="-1" type="button">&#x25BC;</button>
               </div>
             </div>
-            <div id="p2SweepRow" class="full sweep-surplus-row" style="display:none">
-              <label>Sweep surplus to GIA</label>
+            <div id="p2SweepRow" class="sweep-surplus-label-col" style="display:none">
+              <label><span class="dotted-hint" title="When your salary exceeds your share of the household spending target, the surplus is swept into your GIA each year, compounding tax-efficiently rather than sitting idle in cash.">Sweep surplus cash to GIA</span></label>
+            </div>
+            <div id="p2SweepToggleCol" class="sweep-surplus-toggle-col" style="display:none">
               <div class="wiz-seg">
                 <label class="wiz-seg__btn"><input type="radio" name="p2SweepSurplus" value="true"> Yes</label>
                 <label class="wiz-seg__btn"><input type="radio" name="p2SweepSurplus" value="false" checked> No</label>
@@ -333,32 +337,26 @@
           <div class="setup-panel-title">Assets</div>
         
             <div id="alloc-summary">
-
               <div class="wrapper-row">
                 <span class="wrapper-name">Equities</span>
                 <span class="wrapper-val" id="alloc-eq-pct">–</span>
               </div>
-
               <div class="wrapper-row">
                 <span class="wrapper-name">Bonds</span>
                 <span class="wrapper-val" id="alloc-bd-pct">–</span>
               </div>
-
               <div class="wrapper-row">
                 <span class="wrapper-name">Cashlike</span>
                 <span class="wrapper-val" id="alloc-cl-pct">–</span>
               </div>
-
               <div class="wrapper-row">
                 <span class="wrapper-name">Cash</span>
                 <span class="wrapper-val" id="alloc-c-pct">–</span>
               </div>
-
-              <div class="wrapper-row alloc-total-row">
-                <span class="wrapper-name alloc-total-label">Asset allocation</span>
-                <span class="alloc-balanced" id="alloc-total-label">–</span>
-              </div>
-
+            </div>
+            <div class="wrapper-total-footer">
+              <span class="meta-label">Asset Allocation</span>
+              <span class="alloc-balanced" id="alloc-total-label">–</span>
             </div>
 
         </div><!-- /.setup-panel (Allocation) -->
