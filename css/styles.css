@@ -3743,21 +3743,14 @@ input[type="radio"] { accent-color: var(--accent); }
   color: var(--accent);
 }
 
-/* Growth rate suggestion card */
-/* Suppress borders on inflation row (sits above suggestion), suggestion row, and mgmt charge row */
+/* ── Growth rate suggestion card ──────────────────────────────────── */
 .growth-suggestion-row,
 .mgmt-charge-row {
   border-bottom: none !important;
 }
 
-.growth-suggestion-row + tr,
-.growth-suggestion-row {
-  border-top: none;
-}
-
-/* Make the td itself fill 100% width */
 .growth-suggestion-cell {
-  padding-top: 12px;
+  padding-top: 20px;
   padding-bottom: 0;
   width: 100%;
 }
