@@ -19,6 +19,7 @@
       growth, inflation,
       thresholdMode, thresholdFromYear,
       bniEnabled, bniP1GIA, bniP1Years, bniP2GIA, bniP2Years,
+      p1SweepSurplus, p2SweepSurplus,
       dividendYield,
       dividendMode,
       strategy,
@@ -209,13 +210,44 @@
 
       // How much of the target is already covered before interest draws
       const preIntGuaranteed = p1SP + p2SP + p1SalInc + p2SalInc + p1DivsUsed + p2DivsUsed;
-      // Surplus salary/SP above target goes to p1 cash buffer
-      const preIntSurplus    = Math.max(0, preIntGuaranteed - target);
-      if (preIntSurplus > 0) {
+
+      // Per-person salary surplus sweep to GIA (when enabled)
+      // Each person's surplus = their salary minus their proportional share of the target.
+      // Share is weighted by salary fraction; if only one person has salary they bear the full target.
+      const totalSalInc = p1SalInc + p2SalInc;
+      if (totalSalInc > 0 && preIntGuaranteed > target) {
+        const p1SalShare = totalSalInc > 0 ? p1SalInc / totalSalInc : 0.5;
+        const p2SalShare = 1 - p1SalShare;
+        const p1SalSurplus = Math.max(0, p1SalInc - target * p1SalShare);
+        const p2SalSurplus = Math.max(0, p2SalInc - target * p2SalShare);
+
+        if (p1SweepSurplus && p1SalSurplus > 0) {
+          p1Bal.GIA = (p1Bal.GIA || 0) + p1SalSurplus;
+          annotations.push({ year, person: 'p1', event: 'cash_surplus',
+            message: `${p1name}'s salary surplus (£${Math.round(p1SalSurplus).toLocaleString('en-GB')}) above target share swept to GIA` });
+        } else if (p1SalSurplus > 0) {
+          p1Bal.Cash = (p1Bal.Cash || 0) + p1SalSurplus;
+          annotations.push({ year, person: 'p1', event: 'cash_surplus',
+            message: `Household surplus income (£${Math.round(p1SalSurplus).toLocaleString('en-GB')}) above target parked in ${p1name}'s Cash` });
+        }
+
+        if (p2SweepSurplus && p2SalSurplus > 0) {
+          p2Bal.GIA = (p2Bal.GIA || 0) + p2SalSurplus;
+          annotations.push({ year, person: 'p2', event: 'cash_surplus',
+            message: `${p2name}'s salary surplus (£${Math.round(p2SalSurplus).toLocaleString('en-GB')}) above target share swept to GIA` });
+        } else if (p2SalSurplus > 0) {
+          p1Bal.Cash = (p1Bal.Cash || 0) + p2SalSurplus;
+          annotations.push({ year, person: 'p2', event: 'cash_surplus',
+            message: `Household surplus income (£${Math.round(p2SalSurplus).toLocaleString('en-GB')}) above target parked in ${p1name}'s Cash` });
+        }
+      } else if (preIntGuaranteed > target) {
+        // No salary income (surplus from SP/dividends) — park in p1 cash as before
+        const preIntSurplus = preIntGuaranteed - target;
         p1Bal.Cash = (p1Bal.Cash || 0) + preIntSurplus;
         annotations.push({ year, person: 'p1', event: 'cash_surplus',
           message: `Household surplus income (£${Math.round(preIntSurplus).toLocaleString('en-GB')}) above target parked in ${p1name}'s Cash` });
       }
+
       let intBudget = Math.max(0, target - preIntGuaranteed);
 
       intAccts.forEach(a => {
