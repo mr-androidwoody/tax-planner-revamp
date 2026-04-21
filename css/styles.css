@@ -245,7 +245,7 @@ canvas { display: block; width: 100%; height: auto; }
 .btn:hover,
 .run-btn:hover,
 .btn-add:hover { transform: translateY(-1px); }
-.btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
 
 .btn-primary {
