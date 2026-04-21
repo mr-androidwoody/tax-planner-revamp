@@ -636,7 +636,7 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .people-grid > div.full { grid-column: 1 / -1; }
 
-/* Sweep surplus — label in left col, toggle in right col, normal grid flow */
+/* Sweep surplus — label in left col, toggle right-aligned in right col */
 .sweep-surplus-label-col,
 .sweep-surplus-toggle-col {
   display: flex;
@@ -646,14 +646,7 @@ input[type="radio"] { accent-color: var(--accent); }
   justify-content: center;
 }
 .sweep-surplus-toggle-col {
-  align-items: flex-start;
-}
-
-/* Dotted underline hint — native browser tooltip on hover */
-.dotted-hint {
-  border-bottom: 1px dotted var(--muted);
-  cursor: help;
-  text-decoration: none;
+  align-items: flex-end;
 }
 
 /* Smaller inputs inside assump cards — match setup-panel / acct-table sizing */
