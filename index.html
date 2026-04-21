@@ -40,6 +40,35 @@
       color: #22314d;
       line-height: 1;
     }
+    /* ── Background image ── */
+    body {
+      background:
+        url('img/bg.jpg') center center / cover fixed no-repeat;
+    }
+    /* Dark blue overlay on .app knocks back pinks, unifies to brand blues */
+    .app {
+      position: relative;
+      background: transparent;
+    }
+    .app::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(18, 30, 60, 0.82) 0%,
+          rgba(10, 20, 50, 0.78) 50%,
+          rgba(18, 30, 60, 0.82) 100%
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Ensure all direct app children sit above the overlay */
+    .app > * {
+      position: relative;
+      z-index: 1;
+    }
   </style>
 
 </head>
