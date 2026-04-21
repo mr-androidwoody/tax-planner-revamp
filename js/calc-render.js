@@ -464,7 +464,7 @@
         .filter(x => x.sf >= 20000);
       if (sfHidden > 0 && sfBase <= 0) {
         // Shortfall is entirely due to toggled-off sources, not a genuine engine shortfall
-        return `No genuine shortfall — gap shown because one or more income sources are hidden in the chart`;
+        return `No genuine shortfall - gap shown because one or more income sources are hidden in the chart`;
       }
       if (sfHidden > 0) {
         return `Genuine shortfall in ${sfYears.length} year${sfYears.length !== 1 ? 's' : ''} from ${sfYears[0].year}, plus hidden sources adding ${fmt(sfHidden)}`;
