@@ -1375,6 +1375,12 @@
     }
   });
 
+  // Show/hide sweep surplus toggle when salary fields change
+  ['p1Salary','p2Salary'].forEach(id => {
+    safeEl(id)?.addEventListener('input', _applySweepSurplusVisibility);
+    safeEl(id)?.addEventListener('change', _applySweepSurplusVisibility);
+  });
+
   document.getElementById('spending')?.addEventListener('input', () => {
     const _s = C.summarisePortfolio(state.portfolioAccounts);
     refreshDrawdownRates(_s.total);
