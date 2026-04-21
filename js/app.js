@@ -268,6 +268,10 @@
     }
     refreshSetupSummary();
     refreshPortfolioUI();
+
+    // Ensure all currency-input fields in the setup panel are correctly formatted
+    // after load — catches cases where values were saved as raw numbers
+    document.querySelectorAll('.setup-panel .currency-input').forEach(R.applyCurrencyFormattingToInput);
   }
 
   function applyAssumptionsInputs(a) {
