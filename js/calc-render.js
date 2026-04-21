@@ -807,16 +807,27 @@
 
       // Summarise repeating events; show discrete ones as-is
       if (event === 'cash_surplus' && items.length > 1) {
-        const first = items[0], last = items[items.length - 1];
-        const total = _rows
-          .filter(r => r.year >= first.year && r.year <= last.year)
-          .reduce((s, r) => s + Math.max(0, (r.p1SP || 0) + (r.p2SP || 0) + (r.p1SalInc || 0) + (r.p2SalInc || 0) + (r.p1Divs || 0) + (r.p2Divs || 0) - (r.target || 0)), 0);
-        const firstAmt = items[0].message.match(/£[\d,]+/)?.[0] || '';
-        const lastAmt  = last.message.match(/£[\d,]+/)?.[0] || '';
-        const row = document.createElement('div');
-        row.className = 'chart-insight-summary';
-        row.textContent = `${first.year}–${last.year}: Annual household surplus above target parked in ${items[0].message.split('parked in ')[1]}, ${firstAmt} rising to ${lastAmt}/yr (total ${fmt0(total)})`;
-        group.appendChild(row);
+        // Split items by destination: GIA sweep vs Cash park
+        const giaItems  = items.filter(a => a.message.includes('swept to GIA'));
+        const cashItems = items.filter(a => a.message.includes('parked in'));
+
+        const renderSurplusGroup = (groupItems, toGIA) => {
+          if (!groupItems.length) return;
+          const first = groupItems[0], last = groupItems[groupItems.length - 1];
+          const firstAmt = first.message.match(/£[\d,]+/)?.[0] || '';
+          const lastAmt  = last.message.match(/£[\d,]+/)?.[0] || '';
+          const total = _rows
+            .filter(r => r.year >= first.year && r.year <= last.year)
+            .reduce((s, r) => s + Math.max(0, (r.p1SP || 0) + (r.p2SP || 0) + (r.p1SalInc || 0) + (r.p2SalInc || 0) + (r.p1Divs || 0) + (r.p2Divs || 0) - (r.target || 0)), 0);
+          const dest = toGIA ? 'swept to GIA' : `parked in ${first.message.split('parked in ')[1]}`;
+          const row = document.createElement('div');
+          row.className = 'chart-insight-summary';
+          row.textContent = `${first.year}–${last.year}: Annual surplus ${dest}, ${firstAmt} rising to ${lastAmt}/yr (total ${fmt0(total)})`;
+          group.appendChild(row);
+        };
+
+        renderSurplusGroup(giaItems,  true);
+        renderSurplusGroup(cashItems, false);
       } else {
         items.forEach(a => {
           const row = document.createElement('div');
