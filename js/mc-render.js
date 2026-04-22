@@ -327,32 +327,83 @@
   // container hidden (it still exists in the HTML as a no-op anchor).
   // ─────────────────────────────────────────────────────────────────────────
 
-  function _buildStressBtnsHTML() {
+  // ─────────────────────────────────────────────────────────────────────────
+  // SCENARIO CARDS
+  // Four cards (Baseline + 3 stress scenarios) replace the old button strip.
+  // Baseline is always pre-active. Stress cards show idle/done/active states.
+  // Click handlers are bound by _bindStressBtns() — data-stress-state attr
+  // is preserved so that function works unchanged.
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const CARD_META = {
+    baseline:   {
+      eyebrow: 'Your plan',
+      desc:    'Your projected retirement outcomes under normal market assumptions.',
+    },
+    sorr:       {
+      eyebrow: 'Stress scenario',
+      desc:    'Markets fall sharply in the first few years of retirement, before the portfolio has had time to recover.',
+    },
+    inflation:  {
+      eyebrow: 'Stress scenario',
+      desc:    'A prolonged period of high inflation in the early years of retirement, squeezing the real value of withdrawals.',
+    },
+    lostDecade: {
+      eyebrow: 'Stress scenario',
+      desc:    'Near-zero real growth for a decade at some point during retirement, limiting the portfolio\'s ability to compound.',
+    },
+  };
+
+  function _buildScenarioCardsHTML() {
     if (!_results.baseline) return '';
 
-    const btns = STATE_IDS.map(id => {
+    const cards = STATE_IDS.map(id => {
       const hasResult = !!_results[id];
       const isActive  = id === _activeState;
       const isStale   = hasResult && _staleStates[id];
-      const label     = STATE_LABELS[id];
+      const meta      = CARD_META[id];
 
-      let cls = 'mc-sc-btn';
-      if (isActive)       cls += ' mc-sc-btn--active';
-      else if (hasResult) cls += ' mc-sc-btn--done';
-      else                cls += ' mc-sc-btn--idle';
+      // Card state class
+      let cardCls = 'mc-sc-card';
+      if (isActive)       cardCls += ' mc-sc-card--active';
+      else if (hasResult) cardCls += ' mc-sc-card--done';
+      else if (id !== 'baseline') cardCls += ' mc-sc-card--idle';
+
+      // CTA label and state
+      let ctaLabel, ctaCls;
+      if (isActive) {
+        ctaLabel = 'Viewing results';
+        ctaCls   = 'mc-sc-card__cta mc-sc-card__cta--viewing';
+      } else if (hasResult) {
+        ctaLabel = 'View results';
+        ctaCls   = 'mc-sc-card__cta mc-sc-card__cta--done';
+      } else if (id === 'baseline') {
+        ctaLabel = 'View results';
+        ctaCls   = 'mc-sc-card__cta mc-sc-card__cta--done';
+      } else {
+        ctaLabel = 'Test this scenario \u203a';
+        ctaCls   = 'mc-sc-card__cta mc-sc-card__cta--idle';
+      }
 
       const staleDot = isStale
-        ? '<span class="mc-sc-stale-dot" title="Re-run to update"></span>'
+        ? '<span class="mc-sc-stale-dot" title="Projection has changed — re-run to update"></span>'
         : '';
 
-      return `<button class="${cls}" data-stress-state="${id}" type="button">${label}${staleDot}</button>`;
+      return `
+        <button class="${cardCls}" data-stress-state="${id}" type="button">
+          <div class="mc-sc-card__eyebrow">${meta.eyebrow}${staleDot}</div>
+          <div class="mc-sc-card__label">${STATE_LABELS[id]}</div>
+          <p class="mc-sc-card__desc">${meta.desc}</p>
+          <span class="${ctaCls}">${ctaLabel}</span>
+        </button>`;
     }).join('');
 
-    const desc = (_activeState !== 'baseline' && STATE_DESCRIPTIONS[_activeState])
-      ? `<p class="mc-sc-desc">${STATE_DESCRIPTIONS[_activeState]}</p>`
-      : '';
+    return `<div class="mc-sc-cards">${cards}</div>`;
+  }
 
-    return `<div class="mc-sc-inline"><div class="mc-sc-btns">${btns}</div>${desc}</div>`;
+  function _buildStressBtnsHTML() {
+    // Delegates to card layout — kept for call-site compatibility.
+    return _buildScenarioCardsHTML();
   }
 
   function _bindStressBtns() {
