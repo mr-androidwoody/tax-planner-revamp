@@ -265,6 +265,23 @@
    * @param {string} stressId — 'sorr' | 'inflation' | 'lostDecade'
    * @param {object} result   — same shape as baseline result
    */
+  /**
+   * Silently cache a stress result without switching the active view or
+   * triggering any render. Used by the background pre-run in app.js so
+   * results are ready for PDF export before the user manually opens them.
+   * When the user later clicks the card, _bindStressBtns sees _results[id]
+   * populated and calls switchState() directly — no re-run needed.
+   *
+   * @param {string} stressId — 'sorr' | 'inflation' | 'lostDecade'
+   * @param {object} result   — same shape as baseline result
+   */
+  function storeStressResult(stressId, result) {
+    if (!STATE_IDS.includes(stressId) || stressId === 'baseline') return;
+    _results[stressId]     = result;
+    _staleStates[stressId] = false;
+    // No state switch, no render, no loader — purely a cache write.
+  }
+
   function setStressResult(stressId, result) {
     if (!STATE_IDS.includes(stressId)) return;
     _results[stressId]     = result;
@@ -1311,7 +1328,7 @@
   }
 
   window.RetireMCRender = {
-    setResults, setStressResult, switchState, render, setReal, showLoader, setStale,
+    setResults, setStressResult, storeStressResult, switchState, render, setReal, showLoader, setStale,
     getSnapshot() {
       return {
         baseline:          _results.baseline   || null,

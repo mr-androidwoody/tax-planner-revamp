@@ -1314,6 +1314,13 @@
       // ── Refresh the deterministic metrics badge now RetireMCResults is populated ──
       window.RetireCalcRender?.renderMetrics();
 
+      // ── Silently pre-run all three stress scenarios in the background ──
+      // Results are cached via storeStressResult so the PDF export can include
+      // them immediately. The UI is unaffected — cards still show "Test this
+      // scenario" until the user clicks them, at which point switchState()
+      // renders instantly from the cached result rather than re-running.
+      _runBackgroundStress(inputs, _mcAssume);
+
     } catch (err) {
       _hideLoader();
       if (_outlookTabBtn) _outlookTabBtn.classList.remove('results-tab--simulating');
@@ -1323,6 +1330,43 @@
       _resetTestPlanBtn();
       console.error('runRisk error:', err);
       showToast('Simulation failed — see console', true);
+    }
+  }
+
+  // ─────────────────────────────
+  // BACKGROUND STRESS PRE-RUN
+  // Fires automatically after a successful runRisk(). Silently runs all three
+  // stress scenarios sequentially and caches results via storeStressResult.
+  // No UI changes — the user sees no loader or card state change.
+  // If the user manually clicks a stress card before this completes, the
+  // mc-run-stress event handler runs that scenario with its own loader as
+  // normal; the background run will skip any already-stored result.
+  // ─────────────────────────────
+  async function _runBackgroundStress(inputs, mcAssume) {
+    const MCE = window.RetireMCEngine;
+    const MCR = window.RetireMCRender;
+    if (!MCE || !MCR) return;
+
+    const stressIds = ['sorr', 'inflation', 'lostDecade'];
+    for (const stressId of stressIds) {
+      // Skip if the user has already triggered this scenario manually.
+      if (MCR.getSnapshot()[stressId]) continue;
+      try {
+        const result = await MCE.runStress({
+          stressId,
+          inputs,
+          mcGrowth:     mcAssume.growth,
+          equityVol:    mcAssume.equityVol,
+          inflationVol: mcAssume.inflationVol,
+        });
+        // Only store if the user hasn't run it manually in the meantime.
+        if (!MCR.getSnapshot()[stressId]) {
+          MCR.storeStressResult(stressId, result);
+        }
+      } catch (err) {
+        // Silent failure — background runs are best-effort.
+        console.warn(`Background stress run failed for ${stressId}:`, err);
+      }
     }
   }
 
