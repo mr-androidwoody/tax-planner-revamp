@@ -1258,7 +1258,7 @@ function page8(s) {
     row.innerHTML = `
       <div style="width:48px;text-align:right;font-size:9.5px;color:var(--ink-mid);flex-shrink:0;">${d.age_p1_end!=null?'Age '+d.age_p1_end:d.year}</div>
       <div style="flex:1;height:12px;background:var(--rule);border-radius:3px;overflow:hidden;"><div style="width:${pct.toFixed(1)}%;height:100%;background:${col};border-radius:3px;"></div></div>
-      <div style="width:36px;font-family:'Helvetica Neue',sans-serif;font-size:9.5px;font-weight:700;color:${col};">${pct.toFixed(0)}%</div>`;
+      <div style="width:58px;font-family:'Helvetica Neue',sans-serif;font-size:8.5px;font-weight:700;color:${col};">${d.survival_rate>=.99?'Resilient':d.survival_rate>=.95?'Solid':d.survival_rate>=.90?'Adequate':d.survival_rate>=.80?'Thin':d.survival_rate>=.70?'Fragile':'Vulnerable'}</div>`;
     leftCol.appendChild(row);
   });
 
