@@ -1060,6 +1060,7 @@
         testPlanBtn.classList.remove('btn-test-plan--stale');
         delete document.body.dataset.riskRun;
       }
+      state.riskRun = false;
 
       _syncExportBtn();
 
