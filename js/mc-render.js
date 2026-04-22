@@ -638,7 +638,8 @@
         <div class="mc-verdict-lower">
           <div class="mc-verdict-lower__left">
             <p class="mc-verdict-sentence">${verdictSentence}</p>
-            <div class="mc-verdict-meta">Based on ${r.simCount.toLocaleString('en-GB')} simulations · ${firstYear} – ${lastYear}${_activeState !== 'baseline' ? ' · ' + STATE_LABELS[_activeState] + ' scenario' : ''}</div>
+            ${_activeState !== 'baseline' ? `<div class="mc-verdict-scenario-tag">${STATE_LABELS[_activeState]} scenario</div>` : ''}
+            <div class="mc-verdict-meta">Based on ${r.simCount.toLocaleString('en-GB')} simulations · ${firstYear} – ${lastYear}</div>
           </div>
           <div class="mc-verdict-lower__right">
             ${shortfallHTML}
