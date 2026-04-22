@@ -211,9 +211,14 @@
     _spendingContext = spendingContext || null;
     _resultReady     = true;
 
-    // When a new baseline arrives, all stress results that were computed from
-    // the previous inputs are now stale.
-    STATE_IDS.forEach(id => { if (id !== 'baseline') _staleStates[id] = _results[id] !== null; });
+    // When a new baseline arrives, clear all stress results — inputs may have
+    // changed so old stress runs are no longer valid. Buttons revert to idle.
+    STATE_IDS.forEach(id => {
+      if (id !== 'baseline') {
+        _results[id]     = null;
+        _staleStates[id] = false;
+      }
+    });
 
     // Switch active view to baseline on a new baseline run.
     _activeState = 'baseline';
@@ -972,11 +977,14 @@
     // Mark the baseline stale.
     _staleStates.baseline = !!stale;
 
-    // A re-projection also invalidates all stress results since their inputs
-    // have changed. Mark each computed stress state stale too.
+    // A re-projection also clears all stress results since inputs may have changed.
+    // Buttons revert to idle so the user must re-run each stress scenario.
     if (stale) {
       STATE_IDS.forEach(id => {
-        if (id !== 'baseline' && _results[id]) _staleStates[id] = true;
+        if (id !== 'baseline') {
+          _results[id]     = null;
+          _staleStates[id] = false;
+        }
       });
     }
 
