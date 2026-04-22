@@ -478,6 +478,20 @@
       _p10DepAge < 80    ? 'your 70s'             :
       _p10DepAge < 90    ? 'your 80s'             : 'your 90s';
 
+    // ── Early delta computation — used by verdictSentence and later blocks ──
+    // Baseline rate for comparison; null when viewing baseline itself.
+    const _baselineRateForSentence = (!isStressView || !_results.baseline)
+      ? null : _results.baseline.successRate;
+    const _verdictBandOf = r => r >= 0.95 ? 3 : r >= 0.90 ? 2 : r >= 0.80 ? 1 : 0;
+    const _bandDrop = _baselineRateForSentence !== null
+      ? _verdictBandOf(_baselineRateForSentence) - _verdictBandOf(rate) : 0;
+    const _ppDrop   = _baselineRateForSentence !== null
+      ? Math.round((_baselineRateForSentence - rate) * 100) : 0;
+    // Severity tiers for stress sentence framing
+    const _stressMarginal     = isStressView && _bandDrop <= 0 && _ppDrop <= 5;
+    const _stressModerate     = isStressView && !_stressMarginal && _bandDrop <= 1 && _ppDrop <= 20;
+    const _stressSignificant  = isStressView && !_stressMarginal && !_stressModerate;
+
     // ── Early margin classification (needed by verdictSentence below) ─
     const _earlyHeadroom     = sustainableSpending !== null ? sustainableSpending - currentSpending : null;
     const _earlyMarginRatio  = (_earlyHeadroom !== null && currentSpending > 0) ? _earlyHeadroom / currentSpending : null;
@@ -486,45 +500,72 @@
 
     // Verdict sentence: focuses on resilience claim and timeline only.
     // Specific £ figures are owned by the hero stat; success rate is in the big number.
-    const verdictSentence =
-      // A1 — On track, no depletion seen
-      rate >= 0.95 && _p10DepletesAtYiEarly === null
-        ? 'Your plan is on track. At your current spending level, it is likely to hold up even if markets are weaker than expected.' :
-      // A2 — On track, but late-life pressure only
-      rate >= 0.95 && _lateRisk
-        ? `Your plan is on track. Most of the risk sits much later in retirement, not in the early years.` :
-      // A1 fallback — on track, minor edge pressure
-      rate >= 0.95
-        ? 'Your plan is on track and has a meaningful buffer above the level needed to stay sustainable.' :
-      // B1 — On track but tight, no depletion, early sensitivity
-      rate >= 0.90 && _p10DepletesAtYiEarly === null && _earlyMarginTight
-        ? 'Your plan is on track, but the buffer is thin. A bad run of returns early in retirement could put it under pressure.' :
-      // B1 moderate margin
-      rate >= 0.90 && _p10DepletesAtYiEarly === null && _earlyMarginModerate
-        ? 'Your plan is on track, but not by a wide margin. It works in most scenarios, though the room above the threshold is modest.' :
-      // B1 — on track, no depletion seen, no particular margin flag
-      rate >= 0.90 && _p10DepletesAtYiEarly === null
-        ? 'Your plan is on track. It works in most scenarios, though the margin is not large.' :
-      // B2 — on track but tight, late risk, tight margin
-      rate >= 0.90 && _lateRisk && _earlyMarginTight
-        ? `Your plan is on track, but not by a wide margin. Some risk is pushed into later retirement, where there is less room to recover.` :
-      // B2 — on track but tight, late risk
-      rate >= 0.90 && _lateRisk
-        ? `Your plan is on track, but some of the risk sits later in retirement, where there is less room to recover.` :
-      // B1 fallback
-      rate >= 0.90
-        ? 'Your plan is on track, though it does not have a large margin for error.' :
-      // C2 — Borderline, later-life failure risk
-      rate >= 0.80 && _lateRisk
-        ? `Your plan is borderline. It may work, but too much of the risk is pushed into later retirement, where there is less room to recover.` :
-      // C1 — Borderline, meaningful downside risk, earlier trouble
-      rate >= 0.80
-        ? 'Your plan is borderline. It may work, but it is not comfortably safe. In weaker markets, it starts to run into trouble in ' + _depStage + '.' :
-      // D2 — At risk, poor typical outcome
-      _p10DepletesAtYiEarly !== null && _p10DepletesAtYiEarly <= lastIdx * 0.4
-        ? `Your plan is at risk. As things stand, there is too high a chance of running short before the end of retirement.` :
-      // D1 — At risk, material failure risk
-        'Your plan is at risk. As things stand, there is too high a chance of running short before the end of retirement.';
+    // For stress views, the sentence contextualises the result against the baseline plan.
+    let verdictSentence;
+    if (isStressView) {
+      // Stress verdict sentence — compares this scenario outcome to the baseline plan
+      if (rate >= 0.95) {
+        verdictSentence = _stressMarginal
+          ? `Your baseline plan is on track, and this scenario makes little difference. The plan remains robust under these conditions.`
+          : `Your baseline plan is on track. This scenario does not change that — the plan holds up well even under these conditions.`;
+      } else if (rate >= 0.90) {
+        verdictSentence = _stressMarginal
+          ? `Your baseline plan is on track. This scenario is not significantly more demanding — the plan still holds, though with a little less room.`
+          : _stressSignificant
+          ? `Your baseline plan is on track, but this scenario puts it under considerably more pressure. The margin is thinner here.`
+          : `Your baseline plan is on track, but this scenario is more demanding. The plan still works, though the buffer is reduced.`;
+      } else if (rate >= 0.80) {
+        verdictSentence = _stressMarginal
+          ? `Your baseline plan is on track, but this scenario is not as resilient. Under these conditions, the plan becomes borderline.`
+          : _stressSignificant
+          ? `Your baseline plan is on track, but this scenario puts it significantly at risk of becoming borderline. The gap compared with your baseline is substantial.`
+          : `Your baseline plan is on track, but this scenario reveals a real weakness. The plan becomes borderline under these conditions.`;
+      } else {
+        verdictSentence = _stressMarginal
+          ? `Your baseline plan is borderline, and this scenario makes it worse. Under these conditions, the plan is at risk.`
+          : _stressSignificant
+          ? `Your baseline plan is on track, but this scenario puts it significantly at risk. The drop compared with your baseline is large enough to matter.`
+          : `Your baseline plan holds, but this scenario puts it at risk. The plan is considerably weaker under these conditions than in the baseline.`;
+      }
+    } else {
+      // Baseline verdict sentence — unchanged logic, "baseline plan" label added
+      verdictSentence =
+        // A1 — On track, no depletion seen
+        rate >= 0.95 && _p10DepletesAtYiEarly === null
+          ? 'Your baseline plan is on track. At your current spending level, it is likely to hold up even if markets are weaker than expected.' :
+        // A2 — On track, but late-life pressure only
+        rate >= 0.95 && _lateRisk
+          ? `Your baseline plan is on track. Most of the risk sits much later in retirement, not in the early years.` :
+        // A1 fallback — on track, minor edge pressure
+        rate >= 0.95
+          ? 'Your baseline plan is on track and has a meaningful buffer above the level needed to stay sustainable.' :
+        // B1 — On track but tight, no depletion, early sensitivity
+        rate >= 0.90 && _p10DepletesAtYiEarly === null && _earlyMarginTight
+          ? 'Your baseline plan is on track, but the buffer is thin. A bad run of returns early in retirement could put it under pressure.' :
+        // B1 moderate margin
+        rate >= 0.90 && _p10DepletesAtYiEarly === null && _earlyMarginModerate
+          ? 'Your baseline plan is on track, but not by a wide margin. It works in most scenarios, though the room above the threshold is modest.' :
+        // B1 — on track, no depletion seen, no particular margin flag
+        rate >= 0.90 && _p10DepletesAtYiEarly === null
+          ? 'Your baseline plan is on track. It works in most scenarios, though the margin is not large.' :
+        // B2 — on track but tight, late risk, tight margin
+        rate >= 0.90 && _lateRisk && _earlyMarginTight
+          ? `Your baseline plan is on track, but not by a wide margin. Some risk is pushed into later retirement, where there is less room to recover.` :
+        // B2 — on track but tight, late risk
+        rate >= 0.90 && _lateRisk
+          ? `Your baseline plan is on track, but some of the risk sits later in retirement, where there is less room to recover.` :
+        // B1 fallback
+        rate >= 0.90
+          ? 'Your baseline plan is on track, though it does not have a large margin for error.' :
+        // C2 — Borderline, later-life failure risk
+        rate >= 0.80 && _lateRisk
+          ? `Your baseline plan is borderline. It may work, but too much of the risk is pushed into later retirement, where there is less room to recover.` :
+        // C1 — Borderline, meaningful downside risk, earlier trouble
+        rate >= 0.80
+          ? 'Your baseline plan is borderline. It may work, but it is not comfortably safe. In weaker markets, it starts to run into trouble in ' + _depStage + '.' :
+        // D2 / D1 — At risk
+          'Your baseline plan is at risk. As things stand, there is too high a chance of running short before the end of retirement.';
+    }
 
     // ── Headroom / gap ────────────────────────────────────────────────
     let headroom = null;
