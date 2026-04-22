@@ -922,27 +922,40 @@
     // baseline-calibrated spending/delay recommendations.
     let s4;
     if (isStressView) {
-      const baselineRate = _results.baseline ? _results.baseline.successRate : null;
+      const baselineRate  = _results.baseline ? _results.baseline.successRate : null;
       const scenarioLabel = STATE_LABELS[_activeState];
+      const absDeltaS4    = baselineRate !== null ? Math.abs(Math.round((baselineRate - rate) * 100)) : null;
+      const deltaPhS4     = absDeltaS4 !== null && absDeltaS4 > 0
+        ? `${absDeltaS4} percentage point${absDeltaS4 === 1 ? '' : 's'} lower`
+        : null;
 
-      let stressTakeaway, stressDetail;
+      // Consequence-led headline — names the outcome, not the scenario
+      let stressTakeaway;
       if (rate >= 0.95) {
-        stressTakeaway = `Your plan remains robust under the ${scenarioLabel} scenario.`;
-        stressDetail   = `Even under these conditions, the plan holds up well. No immediate change is needed. Return to the Baseline view for spending guidance and recommended actions.`;
+        stressTakeaway = `This scenario leaves the plan looking robust.`;
       } else if (rate >= 0.90) {
-        stressTakeaway = `Your plan still holds under the ${scenarioLabel} scenario, but the margin is thinner.`;
-        stressDetail   = `The plan remains above the sustainability threshold, but this scenario reduces the cushion${baselineRate !== null ? ` by ${Math.round((baselineRate - rate) * 100)}pp` : ''}. Check whether your baseline buffer is enough to absorb conditions like this if they arise early in retirement.`;
+        stressTakeaway = `This scenario puts the plan under more pressure, though it still holds.`;
       } else if (rate >= 0.80) {
-        stressTakeaway = `Under the ${scenarioLabel} scenario, your plan becomes borderline.`;
-        stressDetail   = `This exposes a real weakness that the baseline view may not fully show${baselineRate !== null ? `, with the likelihood of holding up falling ${Math.round((baselineRate - rate) * 100)}pp from baseline` : ''}. Use the Baseline recommendations as your main guide, but treat them as more urgent if early retirement conditions start to resemble this scenario.`;
+        stressTakeaway = `A difficult start to retirement makes this plan borderline.`;
       } else {
-        stressTakeaway = `Under the ${scenarioLabel} scenario, your plan is at risk.`;
-        stressDetail   = `This is the kind of adverse start that your baseline buffer may not be strong enough to absorb${baselineRate !== null ? `, with the likelihood of holding up falling ${Math.round((baselineRate - rate) * 100)}pp from baseline` : ''}. The Baseline fixes for spending and delay become more important.`;
+        stressTakeaway = `A difficult start to retirement puts this plan at risk.`;
       }
 
-      // Stress-specific bullets: portfolio outcomes under the scenario
-      const p50End = _deflate(r.p50Portfolio[lastIdx], lastIdx);
-      const p10End = _deflate(r.p10Portfolio[lastIdx], lastIdx);
+      // Detail — consequence-led, delta in natural language, Baseline as explicit action
+      let stressDetail;
+      if (rate >= 0.95) {
+        stressDetail = `Even under these conditions, the plan holds up well${deltaPhS4 ? ` — the likelihood of holding up is only ${deltaPhS4} compared with your baseline` : ''}. No immediate change is needed on the strength of this result.`;
+      } else if (rate >= 0.90) {
+        stressDetail = `The plan stays above the sustainability threshold, but this scenario reduces the cushion${deltaPhS4 ? `, with the likelihood of holding up ${deltaPhS4} compared with your baseline` : ''}. Check whether your baseline buffer is large enough to absorb this kind of pressure if it arises early in retirement.`;
+      } else if (rate >= 0.80) {
+        stressDetail = `This exposes a real weakness that the baseline view may not fully show${deltaPhS4 ? `. Compared with your baseline, the likelihood of holding up is ${deltaPhS4}, which suggests your current buffer may not cope with a difficult start to retirement` : ''}. Treat your baseline spending and delay changes as more urgent.`;
+      } else {
+        stressDetail = `This is the kind of difficult start your current buffer may not be strong enough to absorb.${deltaPhS4 ? ` Compared with your baseline, the plan is much weaker here, with its likelihood of holding up ${deltaPhS4} lower.` : ''} That makes your baseline spending and delay changes more important.`;
+      }
+
+      // Stress bullets — consequence-led, collapse duplicate £0 figures
+      const p50End    = _deflate(r.p50Portfolio[lastIdx], lastIdx);
+      const p10End    = _deflate(r.p10Portfolio[lastIdx], lastIdx);
       const roundKend = v => roundToNearest(v, 10000);
       const fmtKendB  = v => fmtB(roundKend(Math.max(0, v)));
 
@@ -953,14 +966,30 @@
         }
       }
 
+      const p10NearZero = roundKend(Math.max(0, p10End)) <= 0;
+      const p50NearZero = roundKend(Math.max(0, p50End)) <= 0;
+
       const stressBullets = [];
+
+      // Bullet 1 — weaker outcomes
       if (p10DepletesAge !== null) {
-        stressBullets.push(`In weaker outcomes under this scenario, funds run low around age ${p10DepletesAge}.`);
+        stressBullets.push(`In weaker outcomes, funds run low around age ${p10DepletesAge}.`);
+      } else if (p10NearZero) {
+        stressBullets.push(`In weaker outcomes, there is effectively no margin left.`);
       } else {
-        stressBullets.push(`In weaker outcomes under this scenario, the plan still tends to finish with about ${fmtKendB(p10End)} left.`);
+        stressBullets.push(`In weaker outcomes, the plan tends to finish with about ${fmtKendB(p10End)} left.`);
       }
-      stressBullets.push(`In a typical outcome under this scenario, the plan finishes with around ${fmtKendB(p50End)}.`);
-      stressBullets.push(`Switch to Baseline for spending guidance and recommended actions.`);
+
+      // Bullet 2 — typical outcome (only show if meaningfully distinct from bullet 1)
+      if (p50NearZero && p10NearZero) {
+        stressBullets.push(`Even a typical outcome leaves little or no cushion.`);
+      } else if (!p50NearZero) {
+        stressBullets.push(`In a typical outcome, the plan finishes with around ${fmtKendB(p50End)}.`);
+      }
+      // If p50 is non-zero but p10 was near-zero, the contrast is already clear — both show.
+
+      // Bullet 3 — Baseline redirect as explicit action
+      stressBullets.push(`Use the Baseline view for spending guidance and your main recommended actions.`);
 
       const stressBulletsHTML = stressBullets.map(b => `<li class="mc-action-bullet">${b}</li>`).join('');
 
@@ -968,7 +997,7 @@
         <div class="mc-primary-action" style="border-top-color:${verdictColour.actionBorder};background:${verdictColour.actionBg}">
           <div class="mc-primary-action__body">
             <div class="mc-primary-action__left">
-              <div class="mc-primary-action__label" style="color:${verdictColour.actionLabel}">Scenario takeaway</div>
+              <div class="mc-primary-action__label" style="color:${verdictColour.actionLabel}">What this means</div>
               <p class="mc-primary-action__text" style="color:${verdictColour.actionText}">${stressTakeaway}</p>
               <p class="mc-primary-action__impact" style="color:${verdictColour.actionImpact}">${stressDetail}</p>
             </div>
