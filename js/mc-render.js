@@ -780,7 +780,6 @@
     //   Item 1 (Spending)       → threshold relationship only, no £ figure
     //   Item 2 (Consider more)  → owns the ceiling £ (or discipline note in tight margin)
     //   Item 3 (Flexible)       → owns the flex-rule angle
-    let s2Right;
     if (planIsStrong) {
       const items = [];
 
