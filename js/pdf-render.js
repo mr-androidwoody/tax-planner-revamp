@@ -1219,7 +1219,15 @@ function page8(s) {
     if (rate >= 0.80) return { bg:'#BA7517', ab:'#faeeda', ac:'#BA7517' };
     return                   { bg:'#A32D2D', ab:'#fcebeb', ac:'#A32D2D' };
   }
-  function icol(lvl) { return lvl==='low'?'#3B6D11':lvl==='moderate'?'#BA7517':lvl==='high'?'#A32D2D':'#7a90a8'; }
+  // Colour by success rate band — matches app mc-render.js logic
+  // safe: #C0DD97 bg / #27500A text  (≥95%)
+  // neutral: #D3D1C7 bg / #5F5E5A text (≥90%)
+  // warn: #FAC775 bg / #633806 text  (≥80%)
+  // risk: #F7C1C1 bg / #791F1F text  (<80%)
+  function scBg(rate)   { return rate>=.95?'#C0DD97':rate>=.90?'#D3D1C7':rate>=.80?'#FAC775':'#F7C1C1'; }
+  function scText(rate) { return rate>=.95?'#27500A':rate>=.90?'#5F5E5A':rate>=.80?'#633806':'#791F1F'; }
+  function scBorder(rate){ return rate>=.95?'#3B6D11':rate>=.90?'#7a90a8':rate>=.80?'#BA7517':'#A32D2D'; }
+  function scLabel(rate) { return rate>=.95?'Still on track':rate>=.90?'Reduced margin':rate>=.80?'Borderline':'At risk'; }
   const v = vcol(rate);
   const fmtPctV = r => r == null ? '—' : (r >= 0.995 ? '99%+' : Math.round(r*100)+'%');
 
@@ -1252,7 +1260,7 @@ function page8(s) {
 
   (r.survival_by_decade||[]).forEach(d => {
     const pct = (d.survival_rate*100);
-    const col = d.survival_rate>=.95?'#3B6D11':d.survival_rate>=.80?'#BA7517':'#A32D2D';
+    const col = d.survival_rate>=.99?'#3B6D11':d.survival_rate>=.95?'#5A9E1A':d.survival_rate>=.80?'#BA7517':'#A32D2D';
     const row = el('div','');
     row.style.cssText = 'display:flex;align-items:center;gap:9px;margin-bottom:8px;';
     row.innerHTML = `
@@ -1381,17 +1389,16 @@ function page8(s) {
         <div style="font-size:10.5px;font-weight:700;color:var(--ink);margin-bottom:3px;">${meta.title}</div>
         <p style="font-size:8.5px;color:var(--ink-light);font-style:italic;margin:0;">Not tested in this report</p>`;
     } else {
-      const col    = icol(sc.impact_level);
-      const scP    = Math.round(sc.success_rate * 100);
+      const rate2  = sc.success_rate;
+      const col    = scBorder(rate2);
+      const scP    = Math.round(rate2 * 100);
       const baseP  = Math.round(r.success_rate * 100);
       const absDelta = Math.abs(Math.round((sc.success_rate_delta||0) * 100));
       const deltaText = sc.success_rate_delta === 0
         ? 'No change to plan outcome'
         : `Drops from ${baseP}% to ${scP}% under this scenario`;
-      const impactLabel = sc.impact_level === 'high' ? 'Most sensitive scenario'
-        : sc.impact_level === 'moderate' ? 'Moderate sensitivity'
-        : 'Plan holds up well';
-      const borderCol = sc.impact_level === 'high' ? '#A32D2D' : sc.impact_level === 'moderate' ? '#BA7517' : '#3B6D11';
+      const impactLabel = scLabel(rate2);
+      const borderCol = scBorder(rate2);
 
       card.style.borderColor = borderCol + '40';
       card.style.borderLeftColor = borderCol;
@@ -1405,7 +1412,7 @@ function page8(s) {
           </div>
           <div style="text-align:right;flex-shrink:0;margin-left:14px;">
             <div style="font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:900;color:${col};line-height:1;">${fmtPctV(sc.success_rate)}</div>
-            <div style="font-size:7.5px;color:${col};font-weight:600;margin-top:2px;">${impactLabel}</div>
+            <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-size:7.5px;font-weight:700;background:${scBg(rate2)};color:${scText(rate2)};margin-top:3px;">${impactLabel}</span>
           </div>
         </div>
         <p style="font-size:8.5px;color:var(--ink-light);font-style:italic;line-height:1.5;margin:0 0 5px;border-top:1px solid var(--rule);padding-top:5px;">${meta.why}</p>
