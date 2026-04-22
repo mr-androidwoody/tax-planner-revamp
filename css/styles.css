@@ -4474,10 +4474,123 @@ input[type="radio"] { accent-color: var(--accent); }
 
 .mc-below-hero {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 16px;
+}
+
+/* ── Scenario cards — 4-up grid replacing the old button strip ── */
+.mc-sc-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.mc-sc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 12px;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  font: inherit;
+  width: 100%;
+}
+
+.mc-sc-card:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 2px 8px rgba(22,39,67,0.07);
+}
+
+.mc-sc-card--active {
+  border-color: #1e293b;
+  background: #f8fafc;
+  box-shadow: 0 2px 10px rgba(22,39,67,0.10);
+  cursor: default;
+}
+
+.mc-sc-card--active:hover {
+  border-color: #1e293b;
+}
+
+.mc-sc-card--idle {
+  border-style: dashed;
+  border-color: #cbd5e1;
+  background: #fafafa;
+}
+
+.mc-sc-card--done {
+  border-color: #cbd5e1;
+  background: #fff;
+}
+
+.mc-sc-card__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.mc-sc-card--active .mc-sc-card__eyebrow {
+  color: #475569;
+}
+
+.mc-sc-card__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.mc-sc-card--idle .mc-sc-card__label {
+  color: #64748b;
+}
+
+.mc-sc-card__desc {
+  font-size: 11px;
+  line-height: 1.55;
+  color: #64748b;
+  margin: 0;
+  flex: 1;
+}
+
+.mc-sc-card--active .mc-sc-card__desc {
+  color: #475569;
+}
+
+.mc-sc-card__cta {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 0 0;
+  border-top: 1px solid #e2e8f0;
+  width: 100%;
+  text-align: left;
+}
+
+.mc-sc-card__cta--idle {
+  color: #3460e8;
+}
+
+.mc-sc-card__cta--done {
+  color: #3460e8;
+}
+
+.mc-sc-card__cta--viewing {
+  color: #475569;
+}
+
+.mc-sc-card--active .mc-sc-card__cta {
+  border-top-color: #cbd5e1;
 }
 
 /* ── Stress scenario interpretation panel ── */
