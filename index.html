@@ -1645,6 +1645,9 @@
     btn = e.target.closest('.wiz-tab[data-wiz]');
     if (btn) { showStep(parseInt(btn.dataset.wiz, 10)); }
   });
+
+  // Expose so app.js can reset the wizard to step 1 when navigating to this tab.
+  window.RetireWizard = { showStep: showStep };
 })();
 </script>
 <script>
