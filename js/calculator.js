@@ -11,6 +11,9 @@
   // ─────────────────────────────────────────────
   // TAX RULE HELPERS
   // ─────────────────────────────────────────────
+  // `year` is the calendar year that opens the tax year (e.g. 2025 = 2025/26).
+  // All years up to and including 2026 use the 2026-27 rules (the last year
+  // for which concrete data is held). From 2027 onwards, the 2027-28+ catch-all applies.   
   function getTaxRulesForYear(year) {
     return year <= 2026 ? D.TAX_RULES['2026-27'] : D.TAX_RULES['2027-28+'];
   }
