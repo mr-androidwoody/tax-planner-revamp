@@ -1,0 +1,765 @@
+/* ========================================
+   IncomeFlow — Dark Theme
+   Drop-in replacement for styles.css.
+   Palette derived from the gate page navy colourway:
+     Page bg:      #0f1829
+     Shell/card:   #1a2438
+     Panel:        #1e2a40
+     Border:       #2a3a55
+     Text:         #e8edf5
+     Muted:        #7a8ba8
+     Accent:       #4a78ff
+   ======================================== */
+
+/* ========================================
+   Variables
+   ======================================== */
+
+:root {
+  --bg:             #0f1829;
+  --bg-page:        #0f1829;
+  --shell:          rgba(26, 36, 56, 0.92);
+  --shell-border:   rgba(42, 58, 85, 0.98);
+  --panel:          rgba(30, 42, 64, 0.96);
+  --panel-solid:    #1e2a40;
+  --panel-soft:     #1a2438;
+  --border:         #2a3a55;
+  --border-strong:  #3a4f72;
+  --text:           #e8edf5;
+  --muted:          #7a8ba8;
+  --accent:         #4a78ff;
+  --accent-2:       #3460e8;
+  --green:          #22c55e;
+  --green-2:        #16a34a;
+  --warning:        #f59e0b;
+  --danger:         #ef4444;
+  --shadow:         0 10px 30px rgba(0, 0, 0, 0.4);
+  --shadow-sm:      0 6px 16px rgba(0, 0, 0, 0.3);
+  --radius-xl:      28px;
+  --radius:         20px;
+  --radius-sm:      14px;
+  --radius-xs:      10px;
+  --input-bg:       rgba(15, 24, 41, 0.95);
+  --input-border:   #3a4f72;
+  --header-height:  130px;
+  --content-max:    1600px;
+}
+
+/* ========================================
+   Base / Reset
+   ======================================== */
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ========================================
+   Header
+   ======================================== */
+
+.top-header {
+  background: rgba(15, 24, 41, 0.88);
+  border-bottom: 1px solid rgba(42, 58, 85, 0.8);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.title-block h1 {
+  color: #c8d6f0;
+}
+
+.title-block p {
+  color: var(--muted);
+}
+
+.tab-btn {
+  color: #7a8ba8;
+}
+
+.tab-btn:hover { color: #c8d6f0; }
+
+.tab-active,
+.tab-active:hover {
+  background: linear-gradient(180deg, #4a78ff 0%, #315ce8 100%);
+  color: #ffffff;
+}
+
+.results-tab {
+  color: #7a8ba8;
+}
+
+.results-tab--active {
+  background: linear-gradient(180deg, #4a78ff 0%, #315ce8 100%);
+  color: #fff;
+}
+
+/* ========================================
+   Page shell
+   ======================================== */
+
+.app-shell,
+.shell {
+  background: var(--shell);
+  border-color: var(--shell-border);
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
+
+.btn-primary {
+  background: linear-gradient(180deg, #4a78ff 0%, #3460e8 100%);
+  color: #fff;
+}
+
+.btn-success {
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+}
+
+.btn-secondary {
+  color: #c8d6f0;
+  border-color: var(--border-strong);
+  background: var(--panel-solid);
+}
+
+.btn-secondary:hover { background: #253450; }
+
+.btn-delete:hover {
+  background: #3d1a1a;
+  color: #f87171;
+  border-color: #7f2d2d;
+}
+
+.preload-btn {
+  background: linear-gradient(180deg, #4a78ff 0%, #3460e8 100%);
+  color: #fff;
+}
+
+.preload-btn:hover { background: #253450; }
+
+.btn-save-state,
+.btn-save-state:hover {
+  background: var(--panel-solid);
+  color: #7a8ba8;
+}
+
+.btn-save-state--error,
+.btn-save-state--error:hover {
+  background: #3d1a1a;
+  color: #f87171;
+  border-color: #7f2d2d;
+}
+
+.btn-save-state--saved,
+.btn-save-state--saved:hover,
+.btn-saving:hover {
+  background: #132d1f;
+  color: #4ade80;
+}
+
+.btn-loading,
+.btn-loading:hover {
+  background: var(--panel-solid);
+  color: #4a78ff;
+}
+
+.btn-load-error,
+.btn-load-error:hover {
+  background: #3d1a1a;
+  color: #f87171;
+}
+
+.btn-load-success,
+.btn-load-success:hover {
+  background: #132d1f;
+  color: #4ade80;
+}
+
+.error-banner {
+  background: #3d1a1a;
+  color: #f87171;
+  border-color: #7f2d2d;
+}
+
+/* ========================================
+   Inputs / Selects
+   ======================================== */
+
+input,
+select,
+textarea {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  background: #0d1626;
+}
+
+select:hover { border-color: #4a5f80; }
+
+input::placeholder { color: #4a5f80; }
+
+/* ========================================
+   Stepper input
+   ======================================== */
+
+.stepper-input {
+  background: #162035;
+  color: #8a9ab8;
+}
+
+.stepper-btn:hover { background: #253450; }
+
+/* ========================================
+   Shared panel styling
+   ======================================== */
+
+.card,
+.panel,
+.chart-panel,
+.setup-panel,
+[class*="panel"] {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+/* ========================================
+   Setup tab
+   ======================================== */
+
+.port-alert {
+  background: #3d1a1a;
+  color: #f87171;
+}
+
+.assumptions-panel-label,
+.setup-panel-label {
+  color: var(--muted);
+}
+
+.preset-btn {
+  background: #1a2d48;
+  color: #8a9ab8;
+}
+
+.preset-btn:hover {
+  background: #253450;
+}
+
+.preset-btn--active {
+  background: #eef5ff !important;
+  color: #1e2a40 !important;
+  border-color: #4a78ff !important;
+}
+
+.alloc-balanced { color: #4ade80; }
+
+/* Wrapper field states */
+.wrapper-field--disabled {
+  background: #fff0f0;
+  color: #b91c1c;
+}
+
+/* Account table */
+.acct-table th {
+  color: var(--muted);
+}
+
+.acct-row--selected td,
+.acct-row:hover td {
+  background: #1a2d48;
+}
+
+.acct-row td {
+  background: var(--panel-solid);
+  color: var(--text);
+}
+
+.acct-row--cash td {
+  background: #1a2438;
+  color: #7a8ba8;
+}
+
+.acct-row--disabled td {
+  background: #162035;
+  color: #4a5f80;
+  border-color: #253450;
+}
+
+.total-ok   { background: #132d1f; color: #4ade80; }
+.total-warn { background: #2d2010; color: #fbbf24; }
+.total-err  { background: #3d1a1a; color: #f87171; }
+
+.status-ok   { color: #4ade80; }
+.status-warn { color: #fbbf24; }
+.status-err  { color: #f87171; }
+
+.row-warn td { background: #2d2010; }
+.row-err  td { background: #3d1a1a; }
+
+/* ========================================
+   Assumptions tab
+   ======================================== */
+
+.assumptions-warning {
+  background: #2a1f0a;
+  border-color: #f5a623;
+  color: #fbbf24;
+}
+
+.assumptions-section {
+  background: #1a2d48;
+  color: var(--muted);
+}
+
+.section-title:hover { background: #1e3050; }
+
+.bni-info {
+  background: #1a2d48;
+  color: #7a8ba8;
+}
+
+.bni-info strong { color: #c8d6f0; }
+
+.bni-note {
+  background: #1f2d45;
+  color: #8a9ab8;
+}
+
+.bni-note--warn {
+  background: #2a1f0a;
+  color: #fbbf24;
+}
+
+.bni-note--err {
+  background: #3d1a1a;
+  color: #f87171;
+}
+
+/* ========================================
+   Results tab
+   ======================================== */
+
+.results-header {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+.results-intro {
+  color: var(--muted);
+}
+
+/* Sidebar */
+.chart-sidebar {
+  background: var(--panel-solid);
+  border-color: var(--border);
+}
+
+.sidebar-legend__header {
+  color: var(--muted);
+}
+
+/* Tooltips */
+.tooltip-header {
+  background: #253450;
+  color: #c8d6f0;
+}
+
+/* Metrics band */
+.metrics-band {
+  background: var(--panel-solid);
+  border-color: var(--border);
+}
+
+.metric-card {
+  background: #162035;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.metric-card__label { color: var(--muted); }
+
+/* Chart insight pane */
+.chart-insight-pane {
+  background: var(--panel-solid);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.chart-insight-pane__header {
+  background: #162035;
+  border-color: var(--border);
+  color: #c8d6f0;
+}
+
+/* Data tables */
+.data-table th {
+  background: #162035;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+.data-table td {
+  background: var(--panel-solid);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.data-table tr:nth-child(even) td {
+  background: #1a2438;
+}
+
+.data-table tr:hover td {
+  background: #1e3050;
+}
+
+/* Drawdown rate cards */
+.drawdown-rate-card__value--ok   { color: #4ade80; }
+.drawdown-rate-card__value--warn { color: #fbbf24; }
+.drawdown-rate-card__value--err  { color: #f87171; }
+
+.drawdown-rate-legend__item--ok::before   { background: #4ade80; }
+.drawdown-rate-legend__item--warn::before { background: #fbbf24; }
+.drawdown-rate-legend__item--err::before  { background: #f87171; }
+
+/* Run risk / Test plan button */
+.btn-run-risk,
+.btn-test-plan {
+  background: linear-gradient(180deg, #4a78ff 0%, #3460e8 100%);
+  color: #fff;
+}
+
+.btn-run-risk:hover:not(:disabled) {
+  background: linear-gradient(180deg, #1a3fbf 0%, #1230b0 100%);
+}
+
+.btn-run-risk:disabled,
+.btn-run-risk.btn-run-risk--disabled {
+  background: #253450;
+  color: #4a5f80;
+}
+
+/* ========================================
+   MC verdict states
+   ======================================== */
+
+.mc-verdict.mc-verdict--strong {
+  background: #0d2218;
+  border-color: #166534;
+}
+.mc-verdict.mc-verdict--strong .mc-section-heading { color: #4ade80; }
+
+.mc-verdict.mc-verdict--good {
+  background: #0d2218;
+  border-color: #166534;
+}
+.mc-verdict.mc-verdict--good .mc-section-heading { color: #4ade80; }
+
+.mc-verdict.mc-verdict--moderate {
+  background: #2d2010;
+  border-color: #92400e;
+}
+.mc-verdict.mc-verdict--moderate .mc-section-heading { color: #fbbf24; }
+
+.mc-verdict.mc-verdict--weak {
+  background: #3d1a1a;
+  border-color: #991b1b;
+}
+.mc-verdict.mc-verdict--weak .mc-section-heading { color: #f87171; }
+
+/* MC sustain states */
+.mc-sustain--safe {
+  background: #0d2218;
+  border-color: #166534;
+  border-left-color: #4ade80;
+}
+.mc-sustain--safe .mc-section-heading { color: #4ade80; }
+
+.mc-sustain--warn {
+  background: #2d2010;
+  border-color: #92400e;
+  border-left-color: #fbbf24;
+}
+.mc-sustain--warn .mc-section-heading { color: #fbbf24; }
+
+.mc-sustain--danger {
+  background: #3d1a1a;
+  border-color: #991b1b;
+  border-left-color: #f87171;
+}
+.mc-sustain--danger .mc-section-heading { color: #f87171; }
+
+/* MC key figures */
+.mc-key-figures { background: var(--panel-solid); }
+.mc-key-figure { background: #162035; border-color: var(--border); }
+.mc-key-figure__label { color: var(--muted); }
+.mc-key-figure__value { color: #c8d6f0; }
+.mc-key-figure__sub { color: #7a8ba8; }
+
+/* MC section */
+.mc-section { border-color: var(--border); }
+.mc-section-heading { color: #c8d6f0; }
+.mc-section p { color: #8a9ab8; }
+.mc-section--muted { background: #162035; }
+.mc-section--muted .mc-section-heading { color: #7a8ba8; }
+.mc-section--muted p { color: #4a5f80; }
+
+/* MC lever pills */
+.mc-lever-pill--safe    { background: #132d1f; color: #4ade80; }
+.mc-lever-pill--warn    { background: #2d2010; color: #fbbf24; }
+.mc-lever-pill--risk    { background: #3d1a1a; color: #f87171; }
+.mc-lever-pill--neutral { background: #253450; color: #8a9ab8; }
+
+/* MC lever */
+.mc-lever { border-color: var(--border); }
+.mc-lever--primary { background: #162035; border-color: var(--border); }
+.mc-lever-name { color: #c8d6f0; }
+.mc-lever--secondary .mc-lever-name { color: #7a8ba8; }
+.mc-lever-outcome { color: #8a9ab8; }
+.mc-lever--primary .mc-lever-outcome { color: #c8d6f0; }
+
+/* MC primary action */
+.mc-primary-action { background: #1e3050; border-color: var(--border); }
+.mc-primary-action__label { color: var(--muted); }
+.mc-primary-action__text { color: #c8d6f0; }
+.mc-primary-action__impact { color: #7a8ba8; }
+.mc-primary-action__text--stress { color: #f87171; }
+
+/* MC action bullets */
+.mc-action-bullet { color: #8a9ab8; }
+.mc-action-bullet::before { background: #4a78ff; }
+
+/* MC bridge / basis notes */
+.mc-bridge-note { color: var(--muted); border-color: var(--border); }
+.mc-basis-note { color: var(--muted); }
+
+/* MC narrative */
+#mc-narrative { color: var(--text); }
+
+/* MC stale banner */
+.mc-stale-banner {
+  background: #2a1f0a;
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+/* MC scenario cards */
+.mc-sc-card {
+  background: #1e2a40;
+  border-color: var(--border);
+  color: var(--text);
+}
+.mc-sc-card:hover {
+  border-color: #4a5f80;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.mc-sc-card--active {
+  border-color: #4a78ff;
+  box-shadow: 0 0 0 1px #4a78ff;
+}
+.mc-sc-card--active:hover { border-color: #4a78ff; }
+.mc-sc-card--idle {
+  border-color: #253450;
+  background: #162035;
+}
+.mc-sc-card--idle:hover { background: #1e2a40; }
+.mc-sc-card--done {
+  border-color: #3a4f72;
+  background: #1e2a40;
+}
+.mc-sc-card__eyebrow { color: #4a5f80; }
+.mc-sc-card__label { color: #c8d6f0; }
+.mc-sc-card--active .mc-sc-card__label { color: #fff; }
+.mc-sc-card--idle .mc-sc-card__label { color: #4a5f80; }
+.mc-sc-card__desc { color: #7a8ba8; }
+.mc-sc-card__cta--idle    { color: #4a78ff; }
+.mc-sc-card__cta--done    { color: #4a78ff; }
+.mc-sc-card__cta--viewing { color: #7a8ba8; }
+
+/* MC scenario inline buttons (legacy strip) */
+.mc-sc-btn {
+  border-color: #3a4f72;
+  background: #162035;
+  color: #7a8ba8;
+}
+.mc-sc-btn:hover {
+  border-color: #4a5f80;
+  color: #c8d6f0;
+  background: #1e3050;
+}
+.mc-sc-btn--active {
+  background: #c8d6f0;
+  border-color: #c8d6f0;
+  color: #0f1829;
+}
+.mc-sc-btn--active:hover {
+  background: #e8edf5;
+  color: #0f1829;
+}
+.mc-sc-btn--done {
+  border-color: #4a5f80;
+  color: #c8d6f0;
+  background: #1e2a40;
+}
+.mc-sc-btn--idle {
+  border-color: #253450;
+  color: #4a5f80;
+}
+.mc-sc-btn--idle:hover {
+  border-color: #3a4f72;
+  color: #7a8ba8;
+  background: #162035;
+}
+
+/* MC stress interp */
+.mc-stress-interp__label { color: #4a5f80; }
+.mc-stress-interp__val { color: #c8d6f0; }
+.mc-stress-delta { }
+.mc-stress-delta--down { background: #3d1a1a; color: #f87171; }
+.mc-stress-delta--up   { background: #132d1f; color: #4ade80; }
+.mc-stress-interp__note { color: #8a9ab8; }
+.mc-stress-interp__action { color: #4a5f80; border-top-color: rgba(255,255,255,0.07); }
+
+/* MC stale dot */
+.mc-sc-stale-dot { background: #f59e0b; }
+
+/* MC decade bars */
+.mc-decade-row__bar { background: #4a78ff; }
+.mc-decade-row__year { color: #7a8ba8; }
+.mc-decade-row__pct { color: #c8d6f0; }
+
+/* MC survival note */
+.mc-survival-note { color: var(--muted); }
+
+/* ========================================
+   Wizard
+   ======================================== */
+
+.wiz-table { border-color: var(--border); }
+.wiz-table th { background: #162035; color: var(--muted); }
+.wiz-table td { background: var(--panel-solid); color: var(--text); border-color: var(--border); }
+
+.wiz-card {
+  background: var(--panel-solid);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.wiz-card--selected {
+  border-color: #4a78ff;
+  background: #1a2d48;
+}
+
+.wiz-body-text { color: #8a9ab8; }
+.wiz-label { color: var(--muted); }
+
+.wiz-remove-btn { color: #f87171; }
+.wiz-remove-btn:hover { background: #f87171; color: #fff; }
+
+.wiz-nav-btn,
+.wiz-next-btn {
+  background: linear-gradient(180deg, #4a78ff 0%, #3460e8 100%);
+  color: #fff;
+}
+
+.wiz-progress-bar { background: #253450; }
+.wiz-progress-fill { background: linear-gradient(90deg, #4a78ff, #315ce8); }
+
+.wiz-seg {
+  background: #162035;
+  border-color: var(--border);
+}
+
+.wiz-seg__btn { color: #7a8ba8; }
+.wiz-seg__btn--active {
+  background: #4a78ff;
+  color: #fff;
+}
+
+/* ========================================
+   Chart canvas area header
+   ======================================== */
+
+.chart-canvas-area__header {
+  border-color: var(--border);
+}
+
+.chart-canvas-area__header h2 {
+  color: #c8d6f0;
+}
+
+/* ========================================
+   Shared / utility
+   ======================================== */
+
+hr,
+.chart-sidebar__divider {
+  border-color: var(--border);
+}
+
+.delete-confirm-box {
+  background: #3d1a1a;
+  border-color: #7f2d2d;
+  color: #f87171;
+}
+
+/* ========================================
+   Splash screen
+   ======================================== */
+
+.splash-brand__wordmark { color: #c8d6f0; }
+
+.splash-card {
+  background: var(--panel-solid);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.splash-card-icon--blue  { background: #1a2d48; }
+.splash-card-icon--green { background: #132d1f; }
+.splash-card-icon--amber { background: #2d2010; }
+
+.splash-cta {
+  background: linear-gradient(180deg, #4a78ff 0%, #315ce8 100%);
+  color: #fff;
+}
+
+.splash-start-btn {
+  background: linear-gradient(180deg, #4a78ff 0%, #315ce8 100%);
+  color: #fff;
+}
+
+/* ========================================
+   Plan summary tab
+   ======================================== */
+
+.ps-chip--green { color: #4ade80; }
+.ps-chip--amber { color: #fbbf24; }
+.ps-chip--red   { color: #f87171; }
+.ps-chip--info  { color: #60a5fa; }
+
+.ps-sidebar__intro { color: #8a9ab8; }
+
+.ps-warn-block {
+  background: #2a1f0a;
+  color: #fbbf24;
+}
+
+.ps-warn-block strong { color: #fbbf24; }
+.ps-warn-block__label { color: #fbbf24; }
+
+/* ========================================
+   Depletion alert
+   ======================================== */
+
+.depletion-alert {
+  background: #3d1a1a;
+  border-color: #991b1b;
+  color: #f87171;
+}
