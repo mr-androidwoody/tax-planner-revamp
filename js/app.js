@@ -406,7 +406,9 @@
     const continueBtn = safeEl('continueToAssumptionsBtn');
 
     const accounts = activeAccounts();
-    const hasNone  = accounts.length === 0; = accounts.filter(acc => {
+    const hasNone  = accounts.length === 0;
+
+    const unbalancedCount = accounts.filter(acc => {
       const total = D.ALLOC_CLASSES.reduce((s, c) => s + (acc.alloc[c] || 0), 0);
       return Math.round(total) !== 100;
     }).length;
@@ -487,18 +489,13 @@
   }
 
   // ─────────────────────────────
-  // ACTIVE ACCOUNTS
-  // Returns only accounts that contribute to totals and projections.
-  // When p2 is disabled, p2-owned accounts are excluded.
+  // SUMMARY
   // ─────────────────────────────
   function activeAccounts() {
     if (state.p2enabled) return state.portfolioAccounts;
     return state.portfolioAccounts.filter(a => a.owner !== 'p2');
   }
 
-  // ─────────────────────────────
-  // SUMMARY
-  // ─────────────────────────────
   function refreshSetupSummary() {
     const summary = C.summarisePortfolio(activeAccounts());
     R.renderSetupSummary(summary);
@@ -854,12 +851,12 @@
     setText('ai-p1sipp', D.formatMoney(p1sipp));
     setText('ai-p1isa',  D.formatMoney(p1isa));
     setText('ai-p1gia',  D.formatMoney(p1gia));
-    setText('ai-p2cash', D.formatMoney(state.p2enabled ? p2cash : 0));
-    setText('ai-p2sipp', D.formatMoney(state.p2enabled ? p2sipp : 0));
-    setText('ai-p2isa',  D.formatMoney(state.p2enabled ? p2isa  : 0));
-    setText('ai-p2gia',  D.formatMoney(state.p2enabled ? p2gia  : 0));
+    setText('ai-p2cash', state.p2enabled ? D.formatMoney(p2cash) : '£0');
+    setText('ai-p2sipp', state.p2enabled ? D.formatMoney(p2sipp) : '£0');
+    setText('ai-p2isa',  state.p2enabled ? D.formatMoney(p2isa)  : '£0');
+    setText('ai-p2gia',  state.p2enabled ? D.formatMoney(p2gia)  : '£0');
 
-    // Portfolio footer totals — exclude p2 when disabled
+    // Portfolio footer totals
     const totIsa  = p1isa  + (state.p2enabled ? p2isa  : 0);
     const totSipp = p1sipp + (state.p2enabled ? p2sipp : 0);
     const totGia  = p1gia  + (state.p2enabled ? p2gia  : 0);
@@ -925,8 +922,8 @@
       }
     }
 
-    const total  = activeAccounts().reduce((s, a) => s + (a.value || 0), 0);
-    const nAccts = activeAccounts().length;
+    const total  = state.portfolioAccounts.reduce((s, a) => s + (a.value || 0), 0);
+    const nAccts = state.portfolioAccounts.length;
     // Banner removed — wizard layout has no .assump-cards container
 
     updateSidebarNames();
@@ -995,7 +992,7 @@
       p2Order: ['GIA', 'SIPP', 'ISA'],
       // Interest-bearing accounts (e.g. Invest Engine, QMMF with monthly draw).
       // Passed to MC worker so it can model guaranteed income and balance depletion.
-      intAccts: activeAccounts()
+      intAccts: (activeAccounts())
         .filter(a => a.rate != null || a.monthlyDraw != null)
         .map(a => ({
           owner:       a.owner,
